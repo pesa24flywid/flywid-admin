@@ -209,6 +209,11 @@ const menuOptions = [
         link: "/dashboard/controls/add-cms-biller?pageId=controls",
         status: true,
       },
+      {
+        title: "manage banks",
+        link: "/dashboard/controls/manage-banks?pageId=controls",
+        status: true,
+      },
     ]
   },
   {
@@ -394,7 +399,11 @@ const Layout = (props) => {
       })
       setTimeout(() => Router.push("/"), 2000)
     }
-  })
+  }, [])
+
+  useEffect(() => {
+    axios.get("/sanctum/csrf-cookie")
+  }, [])
 
   async function logout() {
     await axios.post("/logout").then(() => {

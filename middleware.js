@@ -1,17 +1,17 @@
-// import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
  
-// const Middleware = (req) => {
+const Middleware = (req) => {
     
-//     const verified = req.cookies.get("verified")
+    const verified = req.cookies.get("verified")
 
-//     const url = req.url
+    const url = req.url
     
-//     if(!verified && url.includes("/dashboard")){
-//         return NextResponse.redirect(process.env.NEXT_PUBLIC_FRONTEND_URL)
-//     }
-//     else if(verified && url.includes("/auth")){
-//         return NextResponse.redirect(process.env.NEXT_PUBLIC_FRONTEND_URL+"/dashboard?pageid=dashboard")
-//     }
-// }
+    if(!verified && url.includes("/dashboard")){
+        return NextResponse.redirect(process.env.NEXT_PUBLIC_FRONTEND_URL)
+    }
+    else if(verified && url.includes("/auth")){
+        return NextResponse.redirect(process.env.NEXT_PUBLIC_FRONTEND_URL+"/dashboard?pageid=dashboard")
+    }
+}
 
-// export default Middleware
+export default Middleware

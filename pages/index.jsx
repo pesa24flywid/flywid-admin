@@ -56,7 +56,8 @@ const Index = () => {
     if (formik.values.user_id && formik.values.password) {
       axios.post("/send-otp", {
         authMethod: formik.values.authMethod,
-        user_id: formik.values.user_id,
+        ...(authMethod === "email" && { "email": formik.values.user_id }),
+        ...(authMethod === "phone" && { "phone": formik.values.user_id }),
         password: formik.values.password,
       }).then((res) => {
         if (res.status == 200) {
