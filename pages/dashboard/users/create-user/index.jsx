@@ -88,6 +88,17 @@ const Index = () => {
                     }
                 }))
             })
+
+            // If selected user type is Retailer, fetch all Distributors
+            axios.get(`/api/admin/get-users/${Formik.values.userType}/${localStorage.getItem('userId')}`).then((res) => {
+                console.log(res.data)
+            }).catch((err) => {
+                console.log(err)
+                Toast({
+                    status: 'error',
+                    description: 'Error while fetching users'
+                })
+            })
         }
         if (!Formik.values.userType) {
             setAvailablePlans([])
