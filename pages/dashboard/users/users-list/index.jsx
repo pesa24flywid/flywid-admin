@@ -34,20 +34,33 @@ import {
     DrawerCloseButton,
     useDisclosure,
     Checkbox,
-    CheckboxGroup
+    CheckboxGroup,
+    VisuallyHidden,
 } from '@chakra-ui/react'
 import { SiMicrosoftexcel } from 'react-icons/si'
 import { FaFileCsv, FaFilePdf, FaPrint } from 'react-icons/fa'
-import { Grid, html } from "gridjs";
-import { _ } from "gridjs-react";
-import "gridjs/dist/theme/mermaid.css";
+import { BsChevronDown } from 'react-icons/bs'
 import Layout from '../../layout';
+import jsPDF from 'jspdf';
+import "jspdf-autotable"
 
+const ExportPDF = (currentRowData) => {
+    const doc = new jsPDF('landscape')
+    const columnDefs = [
+        '#',
+        'Basic Details',
+        'KYC Details',
+        'Balance Details',
+        'Complete Address',
+        'Parent Details',
+        'Actions',
+    ]
 
-import { AgGridReact } from 'ag-grid-react'
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { BsChevronDown } from 'react-icons/bs';
+    doc.autoTable({ html: '#exportableTable' })
+    doc.setCharSpace(4)
+    //This is a key for printing
+    doc.output('dataurlnewwindow');
+}
 
 
 const Index = () => {
@@ -56,144 +69,6 @@ const Index = () => {
 
     const allChecked = checkedItems.every(Boolean)
     const isIndeterminate = checkedItems.some(Boolean) && !allChecked
-
-    const grid = new Grid({
-        columns: [
-            'User Details',
-            'KYC Details',
-            'Balance Details',
-            'Complete Address',
-            'Parent Details',
-            'Actions',
-        ],
-        data: [
-            [
-                html(`
-                    <p>Retailer &nbsp;&nbsp; (Retailer Basic) </p></br>
-                    <p>Sangam Kumar </p>
-                    <p>dezynationindia@gmail.com </p>
-                    <p><a href={'tel:+917838074742'}>+917838074742</a>, <a href={'tel:+919971412064'}>+919971412064</a> </p>
-                    <p>Male &nbsp;&nbsp;07 April 2002</p></br>
-
-                    <p>Dezynation Proprietorship</p>
-                    `),
-                html(`
-                    <p><b>Status: </b>&nbsp;&nbsp; Pending </p>
-                    <p><b>Aadhaar No.: </b>&nbsp;&nbsp; 67XXXXXX3832 </p>
-                    <p><b>PAN: </b>&nbsp;&nbsp; JNxxxxx3D </p>
-                    <p><b>GST No.: </b>&nbsp;&nbsp; NA </p></br>
-                    <p><b>Referral Code.: </b>&nbsp;&nbsp; REPB50 </p>
-                    `),
-                html(`
-                <p><b>Current Balance: </b>&nbsp;&nbsp; ₹ 4689 </p>
-                <p><b>Capping Balance: </b>&nbsp;&nbsp; ₹ 500 </p></br>
-                <p><b>Distributors' Balance: </b></p>
-                <p>₹ 495500 </p></br>
-                <p><b>Retailer' Balance: </b></p>
-                <p>₹ 495500 </p></br>
-                `),
-                html(`
-                    <p>B390, Mangal Bazar Road, Block B, Jahangir Puri,</p>
-                    <p>New Delhi, Delhi,</p>
-                    <p>Pincode - 110033</p>
-                `),
-                _(<>
-                    <p><b>Parent: </b></p><br />
-                    <p>Parent Name Here (User ID)</p>
-                    <p>Parent Mobile Here</p>
-                </>),
-                _(<>
-                    <span><b>Active</b> <Switch size={'sm'} isChecked></Switch></span>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
-                        <button style={{ padding: "2px 4px", background: "green", color: "white" }}>View Profile</button>
-                        <button style={{ padding: "2px 4px", background: "orange", color: "white" }}>Send MPIN</button>
-                        <button style={{ padding: "2px 4px", background: "blue", color: "white" }}>Send Password</button>
-                    </div>
-                </>)
-            ],
-            [
-                html(`
-                    <p>Retailer &nbsp;&nbsp; (Retailer Basic) </p></br>
-                    <p>Rishi Kumar </p>
-                    <p>dezynationindia@gmail.com </p>
-                    <p><a href={'tel:+917838074742'}>+917838074742</a>, <a href={'tel:+919971412064'}>+919971412064</a> </p>
-                    <p>Male &nbsp;&nbsp;07 April 2002</p></br>
-
-                    <p>Dezynation Proprietorship</p>
-                    `),
-                html(`
-                    <p><b>Status: </b>&nbsp;&nbsp; Verified </p>
-                    <p><b>Aadhaar No.: </b>&nbsp;&nbsp; 67XXXXXX3832 </p>
-                    <p><b>PAN: </b>&nbsp;&nbsp; JNxxxxx3D </p>
-                    <p><b>GST No.: </b>&nbsp;&nbsp; NA </p></br>
-                    <p><b>Referral Code.: </b>&nbsp;&nbsp; REPB50 </p>
-                    `),
-                html(`
-                <p><b>Current Balance: </b>&nbsp;&nbsp; ₹ 4689 </p>
-                <p><b>Capping Balance: </b>&nbsp;&nbsp; ₹ 500 </p></br>
-                <p><b>Distributors' Balance: </b></p>
-                <p>₹ 495500 </p></br>
-                <p><b>Retailer' Balance: </b></p>
-                <p>₹ 495500 </p></br>
-
-                `),
-                html(`
-                    <p>B390, Mangal Bazar Road, Block B, Jahangir Puri,</p>
-                    <p>New Delhi, Delhi,</p>
-                    <p>Pincode - 110033</p>
-                `),
-                _(<>
-                </>),
-                _(<>
-                    <span><b>Active</b> <Switch size={'sm'} isChecked></Switch></span>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
-                        <button style={{ padding: "2px 4px", background: "green", color: "white" }}>View Profile</button>
-                        <button style={{ padding: "2px 4px", background: "orange", color: "white" }}>Send MPIN</button>
-                        <button style={{ padding: "2px 4px", background: "blue", color: "white" }}>Send Password</button>
-                    </div>
-                </>)
-            ],
-        ],
-        autoWidth: true,
-        style: {
-            th: {
-                'background-color': "rgb(0,0,200)",
-                'color': "#FFF",
-                'padding': "4px 16px"
-            },
-            td: {
-                'padding': "8px 12px",
-                'font-size': "12px",
-                'vertical-align': 'top',
-            },
-        },
-    });
-
-    const AdditonalCellRenderer = (props) => {
-        <>
-            <Switch id={props.userId}>Active</Switch>
-        </>
-    }
-
-    const [columnDefs, setColumnDefs] = useState([
-        {
-            headerName: "Additional Details",
-            field: "additional details",
-            cellRenderer: AdditonalCellRenderer,
-            cellRendererParams: {
-                userId: 1
-            }
-        }
-    ])
-
-    const [rowData, setRowData] = useState([
-
-    ])
-
-    // useEffect(() => {
-    //     grid.render(wrapperRef.current);
-    // });
-
 
     return (
         <>
@@ -219,10 +94,36 @@ const Index = () => {
                                 alignItems={'center'}
                             >
                                 <HStack spacing={4}>
-                                    <Button size={['xs', 'sm']} colorScheme={'twitter'} leftIcon={<FaFileCsv />}>CSV</Button>
-                                    <Button size={['xs', 'sm']} colorScheme={'whatsapp'} leftIcon={<SiMicrosoftexcel />}>Excel</Button>
-                                    <Button size={['xs', 'sm']} colorScheme={'red'} leftIcon={<FaFilePdf />}>PDF</Button>
-                                    <Button size={['xs', 'sm']} colorScheme={'facebook'} leftIcon={<FaPrint />}>Print</Button>
+                                    <Button
+                                        size={['xs', 'sm']}
+                                        colorScheme={'twitter'}
+                                        leftIcon={<FaFileCsv />}
+                                    >
+                                        CSV
+                                    </Button>
+                                    <Button
+                                        size={['xs', 'sm']}
+                                        colorScheme={'whatsapp'}
+                                        leftIcon={<SiMicrosoftexcel />}
+                                    >
+                                        Excel
+                                    </Button>
+                                    <Button
+                                        size={['xs', 'sm']}
+                                        colorScheme={'red'}
+                                        leftIcon={<FaFilePdf />}
+                                        onClick={() => ExportPDF()}
+                                    >
+                                        PDF
+                                    </Button>
+                                    <Button
+                                        size={['xs', 'sm']}
+                                        colorScheme={'facebook'}
+                                        leftIcon={<FaPrint />}
+                                        onClick={() => ExportPDF()}
+                                    >
+                                        Print
+                                    </Button>
                                 </HStack>
                                 <Input
                                     bg={'white'}
@@ -357,6 +258,63 @@ const Index = () => {
                                 </Table>
                             </TableContainer>
 
+                            {/* Printable Table */}
+                            <VisuallyHidden>
+                                <table id={'exportableTable'}>
+                                    <thead>
+                                        <tr>
+                                            <th p={2}>Basic Details</th>
+                                            <th p={2}>KYC Details</th>
+                                            <th p={2}>Balance Details</th>
+                                            <th p={2}>Complete Address</th>
+                                            <th p={2}>Parent Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td p={2}>
+                                                <Box>
+                                                    <Text>Retailer &nbsp;&nbsp; (Retailer Basic) </Text><br /><br />
+                                                    <Text>Sangam Kumar </Text><br />
+                                                    <Text>dezynationindia@gmail.com </Text><br />
+                                                    <Text><a href={'tel:+917838074742'}>+917838074742</a>, <a href={'tel:+919971412064'}>+919971412064</a> </Text><br />
+                                                    <Text>Male &nbsp;&nbsp;07 April 2002</Text><br /><br />
+                                                    <Text>Dezynation Proprietorship</Text><br />
+                                                </Box>
+                                            </td>
+                                            <td p={2}>
+                                                <Box>
+                                                    <Text><b>Status: </b>&nbsp;&nbsp; Verified </Text><br />
+                                                    <Text><b>Aadhaar No.: </b>&nbsp;&nbsp; 67XXXXXX3832 </Text><br />
+                                                    <Text><b>PAN: </b>&nbsp;&nbsp; JNxxxxx3D </Text><br />
+                                                    <Text><b>GST No.: </b>&nbsp;&nbsp; NA </Text><br /><br />
+                                                    <Text><b>Referral Code.: </b>&nbsp;&nbsp; REPB50 </Text><br />
+                                                </Box>
+                                            </td>
+                                            <td>
+                                                <p><b>Current Balance: </b>&nbsp;&nbsp; Rs. 4689 </p><br />
+                                                <p><b>Capping Balance: </b>&nbsp;&nbsp; Rs. 500 </p><br /><br />
+                                                <p><b>Distributors' Balance: </b>&nbsp;&nbsp;Rs. 495500</p><br /><br />
+                                                <p><b>Retailers' Balance: </b>&nbsp;&nbsp;Rs. 495500</p><br />
+                                            </td>
+                                            <td p={2}>
+                                                <Box>
+                                                    <Text>B390, Mangal Bazar Road, Block B, Jahangir Puri,</Text><br />
+                                                    <Text>New Delhi, Delhi,</Text><br />
+                                                    <Text>Pincode - 110033</Text><br />
+                                                </Box>
+                                            </td>
+                                            <td p={2}>
+                                                <Box>
+                                                    <Text>(567) - Admin One</Text><br />
+                                                    <Text>+91 7838074742</Text><br />
+                                                </Box>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </VisuallyHidden>
+
                         </TabPanel>
 
 
@@ -392,117 +350,117 @@ const Index = () => {
                         <DrawerHeader>Manage Permissions For User</DrawerHeader>
 
                         <DrawerBody>
-                                <TableContainer>
-                                    <Table variant={'simple'}>
-                                        <Thead>
-                                            <Tr>
-                                                <Th>Section Name</Th>
-                                                <Th>Permissions</Th>
-                                            </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            <Tr>
-                                                <Td borderRight={'1px solid #999'}>
+                            <TableContainer>
+                                <Table variant={'simple'}>
+                                    <Thead>
+                                        <Tr>
+                                            <Th>Section Name</Th>
+                                            <Th>Permissions</Th>
+                                        </Tr>
+                                    </Thead>
+                                    <Tbody>
+                                        <Tr>
+                                            <Td borderRight={'1px solid #999'}>
+                                                <Checkbox
+                                                    isChecked={allChecked}
+                                                    isIndeterminate={isIndeterminate}
+                                                    onChange={(e) => setCheckedItems([e.target.checked, e.target.checked])}
+                                                >
+                                                    AePS Section
+                                                </Checkbox>
+                                            </Td>
+                                            <Td>
+                                                <HStack spacing={6}>
                                                     <Checkbox
-                                                        isChecked={allChecked}
-                                                        isIndeterminate={isIndeterminate}
-                                                        onChange={(e) => setCheckedItems([e.target.checked, e.target.checked])}
+                                                        isChecked={checkedItems[0]}
+                                                        onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
                                                     >
-                                                        AePS Section
+                                                        AePS Payout
                                                     </Checkbox>
-                                                </Td>
-                                                <Td>
-                                                    <HStack spacing={6}>
-                                                        <Checkbox
-                                                            isChecked={checkedItems[0]}
-                                                            onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
-                                                        >
-                                                            AePS Payout
-                                                        </Checkbox>
-                                                        <Checkbox
-                                                            isChecked={checkedItems[1]}
-                                                            onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
-                                                        >
-                                                            AePS Withrawal
-                                                        </Checkbox>
-                                                        <Checkbox
-                                                            isChecked={checkedItems[1]}
-                                                            onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
-                                                        >
-                                                            AePS Report
-                                                        </Checkbox>
-                                                    </HStack>
-                                                </Td>
-                                            </Tr>
-                                            <Tr>
-                                                <Td borderRight={'1px solid #999'}>
                                                     <Checkbox
-                                                        isChecked={allChecked}
-                                                        isIndeterminate={isIndeterminate}
-                                                        onChange={(e) => setCheckedItems([e.target.checked, e.target.checked])}
+                                                        isChecked={checkedItems[1]}
+                                                        onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
                                                     >
-                                                        AePS Section
+                                                        AePS Withrawal
                                                     </Checkbox>
-                                                </Td>
-                                                <Td>
-                                                    <HStack spacing={6}>
-                                                        <Checkbox
-                                                            isChecked={checkedItems[0]}
-                                                            onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
-                                                        >
-                                                            AePS Payout
-                                                        </Checkbox>
-                                                        <Checkbox
-                                                            isChecked={checkedItems[1]}
-                                                            onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
-                                                        >
-                                                            AePS Withrawal
-                                                        </Checkbox>
-                                                        <Checkbox
-                                                            isChecked={checkedItems[1]}
-                                                            onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
-                                                        >
-                                                            AePS Report
-                                                        </Checkbox>
-                                                    </HStack>
-                                                </Td>
-                                            </Tr>
-                                            <Tr>
-                                                <Td borderRight={'1px solid #999'}>
                                                     <Checkbox
-                                                        isChecked={allChecked}
-                                                        isIndeterminate={isIndeterminate}
-                                                        onChange={(e) => setCheckedItems([e.target.checked, e.target.checked])}
+                                                        isChecked={checkedItems[1]}
+                                                        onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
                                                     >
-                                                        AePS Section
+                                                        AePS Report
                                                     </Checkbox>
-                                                </Td>
-                                                <Td>
-                                                    <HStack spacing={6}>
-                                                        <Checkbox
-                                                            isChecked={checkedItems[0]}
-                                                            onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
-                                                        >
-                                                            AePS Payout
-                                                        </Checkbox>
-                                                        <Checkbox
-                                                            isChecked={checkedItems[1]}
-                                                            onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
-                                                        >
-                                                            AePS Withrawal
-                                                        </Checkbox>
-                                                        <Checkbox
-                                                            isChecked={checkedItems[1]}
-                                                            onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
-                                                        >
-                                                            AePS Report
-                                                        </Checkbox>
-                                                    </HStack>
-                                                </Td>
-                                            </Tr>
-                                        </Tbody>
-                                    </Table>
-                                </TableContainer>
+                                                </HStack>
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td borderRight={'1px solid #999'}>
+                                                <Checkbox
+                                                    isChecked={allChecked}
+                                                    isIndeterminate={isIndeterminate}
+                                                    onChange={(e) => setCheckedItems([e.target.checked, e.target.checked])}
+                                                >
+                                                    AePS Section
+                                                </Checkbox>
+                                            </Td>
+                                            <Td>
+                                                <HStack spacing={6}>
+                                                    <Checkbox
+                                                        isChecked={checkedItems[0]}
+                                                        onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
+                                                    >
+                                                        AePS Payout
+                                                    </Checkbox>
+                                                    <Checkbox
+                                                        isChecked={checkedItems[1]}
+                                                        onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
+                                                    >
+                                                        AePS Withrawal
+                                                    </Checkbox>
+                                                    <Checkbox
+                                                        isChecked={checkedItems[1]}
+                                                        onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
+                                                    >
+                                                        AePS Report
+                                                    </Checkbox>
+                                                </HStack>
+                                            </Td>
+                                        </Tr>
+                                        <Tr>
+                                            <Td borderRight={'1px solid #999'}>
+                                                <Checkbox
+                                                    isChecked={allChecked}
+                                                    isIndeterminate={isIndeterminate}
+                                                    onChange={(e) => setCheckedItems([e.target.checked, e.target.checked])}
+                                                >
+                                                    AePS Section
+                                                </Checkbox>
+                                            </Td>
+                                            <Td>
+                                                <HStack spacing={6}>
+                                                    <Checkbox
+                                                        isChecked={checkedItems[0]}
+                                                        onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
+                                                    >
+                                                        AePS Payout
+                                                    </Checkbox>
+                                                    <Checkbox
+                                                        isChecked={checkedItems[1]}
+                                                        onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
+                                                    >
+                                                        AePS Withrawal
+                                                    </Checkbox>
+                                                    <Checkbox
+                                                        isChecked={checkedItems[1]}
+                                                        onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
+                                                    >
+                                                        AePS Report
+                                                    </Checkbox>
+                                                </HStack>
+                                            </Td>
+                                        </Tr>
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
                         </DrawerBody>
 
                         <DrawerFooter>
