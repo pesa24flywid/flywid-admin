@@ -102,6 +102,7 @@ const Index = () => {
         "password": formik.values.password,
         "remember": 1,
         "latlong": Cookies.get("latlong"),
+        "organization_code": process.env.NEXT_PUBLIC_ORGANISATION,
       })).then((res) => {
         var hashedValue = bcrypt.hashSync(`${res.data.id + process.env.NEXT_PUBLIC_SALT + res.data.name}`, 2)
         Cookies.set("verified", hashedValue)

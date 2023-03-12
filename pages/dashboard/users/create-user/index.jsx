@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     useFormik
 } from 'formik'
@@ -20,9 +20,10 @@ import {
     useToast,
 } from '@chakra-ui/react'
 import Layout from '../../layout'
-import { FormAxios } from '@/lib/utils/axios'
+import axios, { FormAxios } from '@/lib/utils/axios'
 
 const Index = () => {
+    const [availablePlans, setAvailablePlans] = useState([])
     const Toast = useToast({
         position: 'top-right'
     })
@@ -77,16 +78,21 @@ const Index = () => {
         }
     })
 
-    const FileFormik = useFormik({
-        initialValues: {
-            profilePic: null,
-            aadhaarFront: null,
-            aadhaarBack: null,
-            pan: null,
-
+    useEffect(() => {
+        if (Formik.values.userType) {
+            axios.get(`/api/admin/packages/${Formik.values.userType}`).then((res) => {
+                setAvailablePlans(res.data[0].roles.map((plan) => {
+                    return {
+                        planName: plan.pivot.name,
+                        planId: plan.pivot.id,
+                    }
+                }))
+            })
         }
-    })
-
+        if (!Formik.values.userType) {
+            setAvailablePlans([])
+        }
+    }, [Formik.values.userType])
 
     return (
         <>
@@ -109,9 +115,9 @@ const Index = () => {
                                         value={Formik.values.userType}
                                         onChange={Formik.handleChange}
                                     >
-                                        <option value="retailer">Retailer</option>
-                                        <option value="distributor">Distributor</option>
-                                        <option value="super_distributor">Super Distributor</option>
+                                        <option value="3">Retailer</option>
+                                        <option value="2">Distributor</option>
+                                        <option value="4">Super Distributor</option>
                                     </Select>
                                 </FormControl>
                                 <FormControl w={['full', 'xs']}>
@@ -123,14 +129,15 @@ const Index = () => {
                                         value={Formik.values.userPlan}
                                         onChange={Formik.handleChange}
                                     >
-                                        <option value="retailer basic">Retailer Basic</option>
-                                        <option value="retailer premium">Retailer Premium</option>
-                                        <option value="distributor basic">Distributor Basic</option>
-                                        <option value="distributor premium">Distributor Premium</option>
+                                        {
+                                            availablePlans.map((plan, key) => {
+                                                return <option value={plan.planId} key={key}>{plan.planName}</option>
+                                            })
+                                        }
                                     </Select>
                                 </FormControl>
                                 {
-                                    Formik.values.userType == "retailer" &&
+                                    Formik.values.userType == "3" &&
                                     <FormControl w={['full', 'xs']}>
                                         <FormLabel>Parent Distributor</FormLabel>
                                         <Select
@@ -145,7 +152,7 @@ const Index = () => {
                                     </FormControl>
                                 }
                                 {
-                                    Formik.values.userType == "distributor" &&
+                                    Formik.values.userType == "2" &&
                                     <FormControl w={['full', 'xs']}>
                                         <FormLabel>Parent Super Distributor</FormLabel>
                                         <Select
@@ -338,7 +345,7 @@ const Index = () => {
                                         <Switch
                                             name='isActive'
                                             onChange={(e) => { Formik.setFieldValue('isActive', e.target.checked) }}
-                                            value={Formik.values.isActive ? "1": "0"}
+                                            value={Formik.values.isActive ? "1" : "0"}
                                         ></Switch>
                                     </HStack>
                                 </FormControl>
