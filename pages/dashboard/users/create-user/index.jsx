@@ -24,6 +24,9 @@ import axios, { FormAxios } from '@/lib/utils/axios'
 
 const Index = () => {
     const [availablePlans, setAvailablePlans] = useState([])
+    const [availableParents, setAvailableParents] = useState([])
+    const [isParentInputDisabled, setIsParentInputDisabled] = useState(true)
+    const [isPlanInputDisabled, setIsPlanInputDisabled] = useState(true)
     const Toast = useToast({
         position: 'top-right'
     })
@@ -31,8 +34,8 @@ const Index = () => {
         initialValues: {
             userType: "",
             userPlan: "",
-            parentDistributor: "",
-            parentSuperDistributor: "",
+            hasParent: "0",
+            parent: "",
             firstName: "",
             lastName: "",
             userEmail: "",
@@ -51,7 +54,7 @@ const Index = () => {
             city: "",
             state: "",
             pincode: "",
-            isActive: "0",
+            isActive: "1",
             approvedBy: "",
             referralCode: "",
             gst: "",
@@ -79,6 +82,11 @@ const Index = () => {
     })
 
     useEffect(() => {
+        let userToFetch
+        setAvailableParents([])
+        setAvailablePlans([])
+        setIsParentInputDisabled(true)
+        setIsPlanInputDisabled(true)
         if (Formik.values.userType) {
             axios.get(`/api/admin/packages/${Formik.values.userType}`).then((res) => {
                 setAvailablePlans(res.data[0].roles.map((plan) => {
@@ -87,21 +95,37 @@ const Index = () => {
                         planId: plan.pivot.id,
                     }
                 }))
+                setIsPlanInputDisabled(false)
             })
 
-            // If selected user type is Retailer, fetch all Distributors
-            axios.get(`/api/admin/get-users/${Formik.values.userType}/${localStorage.getItem('userId')}`).then((res) => {
-                console.log(res.data)
-            }).catch((err) => {
-                console.log(err)
-                Toast({
-                    status: 'error',
-                    description: 'Error while fetching users'
-                })
-            })
+            if (Formik.values.userType != "1") {
+                if (Formik.values.userType == "3") userToFetch = "distributor"
+                if (Formik.values.userType == "2") userToFetch = "super_distributor"
+                if (Formik.values.userType == "4") userToFetch = "admin"
+                axios.get(
+                    `/api/admin/get-users/${userToFetch}`).then((res) => {
+                        setAvailableParents(
+                            res.data.map((child) => {
+                                return {
+                                    name: child.name,
+                                    user_id: child.id
+                                }
+                            })
+                        )
+                        setIsParentInputDisabled(false)
+                    }).catch((err) => {
+                        console.log(err)
+                        Toast({
+                            status: 'error',
+                            description: 'Error while fetching users'
+                        })
+                    })
+            }
+
         }
         if (!Formik.values.userType) {
             setAvailablePlans([])
+            setIsPlanInputDisabled(false)
         }
     }, [Formik.values.userType])
 
@@ -129,6 +153,7 @@ const Index = () => {
                                         <option value="3">Retailer</option>
                                         <option value="2">Distributor</option>
                                         <option value="4">Super Distributor</option>
+                                        <option value="1">Admin (Whitelabel)</option>
                                     </Select>
                                 </FormControl>
                                 <FormControl w={['full', 'xs']}>
@@ -139,6 +164,7 @@ const Index = () => {
                                         placeholder={'Select here'}
                                         value={Formik.values.userPlan}
                                         onChange={Formik.handleChange}
+                                        isDisabled={isPlanInputDisabled}
                                     >
                                         {
                                             availablePlans.map((plan, key) => {
@@ -147,33 +173,64 @@ const Index = () => {
                                         }
                                     </Select>
                                 </FormControl>
+                                <input type={'hidden'} name={'hasParent'} value={Formik.values.userType == "1" ? "0" : "1"} />
                                 {
+                                    // Ask parent distributor if user type is retailer
                                     Formik.values.userType == "3" &&
                                     <FormControl w={['full', 'xs']}>
                                         <FormLabel>Parent Distributor</FormLabel>
                                         <Select
-                                            name='parentDistributor'
+                                            name='parent'
                                             bg={'white'}
-                                            value={Formik.values.parentDistributor}
+                                            value={Formik.values.parent}
                                             onChange={Formik.handleChange}
+                                            isDisabled={isParentInputDisabled}
                                         >
-                                            <option value="akhil">Akhil</option>
-                                            <option value="sangam">sangam</option>
+                                            {
+                                                availableParents.map((parent, key) => {
+                                                    return <option value={parent.user_id} key={key}>{parent.name}</option>
+                                                })
+                                            }
                                         </Select>
                                     </FormControl>
                                 }
                                 {
+                                    // Ask parent super distributor if user type is distributor
                                     Formik.values.userType == "2" &&
                                     <FormControl w={['full', 'xs']}>
                                         <FormLabel>Parent Super Distributor</FormLabel>
                                         <Select
-                                            name='parentSuperDistributor'
+                                            name='parent'
                                             bg={'white'}
-                                            value={Formik.values.parentSuperDistributor}
+                                            value={Formik.values.parent}
                                             onChange={Formik.handleChange}
+                                            isDisabled={isParentInputDisabled}
                                         >
-                                            <option value="akhil">Akhil</option>
-                                            <option value="sangam">sangam</option>
+                                            {
+                                                availableParents.map((parent, key) => {
+                                                    return <option value={parent.user_id} key={key}>{parent.name}</option>
+                                                })
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                }
+                                {
+                                    // Ask parent admin if user type is super distributor
+                                    Formik.values.userType == "4" &&
+                                    <FormControl w={['full', 'xs']}>
+                                        <FormLabel>Parent Admin (Whitelabel)</FormLabel>
+                                        <Select
+                                            name='parent'
+                                            bg={'white'}
+                                            value={Formik.values.parent}
+                                            onChange={Formik.handleChange}
+                                            isDisabled={isParentInputDisabled}
+                                        >
+                                            {
+                                                availableParents.map((parent, key) => {
+                                                    return <option value={parent.user_id} key={key}>{parent.name}</option>
+                                                })
+                                            }
                                         </Select>
                                     </FormControl>
                                 }
@@ -353,10 +410,10 @@ const Index = () => {
                                 <FormControl>
                                     <HStack justifyContent={'space-between'}>
                                         <FormLabel>Is user active?</FormLabel>
+                                        <input type="hidden" name='isActive' value={Formik.values.isActive} />
                                         <Switch
-                                            name='isActive'
-                                            onChange={(e) => { Formik.setFieldValue('isActive', e.target.checked) }}
-                                            value={Formik.values.isActive ? "1" : "0"}
+                                            defaultChecked={true}
+                                            onChange={(e) => { Formik.setFieldValue('isActive', e.target.checked ? "1" : "0") }}
                                         ></Switch>
                                     </HStack>
                                 </FormControl>
