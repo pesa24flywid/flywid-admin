@@ -27,6 +27,7 @@ specifiers:
   nextjs-progressbar: ^0.0.16
   nprogress: ^0.2.0
   react: 18.2.0
+  react-checkbox-tree: ^1.8.0
   react-dom: 18.2.0
   react-icons: ^4.7.1
   react-responsive-carousel: ^3.2.23
@@ -58,6 +59,7 @@ dependencies:
   nextjs-progressbar: 0.0.16_next@13.1.6+react@18.2.0
   nprogress: 0.2.0
   react: 18.2.0
+  react-checkbox-tree: 1.8.0_react@18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
   react-responsive-carousel: 3.2.23
@@ -2349,6 +2351,18 @@ packages:
       performance-now: 2.1.0
     dev: false
     optional: true
+
+  /react-checkbox-tree/1.8.0_react@18.2.0:
+    resolution: {integrity: sha512-ufC4aorihOvjLpvY1beab2hjVLGZbDTFRzw62foG0+th+KX7e/sdmWu/nD1ZS/U5Yr0rWGwedGH5GOtR0IkUXw==}
+    peerDependencies:
+      react: ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      classnames: 2.3.2
+      lodash: 4.17.21
+      nanoid: 3.3.4
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
 
   /react-clientside-effect/1.2.6_react@18.2.0:
     resolution: {integrity: sha512-XGGGRQAKY+q25Lz9a/4EPqom7WRjz3z9R2k4jhVKA/puQFH/5Nt27vFZYql4m4NVNdUvX8PS3O7r/Zzm7cjUlg==}

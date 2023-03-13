@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react'
 import {
   HStack,
   VStack,
@@ -22,7 +23,6 @@ import {
   AccordionPanel,
 } from '@chakra-ui/react'
 import Head from 'next/head'
-import React, { useEffect } from 'react'
 import {
   BsPower,
   BsSpeedometer,
@@ -382,6 +382,9 @@ const Layout = (props) => {
   const { pageid } = Router.query
   const { isOpen, onClose, onOpen } = useDisclosure()
 
+  const [userName, setUserName] = useState("NA")
+  const [userType, setUserType] = useState("NA")
+
   useEffect(() => {
     const activePage = typeof window !== 'undefined' ? document.getElementById(pageid) : document.getElementById("dashboard")
     if (activePage) {
@@ -389,6 +392,13 @@ const Layout = (props) => {
       activePage.style.color = "#FFF"
     }
   }, [])
+
+  // Feeding all user details to the sidepanel
+  useEffect(() => {
+    setUserName(localStorage.getItem("userName"))
+    setUserType(localStorage.getItem("userType"))
+  }, [])
+
 
 
   useEffect(() => {
@@ -426,8 +436,8 @@ const Layout = (props) => {
           >
             <VStack py={8}>
               <Image src='https://xsgames.co/randomusers/assets/avatars/male/8.jpg' boxSize={24} rounded={'full'} />
-              <Text fontSize={'xl'} color={'#444'}>Sangam Kumar</Text>
-              <Text fontSize={'sm'} color={'#666'}>Dezynation - Admin</Text>
+              <Text fontSize={'xl'} color={'#444'} textTransform={'capitalize'}>{userName}</Text>
+              <Text fontSize={'sm'} color={'#666'} textTransform={'capitalize'}>FirmName - {userType}</Text>
             </VStack>
             <VStack spacing={2} w={'full'}>
               {

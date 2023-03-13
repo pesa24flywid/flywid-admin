@@ -74,7 +74,7 @@ const Index = () => {
             }).catch((err) => {
                 Toast({
                     status: 'error',
-                    title: 'Error While Creating User',
+                    title: err.message,
                 })
                 console.log(err)
             })
@@ -117,7 +117,7 @@ const Index = () => {
                         console.log(err)
                         Toast({
                             status: 'error',
-                            description: 'Error while fetching users'
+                            description: err.message
                         })
                     })
             }

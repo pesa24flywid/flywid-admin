@@ -73,85 +73,7 @@ const FundTransfer = () => {
     return (
         <>
             <Layout pageTitle={'Fund Request'}>
-                <Text fontWeight={'semibold'} fontSize={'lg'}>Fund Request</Text>
-
-                {/* Fund Request Form */}
-                <Box py={6}>
-                    <Box
-                        rounded={16}
-                        overflow={'hidden'}
-                    >
-                        <Box
-                            bg={'twitter.500'}
-                            p={3} color={'white'}
-                        >
-                            <Text>Find Fund Requests</Text>
-                        </Box>
-                        <Box p={4}>
-                            <Stack
-                                direction={['column', 'row']}
-                                spacing={6} py={6}
-                            >
-                                <FormControl w={['full', 'xs']}>
-                                    <FormLabel>User Name</FormLabel>
-                                    <Input
-                                        name={'userName'} bg={'white'}
-                                        onChange={Formik.handleChange}
-                                        placeholder={'Enter User Name'}
-                                    />
-                                </FormControl>
-                                <FormControl w={['full', 'xs']}>
-                                    <FormLabel>Registered Phone Number</FormLabel>
-                                    <Input
-                                        name={'phone'} bg={'white'}
-                                        onChange={Formik.handleChange}
-                                        type={'tel'}
-                                        placeholder={'Enter Phone Number'}
-                                    />
-                                </FormControl>
-                                <FormControl w={['full', 'xs']}>
-                                    <FormLabel>Firm Name</FormLabel>
-                                    <Input
-                                        name={'firmName'} bg={'white'}
-                                        onChange={Formik.handleChange}
-                                        placeholder={'Enter Firm Name'}
-                                    />
-                                </FormControl>
-                            </Stack>
-                            <Stack
-                                direction={['column', 'row']}
-                                spacing={6} py={6}
-                            >
-                                <FormControl w={['full', 'xs']}>
-                                    <FormLabel>Transaction ID</FormLabel>
-                                    <Input
-                                        name={'transactionId'} bg={'white'}
-                                        onChange={Formik.handleChange}
-                                        placeholder={'Enter Here'}
-                                    />
-                                </FormControl>
-                                <FormControl w={['full', 'xs']}>
-                                    <FormLabel>From Date</FormLabel>
-                                    <Input
-                                        name={'fromDate'} bg={'white'}
-                                        onChange={Formik.handleChange}
-                                        type={'date'}
-                                    />
-                                </FormControl>
-                                <FormControl w={['full', 'xs']}>
-                                    <FormLabel>To Date</FormLabel>
-                                    <Input
-                                        name={'toDate'} bg={'white'}
-                                        onChange={Formik.handleChange}
-                                        type={'date'}
-                                    />
-                                </FormControl>
-                            </Stack>
-
-                        </Box>
-                    </Box>
-                </Box>
-
+                <Text fontWeight={'semibold'} fontSize={'lg'}>Fund Requests From Your Members</Text>
 
                 <Box py={6}>
                     <Text fontWeight={'medium'} pb={4}>Recent Transactions</Text>
@@ -165,6 +87,10 @@ const FundTransfer = () => {
                         <AgGridReact
                             columnDefs={columnDefs}
                             rowData={rowData}
+                            defaultColDef={{
+                                filter: true,
+                                floatingFilter: true,
+                            }}
                         >
 
                         </AgGridReact>
