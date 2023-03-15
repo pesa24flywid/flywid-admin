@@ -38,7 +38,9 @@ const Index = () => {
 
   const [authMethod, setAuthMethod] = useState("email")
 
-  const Toast = useToast()
+  const Toast = useToast({
+    position: 'top-right'
+  })
   const Router = useRouter()
 
 
@@ -131,7 +133,15 @@ const Index = () => {
 
 
   useEffect(() => {
-    axios.get("/sanctum/csrf-cookie")
+    axios.get("/sanctum/csrf-cookie").then(() => {
+      console.log("Connection established")
+    }).catch((err) => {
+      Toast({
+        status: 'error',
+        title: 'Server Error',
+        description: 'We are facing some issues, please try again later.'
+      })
+    })
     getLocation()
   }, [])
 

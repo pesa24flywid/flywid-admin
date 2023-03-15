@@ -80,6 +80,11 @@ const menuOptions = [
         link: "/dashboard/users/users-list?pageid=users",
         status: true,
       },
+      {
+        title: "manage user",
+        link: "/dashboard/users/manage-user?pageid=users",
+        status: true,
+      },
     ]
   },
   {
@@ -191,7 +196,6 @@ const menuOptions = [
   {
     type: "accordion",
     name: "controls",
-    link: "/dashboard/commission?pageid=commission",
     icon: <AiFillApi />,
     children: [
       {
@@ -219,12 +223,11 @@ const menuOptions = [
   {
     type: "accordion",
     name: "reports",
-    link: "/dashboard/commission?pageid=commission",
     icon: <HiDocumentReport />,
     children: [
       {
         title: "dmt",
-        link: "/dashboard",
+        link: "/dashboard/reports/payout?pageid=reports",
         status: true,
       },
       {
@@ -327,7 +330,7 @@ const menuOptions = [
   {
     type: "link",
     name: "support tickets",
-    link: "/dashboard/commission?pageid=commission",
+    link: "/dashboard/support-tickets?pageid=support",
     icon: <IoMdHelpBuoy />,
   },
   {

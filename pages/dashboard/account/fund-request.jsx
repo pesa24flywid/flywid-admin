@@ -76,7 +76,7 @@ const FundTransfer = () => {
                 <Text fontWeight={'semibold'} fontSize={'lg'}>Fund Requests From Your Members</Text>
 
                 <Box py={6}>
-                    <Text fontWeight={'medium'} pb={4}>Recent Transactions</Text>
+                    <Text fontWeight={'medium'} pb={4}>Search and manage fund requests</Text>
                     <HStack spacing={4} my={4}>
                         <Button size={['xs', 'sm']} colorScheme={'twitter'} leftIcon={<FaFileCsv />}>CSV</Button>
                         <Button size={['xs', 'sm']} colorScheme={'whatsapp'} leftIcon={<SiMicrosoftexcel />}>Excel</Button>

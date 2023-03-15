@@ -44,7 +44,7 @@ import { BsChevronDown } from 'react-icons/bs'
 import Layout from '../../layout';
 import jsPDF from 'jspdf';
 import "jspdf-autotable"
-import axios from '@/lib/utils/axios'
+import axios, { ClientAxios } from '@/lib/utils/axios'
 import CheckboxTree from 'react-checkbox-tree'
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import Script from 'next/script'
@@ -72,40 +72,40 @@ const Index = () => {
     const Toast = useToast({
         position: 'top-right'
     })
-    const { isOpen, onClose, onOpen } = useDisclosure()
+    const [userObjId, setUserObjId] = useState("")
     const [permissionsDrawer, setPermissionsDrawer] = useState(false)
 
     const [aepsPermissions, setAepsPermissions] = useState([])
     const [aepsExpansion, setAepsExpansion] = useState([])
     const aepsList = [{
-        value: "allaeps",
+        value: "allAeps",
         label: "All AePS Services",
         children: [
-            { value: 'aepsbasic', label: 'Basic Transactions' },
-            { value: 'aepspayout', label: 'AePS Payouts' },
-            { value: 'aepsreport', label: 'AePS Reports' },
+            { value: 'aepsBasic', label: 'Basic Transactions' },
+            { value: 'aepsPayout', label: 'AePS Payouts' },
+            { value: 'aepsReport', label: 'AePS Reports' },
         ]
     }]
 
     const [bbpsPermissions, setBbpsPermissions] = useState([])
     const [bbpsExpansion, setBbpsExpansion] = useState([])
     const bbpsList = [{
-        value: "allbbps",
+        value: "allBbps",
         label: "All BBPS Services",
         children: [
-            { value: 'bbpstransactions', label: 'BBPS Transactions' },
-            { value: 'bbpsreport', label: 'BBPS Reports' },
+            { value: 'bbps', label: 'BBPS Transactions' },
+            { value: 'bbpsReport', label: 'BBPS Reports' },
         ]
     }]
 
-    const [rechargePermissions, setRechargePermissions] = useState([])
-    const [rechargeExpansion, setRechargeExpansion] = useState([])
-    const rechargeList = [{
-        value: "allrecharge",
-        label: "All Recharge Services",
+    const [payoutPermissions, setPayoutPermissions] = useState([])
+    const [payoutExpansion, setPayoutExpansion] = useState([])
+    const payoutList = [{
+        value: "allPayout",
+        label: "All Payout Services",
         children: [
-            { value: 'rechargetransactions', label: 'Recharge Transactions' },
-            { value: 'rechargereport', label: 'Recharge Reports' },
+            { value: 'payout', label: 'Payout Transactions' },
+            { value: 'payoutReport', label: 'Payout Reports' },
         ]
     }]
 
@@ -115,8 +115,8 @@ const Index = () => {
         value: "alldmt",
         label: "All DMT Services",
         children: [
-            { value: 'dmttransactions', label: 'DMT Transactions' },
-            { value: 'dmtreport', label: 'DMT Reports' },
+            { value: 'dmt', label: 'DMT Transactions' },
+            { value: 'dmtReport', label: 'DMT Reports' },
         ]
     }]
 
@@ -158,9 +158,65 @@ const Index = () => {
         })
     }
 
+    // Fetch User Permissions
+    function fetchUserPermissions() {
+
+        ClientAxios.post('/api/user/fetch', {
+            user_id: `${selectedUser}`,
+        },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        ).then((res) => {
+            setUserObjId(res.data[0]._id)
+            setAepsPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("aeps")
+            }))
+            setBbpsPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("bbps")
+            }))
+            setDmtPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("dmt")
+            }))
+        }).catch((err) => {
+            console.log("No permissions found")
+            console.log(err.message)
+        })
+    }
+
+
+    useEffect(() => {
+        fetchUserPermissions()
+    }, [selectedUser])
+
     function openPermissionsDrawer(userId) {
         setSelectedUser(userId)
         setPermissionsDrawer(true)
+    }
+
+    function saveUserPermissions() {
+        ClientAxios.post('/api/user/update-permissions', {
+            allowed_pages: aepsPermissions.concat(bbpsPermissions, dmtPermissions, payoutPermissions),
+            user_id: selectedUser
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((res) => {
+            Toast({
+                status: 'success',
+                description: 'User permissions were updated!'
+            })
+            fetchUserPermissions()
+        }).catch((err)=>{
+            Toast({
+                status: 'error',
+                title: 'Error Occured',
+                description: err.message
+            })
+        })
     }
 
     return (
@@ -340,8 +396,7 @@ const Index = () => {
                                                                                                     p={2} w={'full'} fontSize={'sm'}
                                                                                                     cursor={'pointer'} _hover={{ bg: 'blue.50' }}
                                                                                                     onClick={() => {
-                                                                                                        setSelectedUser(user.id)
-                                                                                                        setPermissionsDrawer(true)
+                                                                                                        openPermissionsDrawer(user.id)
                                                                                                     }}
                                                                                                 >
                                                                                                     Permissions
@@ -542,11 +597,11 @@ const Index = () => {
                                     />
 
                                     <CheckboxTree
-                                        nodes={rechargeList}
-                                        checked={rechargePermissions}
-                                        onCheck={(checked) => setRechargePermissions(checked)}
-                                        expanded={rechargeExpansion}
-                                        onExpand={(expanded) => setRechargeExpansion(expanded)}
+                                        nodes={payoutList}
+                                        checked={payoutPermissions}
+                                        onCheck={(checked) => setPayoutPermissions(checked)}
+                                        expanded={payoutExpansion}
+                                        onExpand={(expanded) => setPayoutExpansion(expanded)}
                                     />
 
                                     <CheckboxTree
@@ -561,11 +616,14 @@ const Index = () => {
                         </DrawerBody>
 
                         <DrawerFooter>
-                            <Button variant='outline' mr={3} 
-                            onClick={() => setPermissionsDrawer(false)}>
+                            <Button variant='outline' mr={3}
+                                onClick={() => setPermissionsDrawer(false)}>
                                 Cancel
                             </Button>
-                            <Button colorScheme='blue'>Save</Button>
+                            <Button
+                                colorScheme='blue'
+                                onClick={saveUserPermissions}
+                            >Save</Button>
                         </DrawerFooter>
                     </DrawerContent>
                 </Drawer>
