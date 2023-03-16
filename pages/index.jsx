@@ -24,7 +24,7 @@ import {
 import { BsEyeSlash, BsEye } from 'react-icons/bs'
 import { useFormik } from "formik";
 import Link from "next/link";
-import axios from "@/lib/utils/axios";
+import axios from "axios";
 import Cookies from 'js-cookie'
 var bcrypt = require('bcryptjs')
 import { useRouter } from 'next/router'
@@ -56,11 +56,19 @@ const Index = () => {
   function sendOtp() {
     setOtpBeingSent(true)
     if (formik.values.user_id && formik.values.password) {
-      axios.post("/send-otp", {
+      axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/send-otp`, {
         authMethod: formik.values.authMethod,
         ...(authMethod === "email" && { "email": formik.values.user_id }),
         ...(authMethod === "phone" && { "phone": formik.values.user_id }),
         password: formik.values.password,
+      }, {
+        withCredentials: true,
+        headers: {
+          "X-XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
       }).then((res) => {
         if (res.status == 200) {
           Toast({
@@ -96,7 +104,7 @@ const Index = () => {
   async function handleLogin() {
     setIsLoading(true)
     try {
-      await axios.post("/login", JSON.stringify({
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, JSON.stringify({
         "authMethod": authMethod,
         ...(authMethod === "email" && { "email": formik.values.user_id }),
         ...(authMethod === "phone" && { "phone": formik.values.user_id }),
@@ -105,7 +113,15 @@ const Index = () => {
         "remember": 1,
         "latlong": Cookies.get("latlong"),
         "organization_code": process.env.NEXT_PUBLIC_ORGANISATION,
-      })).then((res) => {
+      }), {
+        withCredentials: true,
+        headers: {
+          "X-XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+      }).then((res) => {
         var hashedValue = bcrypt.hashSync(`${res.data.id + process.env.NEXT_PUBLIC_SALT + res.data.name}`, 2)
         Cookies.set("verified", hashedValue)
         localStorage.setItem("userId", res.data.id)
@@ -113,6 +129,8 @@ const Index = () => {
         localStorage.setItem("userName", res.data.name)
         Cookies.set("userName", res.data.name)
         localStorage.setItem("userType", res.data.role[0].name)
+
+        Cookies.set('access-token', res.data.token.original.access_token)
         if (res.data.profile_complete == 0) localStorage.setItem("isProfileComplete", false)
         if (res.data.profile_complete == 1) localStorage.setItem("isProfileComplete", true)
       })
@@ -133,15 +151,15 @@ const Index = () => {
 
 
   useEffect(() => {
-    axios.get("/sanctum/csrf-cookie").then(() => {
-      console.log("Connection established")
-    }).catch((err) => {
-      Toast({
-        status: 'error',
-        title: 'Server Error',
-        description: 'We are facing some issues, please try again later.'
-      })
-    })
+    // axios.get("/sanctum/csrf-cookie").then(() => {
+    //   console.log("Connection established")
+    // }).catch((err) => {
+    //   Toast({
+    //     status: 'error',
+    //     title: 'Server Error',
+    //     description: 'We are facing some issues, please try again later.'
+    //   })
+    // })
     getLocation()
   }, [])
 

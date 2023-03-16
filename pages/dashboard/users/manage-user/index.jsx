@@ -47,7 +47,7 @@ const ManageUser = () => {
 
     function fetchUsersList() {
         setAvailableUsers([])
-        axios.get(`/api/admin/users-list/${SearchFormik.values.selectedRole}`).then((res) => {
+        BackendAxios.get(`/api/admin/users-list/${SearchFormik.values.selectedRole}`).then((res) => {
             console.log(res.data)
             setAvailableUsers(res.data)
         }).catch((err) => {

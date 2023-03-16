@@ -44,7 +44,7 @@ import { BsChevronDown } from 'react-icons/bs'
 import Layout from '../../layout';
 import jsPDF from 'jspdf';
 import "jspdf-autotable"
-import axios, { ClientAxios } from '@/lib/utils/axios'
+import BackendAxios, { ClientAxios } from '@/lib/utils/axios'
 import CheckboxTree from 'react-checkbox-tree'
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import Script from 'next/script'
@@ -129,7 +129,7 @@ const Index = () => {
     // Fetching users
     function fetchUsersList() {
         setFetchedUsers([])
-        axios.get(`/api/admin/users-list/${selectedTab}`).then((res) => {
+        BackendAxios.get(`/api/admin/users-list/${selectedTab}`).then((res) => {
             console.log(res.data)
             setFetchedUsers(res.data)
         }).catch((err) => {
@@ -147,7 +147,7 @@ const Index = () => {
 
 
     function changeUserStatus(userId, updateTo) {
-        axios.get(`/api/admin/user/status/${userId}/${updateTo}`).then(() => {
+        BackendAxios.get(`/api/admin/user/status/${userId}/${updateTo}`).then(() => {
             fetchUsersList
         }).catch((err) => {
             console.log(err)

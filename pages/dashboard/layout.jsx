@@ -407,19 +407,19 @@ const Layout = (props) => {
   useEffect(() => {
     let authentic = bcrypt.compareSync(`${localStorage.getItem("userId") + process.env.NEXT_PUBLIC_SALT + localStorage.getItem("userName")}`, Cookies.get("verified"))
     if (authentic != true) {
-      axios.post("/logout").then(() => {
+      BackendAxios.post("/logout").then(() => {
         Cookies.remove("verified")
       })
       setTimeout(() => Router.push("/"), 2000)
     }
   }, [])
 
-  useEffect(() => {
-    axios.get("/sanctum/csrf-cookie")
-  }, [])
+  // useEffect(() => {
+  //   BackendAxios.get("/sanctum/csrf-cookie")
+  // }, [])
 
   async function logout() {
-    await axios.post("/logout").then(() => {
+    await BackendAxios.post("/logout").then(() => {
       Cookies.remove("verified")
     })
     setTimeout(() => Router.push("/"), 2000)
