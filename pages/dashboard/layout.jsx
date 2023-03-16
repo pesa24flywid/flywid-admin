@@ -46,7 +46,7 @@ import {
   HiUserGroup,
   HiDocumentReport,
 } from 'react-icons/hi'
-import axios from "@/lib/utils/axios";
+import BackendAxios from "@/lib/utils/axios";
 import Cookies from 'js-cookie'
 var bcrypt = require('bcryptjs')
 import { useRouter } from 'next/router'
