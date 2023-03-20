@@ -218,6 +218,11 @@ const menuOptions = [
         link: "/dashboard/controls/manage-banks?pageId=controls",
         status: true,
       },
+      {
+        title: "preferences",
+        link: "/dashboard/controls/preferences?pageId=controls",
+        status: true,
+      },
     ]
   },
   {
