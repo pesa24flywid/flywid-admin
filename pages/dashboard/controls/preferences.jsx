@@ -36,9 +36,30 @@ const Preferences = () => {
         })
     }, [])
 
+    function updateGlobalPreference(dataToUpdate) {
+        ClientAxios.post('/api/global', dataToUpdate, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            console.log(res.data)
+            Toast({
+                status: 'success',
+                title: "Global Preferences Updated",
+                description: "Changes have been saved"
+            })
+        }).catch((err) => {
+            Toast({
+                status: 'error',
+                title: 'Error while fetching global info',
+                description: err.message
+            })
+        })
+    }
 
     function changeDefaultRole(roleName) {
         setDefaultRole(roleName)
+        updateGlobalPreference({ default_role: roleName })
     }
 
     return (
@@ -69,7 +90,7 @@ const Preferences = () => {
                                     <Td>
                                         <Switch
                                             isChecked={defaultRole === "retailer"}
-                                            onChange={() => setDefaultRole("retailer")}
+                                            onChange={() => changeDefaultRole("retailer")}
                                         ></Switch>
                                     </Td>
                                 </Tr>
@@ -83,7 +104,7 @@ const Preferences = () => {
                                     <Td>
                                         <Switch
                                             isChecked={defaultRole === "distributor"}
-                                            onChange={() => setDefaultRole("distributor")}
+                                            onChange={() => changeDefaultRole("distributor")}
                                         ></Switch>
                                     </Td>
                                 </Tr>
@@ -97,7 +118,7 @@ const Preferences = () => {
                                     <Td>
                                         <Switch
                                             isChecked={defaultRole === "super_distributor"}
-                                            onChange={() => setDefaultRole("super_distributor")}
+                                            onChange={() => changeDefaultRole("super_distributor")}
                                         ></Switch>
                                     </Td>
                                 </Tr>
@@ -156,6 +177,41 @@ const Preferences = () => {
                         </HStack>
                     </Box>
                 </Stack>
+                <Box
+                    my={6}
+                >
+                    <Text>Manage Global Notifications</Text>
+                    {
+                        globalInfo.notifications != null ?
+                            globalInfo.notifications.map((notification, key) => {
+                                return (
+                                    <Box
+                                        p={4} bg={'white'}
+                                        rounded={12}
+                                        boxShadow={'lg'}
+                                        my={4} key={key}
+                                    >
+                                        <Text fontSize={'lg'} fontWeight={'semibold'}>
+                                            {notification.title}
+                                        </Text>
+                                        <Text>{notification.content}</Text>
+                                    </Box>
+                                )
+                            }) : (
+                                <Box
+                                    p={4} bg={'white'}
+                                    rounded={12}
+                                    boxShadow={'lg'}
+                                    my={4}
+                                >
+                                    <Text fontSize={'lg'} fontWeight={'semibold'}>
+                                        No notifications to show.
+                                    </Text>
+                                    <Text>Try adding one</Text>
+                                </Box>
+                            )
+                    }
+                </Box>
             </Layout>
         </>
     )
