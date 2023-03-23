@@ -46,7 +46,7 @@ import {
   HiUserGroup,
   HiDocumentReport,
 } from 'react-icons/hi'
-import BackendAxios from "@/lib/utils/axios";
+import BackendAxios, { ClientAxios } from "@/lib/utils/axios";
 import Cookies from 'js-cookie'
 var bcrypt = require('bcryptjs')
 import { useRouter } from 'next/router'
@@ -393,6 +393,8 @@ const Layout = (props) => {
   const [userName, setUserName] = useState("NA")
   const [userType, setUserType] = useState("NA")
 
+  const [permissions, setPermissions] = useState([])
+
   useEffect(() => {
     const activePage = typeof window !== 'undefined' ? document.getElementById(pageid) : document.getElementById("dashboard")
     if (activePage) {
@@ -405,6 +407,17 @@ const Layout = (props) => {
   useEffect(() => {
     setUserName(localStorage.getItem("userName"))
     setUserType(localStorage.getItem("userType"))
+
+    // Fetching all user Permissions
+    ClientAxios.post('/api/user/fetch', {
+      user_id: localStorage.getItem("userId")
+    }).then((res)=>{
+      setPermissions(res.data.permissions)
+      console.log(permissions)
+    }).catch((err)=>{
+      console.log("Could not feetch permissions")
+    })
+
   }, [])
 
 
