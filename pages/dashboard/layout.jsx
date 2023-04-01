@@ -85,6 +85,11 @@ const menuOptions = [
         link: "/dashboard/users/manage-user?pageid=users",
         status: true,
       },
+      {
+        title: "manage admin",
+        link: "/dashboard/users/create-admin?pageid=users",
+        status: true,
+      },
     ]
   },
   {
