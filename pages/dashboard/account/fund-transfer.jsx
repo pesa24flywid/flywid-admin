@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import Layout from '../layout'
+import React, { useState, useEffect } from 'react'
 import {
     Stack,
     Text,
@@ -24,29 +23,83 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
+    useToast
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import { AgGridReact } from 'ag-grid-react'
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import BackendAxios from '@/lib/utils/axios'
+import Layout from '../layout';
+import { useRouter } from 'next/router';
 
 const FundTransfer = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const Router = useRouter()
+    const { user_id } = Router.query
+    const Toast = useToast({
+        position: 'top-right'
+    })
+    const [fetchedUser, setFetchedUser] = useState({
+        user_name: "",
+        firm_name: "",
+        wallet: "",
+        phone: "",
+    })
     const TransferFormik = useFormik({
         initialValues: {
-            beneficiaryId: "",
+            beneficiaryId: user_id || "",
             amount: "",
-            beneficiaryWallet: "main",
-            scheduledDate: "",
-            transactionType: "",
+            transactionType: "transfer",
             remarks: "",
             mpin: "",
+        },
+        onSubmit: values => {
+            if (values.transactionType == "reversal" && !values.remarks) {
+                Toast({
+                    description: 'Remarks are mandatory'
+                })
+            }
+            else {
+                BackendAxios.post(`/api/admin/new-fund`, values).then(res => {
+                    Toast({
+                        status: 'success',
+                        description: 'Transaction successful!'
+                    })
+                }).catch(err => {
+                    Toast({
+                        status: 'error',
+                        description: err.message
+                    })
+                })
+            }
         }
     })
 
-    const verifyBeneficiary = () => {
+    const verifyBeneficiary = (queriedUserId) => {
         // Logic to verifiy beneficiary details
+        BackendAxios.post(`/api/admin/user/info/${queriedUserId || TransferFormik.values.beneficiaryId}`).then((res) => {
+            setFetchedUser({
+                ...fetchedUser,
+                user_name: res.data.data.first_name + " " + res.data.data.last_name,
+                firm_name: res.data.data.firm_name,
+                phone: res.data.data.phone_number,
+                wallet: res.data.data.wallet,
+
+            })
+        }).catch((err) => {
+            Toast({
+                status: 'error',
+                description: 'User not found!'
+            })
+            setFetchedUser({
+                user_name: "",
+                firm_name: "",
+                wallet: "",
+                phone: "",
+            })
+        })
     }
 
 
@@ -55,15 +108,32 @@ const FundTransfer = () => {
     ])
 
     const [columnDefs, setColumnDefs] = useState([
-        { field: "Trnxn ID" },
-        { field: "beneficiary name" },
-        { field: "beneficiary ID" },
-        { field: "phone" },
-        { field: "amount" },
-        { field: "transaction type" },
-        { field: "datetime" },
-        { field: "remarks" },
+        { headerName: "Trnxn ID", field: 'transaction_id' },
+        { headerName: "Beneficiary Name", field: 'name' },
+        { headerName: "Beneficiary ID", field: 'user_id' },
+        { headerName: "Phone", field: 'phone_number' },
+        { headerName: "Amount", field: 'amount' },
+        { headerName: "Transaction Type", field: 'transaction_type' },
+        { headerName: "Datetime", field: 'created_at' },
+        { headerName: "Remarks", field: 'remarks' },
     ])
+
+    useEffect(() => {
+        BackendAxios.get('/api/admin/fetch-admin-funds').then(res => {
+            setRowData(res.data.data.slice(0, 10))
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                description: 'Could not fetch transactions'
+            })
+        })
+    }, [])
+    useEffect(() => {
+        if(Router.isReady){
+            verifyBeneficiary(user_id)
+            TransferFormik.setFieldValue("beneficiaryId", user_id)
+        }
+    }, [Router.isReady])
 
     return (
         <>
@@ -92,6 +162,7 @@ const FundTransfer = () => {
                                     <InputGroup>
                                         <Input
                                             name={'beneficiaryId'}
+                                            value={TransferFormik.values.beneficiaryId}
                                             onChange={TransferFormik.handleChange}
                                             placeholder={'Enter Beneficiary User ID'}
                                         />
@@ -103,35 +174,35 @@ const FundTransfer = () => {
                                     </InputGroup>
                                 </FormControl>
                             </Stack>
-                            <Stack
-                                p={4} bg={'blue.50'}
-                                border={'1px'}
-                                borderColor={'blue.200'}
-                                rounded={16}
-                                direction={['column', 'row']}
-                                spacing={6} justifyContent={'space-between'}
-                            >
-                                <Box>
-                                    <Text fontWeight={'medium'}>Beneficiary Name</Text>
-                                    <Text>Sangam Kumar</Text>
-                                </Box>
-                                <Box>
-                                    <Text fontWeight={'medium'}>Firm Name</Text>
-                                    <Text>Dezynation</Text>
-                                </Box>
-                                <Box>
-                                    <Text fontWeight={'medium'}>Current Balance</Text>
-                                    <Text>₹ 5800</Text>
-                                </Box>
-                                <Box>
-                                    <Text fontWeight={'medium'}>Phone</Text>
-                                    <Text>7838074742</Text>
-                                </Box>
-                                <Box>
-                                    <Text fontWeight={'medium'}>Bank Name</Text>
-                                    <Text>Bank of Baroda</Text>
-                                </Box>
-                            </Stack>
+                            {
+                                fetchedUser.user_name ?
+                                    <Stack
+                                        p={4} bg={'blue.50'}
+                                        border={'1px'}
+                                        borderColor={'blue.200'}
+                                        rounded={16}
+                                        direction={['column', 'row']}
+                                        spacing={6} justifyContent={'space-between'}
+                                        textTransform={'capitalize'}
+                                    >
+                                        <Box>
+                                            <Text fontWeight={'medium'}>Beneficiary Name</Text>
+                                            <Text>{fetchedUser.user_name}</Text>
+                                        </Box>
+                                        <Box>
+                                            <Text fontWeight={'medium'}>Firm Name</Text>
+                                            <Text>{fetchedUser.firm_name}</Text>
+                                        </Box>
+                                        <Box>
+                                            <Text fontWeight={'medium'}>Current Balance</Text>
+                                            <Text>₹ {fetchedUser.wallet}</Text>
+                                        </Box>
+                                        <Box>
+                                            <Text fontWeight={'medium'}>Phone</Text>
+                                            <Text>{fetchedUser.phone}</Text>
+                                        </Box>
+                                    </Stack> : null
+                            }
                             <Stack
                                 direction={['column', 'row']}
                                 py={8} justifyContent={'space-between'}
@@ -160,14 +231,14 @@ const FundTransfer = () => {
                                         <option value="reversal">Reversal</option>
                                     </Select>
                                 </FormControl>
-                                <FormControl w={['full', 'xs']}>
+                                {/* <FormControl w={['full', 'xs']}>
                                     <FormLabel>Schedule Transaction</FormLabel>
                                     <Input
                                         type={'date'}
                                         name={'scheduledDate'}
                                         onChange={TransferFormik.handleChange}
                                     />
-                                </FormControl>
+                                </FormControl> */}
                             </Stack>
                             <FormControl py={6}>
                                 <FormLabel>Remarks (optional)</FormLabel>
@@ -181,7 +252,7 @@ const FundTransfer = () => {
                             <HStack justifyContent={'flex-end'}>
                                 <Button
                                     type='submit' onClick={onOpen}
-                                    colorScheme={'twitter'}>Enter MPIN</Button>
+                                    colorScheme={'twitter'}>Submit</Button>
                             </HStack>
                         </Box>
                     </Box>
@@ -189,7 +260,7 @@ const FundTransfer = () => {
 
 
                 <Box py={6}>
-                    <Text fontWeight={'medium'} pb={4}>Recent Transactions</Text>
+                    <Text fontWeight={'medium'} pb={4}>Recent Transfers</Text>
                     <Box className='ag-theme-alpine' w={'full'} h={['sm', 'xs']}>
                         <AgGridReact
                             columnDefs={columnDefs}
@@ -209,11 +280,12 @@ const FundTransfer = () => {
                         <ModalBody>
                             <VStack>
                                 <FormControl w={['full', 'xs']}>
-                                    <FormLabel>Enter Your MPIN</FormLabel>
+                                    <Text>You are making a transaction for {fetchedUser.user_name} of Rs. {TransferFormik.values.amount} </Text>
+                                    <FormLabel>Enter MPIN to confirm</FormLabel>
                                     <HStack spacing={4}>
                                         <PinInput
                                             name={'mpin'} otp
-                                            onChange={TransferFormik.handleChange}
+                                            onComplete={value => TransferFormik.setFieldValue('mpin', value)}
                                         >
                                             <PinInputField bg={'aqua'} />
                                             <PinInputField bg={'aqua'} />
@@ -231,6 +303,7 @@ const FundTransfer = () => {
                         </ModalFooter>
                     </ModalContent>
                 </Modal>
+
             </Layout>
         </>
     )

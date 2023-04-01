@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import Layout from '../layout'
+import Layout from '../../layout'
 import {
-    Stack,
-    Text,
-    VStack,
-    HStack,
-    Button,
     Box,
+    Text,
+    Button,
+    InputGroup,
+    InputRightAddon,
+    Input,
+    FormControl,
+    FormLabel,
+    useToast,
     VisuallyHidden,
-    useToast
+    HStack,
 } from '@chakra-ui/react'
-import { useFormik } from 'formik'
-import { SiMicrosoftexcel } from 'react-icons/si'
-import { FaFileCsv, FaFilePdf, FaPrint } from 'react-icons/fa'
+import BackendAxios from '@/lib/utils/axios';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from 'react-icons/bs';
-import BackendAxios from '@/lib/utils/axios'
-import jsPDF from 'jspdf'
-import 'jspdf-autotable'
+import { useRouter } from 'next/router';
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -28,41 +29,52 @@ const ExportPDF = () => {
     doc.output('dataurlnewwindow');
 }
 
-const FundRequests = () => {
-    const Toast = useToast({
-        position: 'top-right'
-    })
+
+
+const UserLedger = () => {
+    const [userId, setUserId] = useState("")
     const [rowData, setRowData] = useState([])
     const [columnDefs, setColumnDefs] = useState([
         {
-            field: "status",
-            headerName: "Status",
-            editable: true,
-            singleClickEdit: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: ['processing', 'processed', 'reversed', 'delete']
-            }
+            headerName: "Transaction ID",
+            field: "transaction_id"
         },
-        { headerName: "Request Timestamp", field: 'created_at' },
-        { headerName: "Trnxn ID", field: 'transaction_id' },
-        { headerName: "Amount", field: 'amount' },
-        { headerName: "Requested Bank", field: 'bank_name' },
-        { headerName: "Transaction Type", field: 'transaction_type' },
-        { headerName: "Transaction Receipt", field: 'receipt' },
-        { headerName: "User Name", field: 'name' },
-        { headerName: "User ID", field: 'beneficiary_id' },
-        { headerName: "Phone No.", field: 'phone_number' },
-        { headerName: "Updated By", field: 'user_id' },
-        { headerName: "Remarks", field: 'remarks' },
         {
-            headerName: "Admin Remarks",
-            field: 'admin_remarks',
-            editable: true,
-            singleClickEdit: true,
-            cellEditor: 'agTextCellEditor',
+            headerName: "Done By",
+            field: 'trigered_by'
         },
-        { headerName: "Update Timestamp", field: 'updated_at' },
+        {
+            headerName: "Beneficiary",
+            field: "name"
+        },
+        {
+            headerName: "Description",
+            field: "transaction_for"
+        },
+        {
+            headerName: "Type",
+            field: "service_type"
+        },
+        {
+            headerName: "Credit",
+            field: "credit_amount"
+        },
+        {
+            headerName: "Debit",
+            field: "debit_amount"
+        },
+        {
+            headerName: "Opening Balance",
+            field: "opening_balance"
+        },
+        {
+            headerName: "Closing Balance",
+            field: "closing_balance"
+        },
+        {
+            headerName: "Timestamp",
+            field: "created_at"
+        },
     ])
     const [printableRow, setPrintableRow] = useState(rowData)
     const [pagination, setPagination] = useState({
@@ -73,9 +85,11 @@ const FundRequests = () => {
         next_page_url: "",
         prev_page_url: "",
     })
+    const Router = useRouter()
+    const { user_id } = Router.query
 
-    function fetchRequests(pageLink) {
-        BackendAxios.get(pageLink || '/api/admin/fetch-fund-requests').then(res => {
+    function fetchLedger(pageLink) {
+        BackendAxios.get(pageLink || `/api/admin/transactions?page=1`).then((res) => {
             setPagination({
                 current_page: res.data.current_page,
                 total_pages: parseInt(res.data.last_page),
@@ -92,58 +106,64 @@ const FundRequests = () => {
     }
 
     useEffect(() => {
-        fetchRequests()
-    }, [])
-
-
-    function onCellValueChanged(params) {
-        if (params.data.status == "reversed" && !params.data.admin_rema) {
-            return Toast({
-                description: 'Please add your remarks also'
+        if (Router.isReady) {
+            BackendAxios.get(`/api/admin/transactions-user/${user_id}?page=1`).then((res) => {
+                setPagination({
+                    current_page: res.data.current_page,
+                    total_pages: parseInt(res.data.last_page),
+                    first_page_url: res.data.first_page_url,
+                    last_page_url: res.data.last_page_url,
+                    next_page_url: res.data.next_page_url,
+                    prev_page_url: res.data.prev_page_url,
+                })
+                setRowData(res.data.data)
+                setPrintableRow(res.data.data)
+                setUserId(user_id)
+            }).catch(err => {
+                console.log(err)
             })
         }
-        BackendAxios.post(`/api/admin/update-fund-requests`, params.data).then(res=>{
-            Toast({
-                status: 'success',
-                description: 'Request Updated'
-            })
-        }).catch(err=>{
-            Toast({
-                status: 'error',
-                description: 'Error while updating'
-            })
-            console.log(err)
-        })
-    }
+        else {
+            fetchLedger()
+        }
+    }, [Router.isReady])
 
     return (
         <>
-            <Layout pageTitle={'Fund Request'}>
-                <Text fontWeight={'semibold'} fontSize={'lg'}>Fund Requests From Your Members</Text>
+            <Layout pageTitle={'User Ledger'}>
+                <Box p={4}>
+                    <FormControl w={['full', 'xs']}>
+                        <FormLabel py={2}>Type User ID To Get His Ledger</FormLabel>
+                        <InputGroup>
+                            <Input
+                                name={'userId'} value={userId}
+                                onChange={(e) => setUserId(e.target.value)}
+                                placeholder={'Enter User ID'}
+                            />
+                            <InputRightAddon
+                                children={'Fetch'}
+                                cursor={'pointer'}
+                                onClick={() => fetchLedger()}
+                            />
+                        </InputGroup>
+                    </FormControl>
 
-                <Box py={6}>
-                    <Text fontWeight={'medium'} pb={4}>Search and manage fund requests</Text>
-                    <HStack spacing={4} my={4}>
-                        <Button size={['xs', 'sm']} colorScheme={'twitter'} leftIcon={<FaFileCsv />}>CSV</Button>
-                        <Button size={['xs', 'sm']} colorScheme={'whatsapp'} leftIcon={<SiMicrosoftexcel />}>Excel</Button>
-                        <Button size={['xs', 'sm']} colorScheme={'red'} leftIcon={<FaFilePdf />} onClick={ExportPDF}>PDF</Button>
-                        <Button size={['xs', 'sm']} colorScheme={'facebook'} leftIcon={<FaPrint />} onClick={ExportPDF}>Print</Button>
+                    <HStack mt={12} pb={4} justifyContent={'flex-end'}>
+                        <Button colorScheme={'red'} onClick={ExportPDF} size={'sm'}>Export PDF</Button>
                     </HStack>
-
-
                     <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
                         <Button
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={() => fetchRequests(pagination.first_page_url)}
+                            onClick={() => fetchLedger(pagination.first_page_url)}
                         ><BsChevronDoubleLeft />
                         </Button>
                         <Button
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={() => fetchRequests(pagination.prev_page_url)}
+                            onClick={() => fetchLedger(pagination.prev_page_url)}
                         ><BsChevronLeft />
                         </Button>
                         <Button
@@ -155,18 +175,18 @@ const FundRequests = () => {
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={() => fetchRequests(pagination.next_page_url)}
+                            onClick={() => fetchLedger(pagination.next_page_url)}
                         ><BsChevronRight />
                         </Button>
                         <Button
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={() => fetchRequests(pagination.last_page_url)}
+                            onClick={() => fetchLedger(pagination.last_page_url)}
                         ><BsChevronDoubleRight />
                         </Button>
                     </HStack>
-                    <Box className='ag-theme-alpine' w={'full'} h={['sm', 'xs']}>
+                    <Box className={'ag-theme-alpine'} h={'sm'}>
                         <AgGridReact
                             columnDefs={columnDefs}
                             rowData={rowData}
@@ -175,7 +195,6 @@ const FundRequests = () => {
                                 floatingFilter: true,
                                 resizable: true,
                             }}
-                            onCellValueChanged={onCellValueChanged}
                             onFilterChanged={
                                 (params) => {
                                     setPrintableRow(params.api.getRenderedNodes().map((item) => {
@@ -194,14 +213,14 @@ const FundRequests = () => {
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={() => fetchRequests(pagination.first_page_url)}
+                            onClick={() => fetchLedger(pagination.first_page_url)}
                         ><BsChevronDoubleLeft />
                         </Button>
                         <Button
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={() => fetchRequests(pagination.prev_page_url)}
+                            onClick={() => fetchLedger(pagination.prev_page_url)}
                         ><BsChevronLeft />
                         </Button>
                         <Button
@@ -213,18 +232,17 @@ const FundRequests = () => {
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={() => fetchRequests(pagination.next_page_url)}
+                            onClick={() => fetchLedger(pagination.next_page_url)}
                         ><BsChevronRight />
                         </Button>
                         <Button
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={() => fetchRequests(pagination.last_page_url)}
+                            onClick={() => fetchLedger(pagination.last_page_url)}
                         ><BsChevronDoubleRight />
                         </Button>
                     </HStack>
-
 
                     <VisuallyHidden>
                         <table id='printable-table'>
@@ -232,12 +250,16 @@ const FundRequests = () => {
                                 <tr>
                                     <th>#</th>
                                     {
-                                        columnDefs.map((column, key) => {
-                                            if (column.field != "receipt") {
+                                        columnDefs.filter((column) => {
+                                            if (column.headerName != "Description") {
                                                 return (
-                                                    <th key={key}>{column.headerName}</th>
+                                                    column
                                                 )
                                             }
+                                        }).map((column, key) => {
+                                            return (
+                                                <th key={key}>{column.headerName}</th>
+                                            )
                                         })
                                     }
                                 </tr>
@@ -248,18 +270,15 @@ const FundRequests = () => {
                                         return (
                                             <tr key={key}>
                                                 <td>{key + 1}</td>
-                                                <td>{data.status}</td>
-                                                <td>{data.created_at}</td>
                                                 <td>{data.transaction_id}</td>
-                                                <td>{data.amount}</td>
-                                                <td>{data.bank_name}</td>
-                                                <td>{data.transaction_type}</td>
+                                                <td>{data.trigered_by}</td>
                                                 <td>{data.name}</td>
-                                                <td>{data.beneficiary_id}</td>
-                                                <td>{data.phone_number}</td>
-                                                <td>{data.updated_at}</td>
-                                                <td>{data.user_id}</td>
-                                                <td>{data.remarks}</td>
+                                                <td>{data.service_type}</td>
+                                                <td>{data.credit_amount}</td>
+                                                <td>{data.debit_amount}</td>
+                                                <td>{data.opening_balance}</td>
+                                                <td>{data.closing_balance}</td>
+                                                <td>{data.created_at}</td>
                                             </tr>
                                         )
                                     })
@@ -269,9 +288,10 @@ const FundRequests = () => {
                     </VisuallyHidden>
 
                 </Box>
+
             </Layout>
         </>
     )
 }
 
-export default FundRequests
+export default UserLedger
