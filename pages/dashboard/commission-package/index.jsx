@@ -102,11 +102,11 @@ const CommissionSetup = () => {
             })
         })
     }
-    function fetchAllCommission(selectedPackageId){
-        BackendAxios.get(`api/admin/commissions/${selectedPackageId}`).then(res=>{
+    function fetchAllCommission(selectedPackageId, serviceName) {
+        BackendAxios.get(`api/admin/commissions/${serviceName}`).then(res => {
             setRowData(res.data)
             setModalStatus(true)
-        }).catch(err=>{
+        }).catch(err => {
             Toast({
                 status: "error",
                 description: "Error while fetching commission"
@@ -180,7 +180,7 @@ const CommissionSetup = () => {
 
 
 
-    function handleModal(keyword, packageId) {
+    function handleModal(packageId, keyword) {
         setSelectedPackage(packageId)
         const structure = CommissionStructure.find((item) => {
             if (item.id == keyword) {
@@ -191,7 +191,7 @@ const CommissionSetup = () => {
         if (structure) {
             setGridObject(structure)
             setColumnDefs(structure.columnDefs)
-            fetchAllCommission(packageId)
+            fetchAllCommission(packageId, keyword)
         }
     }
 
@@ -268,14 +268,14 @@ const CommissionSetup = () => {
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={()=>fetchAllPackages(pagination.first_page_url)}
+                            onClick={() => fetchAllPackages(pagination.first_page_url)}
                         ><BsChevronDoubleLeft />
                         </Button>
                         <Button
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={()=>fetchAllPackages(pagination.prev_page_url)}
+                            onClick={() => fetchAllPackages(pagination.prev_page_url)}
                         ><BsChevronLeft />
                         </Button>
                         <Button
@@ -287,14 +287,14 @@ const CommissionSetup = () => {
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={()=>fetchAllPackages(pagination.next_page_url)}
+                            onClick={() => fetchAllPackages(pagination.next_page_url)}
                         ><BsChevronRight />
                         </Button>
                         <Button
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
                             variant={'outline'}
-                            onClick={()=>fetchAllPackages(pagination.last_page_url)}
+                            onClick={() => fetchAllPackages(pagination.last_page_url)}
                         ><BsChevronDoubleRight />
                         </Button>
                     </HStack>
@@ -309,6 +309,8 @@ const CommissionSetup = () => {
                                     <Th>Default</Th>
                                     <Th>Status</Th>
                                     <Th>Payout</Th>
+                                    <Th>DMT</Th>
+                                    <Th>Recharge</Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
@@ -328,7 +330,27 @@ const CommissionSetup = () => {
                                                     <Button
                                                         size={'sm'}
                                                         colorScheme={'blue'}
-                                                        onClick={() => handleModal("4", item.id)}
+                                                        onClick={() => handleModal(item.id, "payout")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* DMT */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "dmt")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* Recharge */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "recharge")}
                                                     >
                                                         Set Commission
                                                     </Button>

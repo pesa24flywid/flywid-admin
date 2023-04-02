@@ -1772,7 +1772,7 @@ const CommissionStructure = [
         ]
     },
     {
-        id: "4",
+        id: "payout",
         title: "payout",
         columnDefs: [
             {
@@ -1842,7 +1842,7 @@ const CommissionStructure = [
         ]
     },
     {
-        id: "5",
+        id: "dmt",
         title: "dmt",
         columnDefs: [
             {
@@ -2282,6 +2282,74 @@ const CommissionStructure = [
                 headerName: "GST (in %)",
                 editable: true,
                 cellEditor: 'agTextCellEditor',
+            },
+        ],
+        rowData: [
+            {
+                serviceType: "Mini Statement",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
+                isFlat: "",
+                fixedCharge: "",
+                gst: ""
+            }
+        ]
+    },
+    {
+        id: "recharge",
+        title: "Recharge",
+        columnDefs: [
+            {
+                field: "fromValue",
+                headerName: "From Value",
+                editable: true,
+                cellEditor: 'agTextCellEditor',
+            },
+            {
+                field: "toValue",
+                headerName: "To Value",
+                editable: true,
+                cellEditor: 'agTextCellEditor',
+            },
+            {
+                field: "retailerCommission",
+                headerName: "Retailer Commission",
+                editable: true,
+                cellEditor: 'agTextCellEditor',
+            },
+            {
+                field: "distributorCommission",
+                headerName: "Distributor Commission",
+                editable: true,
+                cellEditor: 'agTextCellEditor',
+            },
+            {
+                field: "superDistributorCommission",
+                headerName: "Super Distributor Commission",
+                editable: true,
+                cellEditor: 'agTextCellEditor',
+            },
+            {
+                field: "isFlat",
+                headerName: "Is Flat",
+                cellRenderer: 'switchCellRender'
+            },
+            {
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
+            },
+            {
+                field: "gst",
+                headerName: "GST (in %)",
+                editable: true,
+                cellEditor: 'agTextCellEditor',
+            },
+            {
+                field: "actions",
+                headerName: "Actions",
+                cellRenderer: 'actionsCellRender'
             },
         ],
         rowData: [
