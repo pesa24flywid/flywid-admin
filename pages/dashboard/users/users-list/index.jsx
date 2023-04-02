@@ -126,7 +126,7 @@ const Index = () => {
         ]
     }]
 
-    const availableTabs = ['retailers']
+    const availableTabs = ['retailers', 'distributor']
     const [selectedTab, setSelectedTab] = useState("retailer")
     const [fetchedUsers, setFetchedUsers] = useState([])
     const [selectedUser, setSelectedUser] = useState("")
@@ -259,6 +259,14 @@ const Index = () => {
                             width={'xs'} flex={'unset'}
                         >
                             Retailer
+                        </Tab>
+                        <Tab
+                            fontSize={['xs', 'lg']}
+                            _selected={{ bg: 'twitter.500', color: 'white' }}
+                            onClick={() => setSelectedTab("distributor")}
+                            width={'xs'} flex={'unset'}
+                        >
+                            Distributor
                         </Tab>
                     </TabList>
                     <TabPanels pt={8}>
@@ -446,7 +454,7 @@ const Index = () => {
                                                                         <Box>
                                                                             <Text><b>Current Balance: </b>&nbsp;&nbsp; ₹ {user.wallet} </Text>
                                                                             <Text><b>Capping Balance: </b>&nbsp;&nbsp; ₹ {user.minimum_balance} </Text>
-                                                                            <Text textTransform={'capitalize'}>{"Package0"} Plan</Text>
+                                                                            <Text textTransform={'capitalize'}>{user.packages[0].name} Plan</Text>
                                                                             <Text>{user.company_name} {user.firm_type}</Text>
                                                                         </Box>
                                                                     </Td>

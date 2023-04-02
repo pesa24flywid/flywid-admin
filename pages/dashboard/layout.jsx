@@ -177,26 +177,11 @@ const menuOptions = [
     ]
   },
   {
-    type: "accordion",
+    type: "link",
+    id: "package",
     name: "commission package",
     icon: <FaPercentage />,
-    children: [
-      {
-        title: "create package",
-        link: "/dashboard/commission-package/create-package?pageid=commission",
-        status: true,
-      },
-      {
-        title: "commission setup",
-        link: "/dashboard/commission-package/commission-setup?pageid=commission",
-        status: true,
-      },
-      {
-        title: "view commission",
-        link: "/dashboard/commission-package/view-commission?pageid=commission",
-        status: true,
-      },
-    ]
+    link: "/dashboard/commission-package/?pageid=package",
   },
   {
     type: "accordion",
@@ -248,7 +233,7 @@ const menuOptions = [
       {
         title: "bbps",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "recharge",
@@ -258,32 +243,32 @@ const menuOptions = [
       {
         title: "matm",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "payout",
-        link: "/dashboard",
+        link: "/dashboard/reports/payout?pageid=reports",
         status: true,
       },
       {
         title: "cms",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "pg",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "qr code",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "virtual account",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "fund request",
@@ -298,36 +283,36 @@ const menuOptions = [
       {
         title: "wallet-wallet transfer",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "lic report",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "fastag",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "axis account open",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "transaction ledger",
-        link: "/dashboard",
+        link: "/dashboard/reports/transactions?pageid=reports",
         status: true,
       },
       {
         title: "daily sales",
-        link: "/dashboard",
+        link: "/dashboard/reports/transactions/daily?pageid=reports",
         status: true,
       },
       {
         title: "user ledger",
-        link: "/dashboard",
+        link: "/dashboard/reports/transactions/user-ledger?pageid=reports",
         status: true,
       },
       {
@@ -352,37 +337,37 @@ const menuOptions = [
       {
         title: "basic details",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "header",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "footer",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "email",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "sms",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "banner setup",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "notifications",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
     ]
   },
