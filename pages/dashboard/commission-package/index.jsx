@@ -34,8 +34,6 @@ import CommissionStructure from '@/lib/commission-structure/CommissionStructure'
 import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsTrash } from 'react-icons/bs'
 import { useFormik } from 'formik'
 import BackendAxios from '@/lib/utils/axios'
-import { Grid, _ } from "gridjs-react";
-import "gridjs/dist/theme/mermaid.css";
 
 
 const CommissionSetup = () => {
@@ -48,6 +46,7 @@ const CommissionSetup = () => {
     const [gridObject, setGridObject] = useState({})
     const [allPackages, setAllPackages] = useState([])
     const [selectedPackage, setSelectedPackage] = useState("")
+    const [selectedService, setSelectedService] = useState("")
     const [pagination, setPagination] = useState({
         current_page: "1",
         total_pages: "1",
@@ -115,8 +114,8 @@ const CommissionSetup = () => {
     }
 
     function onCellValueChange(params) {
-        if (params.data.from && params.data.to && params.data.commission) {
-            BackendAxios.post(`/api/admin/update-commission/`, { ...params.data, package_id: selectedPackage }).then(() => {
+        if (params.data.from && params.data.to) {
+            BackendAxios.post(`/api/admin/commissions/${selectedService}`, { ...params.data, package_id: selectedPackage }).then(() => {
                 Toast({
                     status: 'success',
                     description: `Commission Updated`
@@ -182,6 +181,7 @@ const CommissionSetup = () => {
 
     function handleModal(packageId, keyword) {
         setSelectedPackage(packageId)
+        setSelectedService(keyword)
         const structure = CommissionStructure.find((item) => {
             if (item.id == keyword) {
                 setModalTitle(item.title)
