@@ -1,12 +1,3 @@
-import React from "react"
-import {
-    HStack,
-    Button,
-    Switch,
-} from '@chakra-ui/react'
-import { BsPlus, BsTrash } from 'react-icons/bs'
-
-
 const CommissionStructure = [
     {
         id: "1",
@@ -39,8 +30,8 @@ const CommissionStructure = [
                 cellEditor: 'agTextCellEditor',
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
+                field: "fixedCharge",
+                headerName: "Is Charge",
                 editable: true,
                 cellEditor: "switchCellRenderer",
             },
@@ -64,7 +55,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -74,7 +65,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -84,7 +75,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -94,7 +85,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -104,7 +95,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -114,7 +105,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -124,7 +115,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -134,7 +125,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -144,7 +135,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -154,7 +145,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -164,7 +155,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -174,7 +165,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -184,7 +175,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -194,7 +185,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -204,7 +195,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -214,7 +205,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -224,7 +215,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -234,7 +225,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -244,7 +235,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -254,7 +245,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -264,7 +255,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -274,7 +265,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -284,7 +275,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -294,7 +285,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -304,7 +295,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -314,7 +305,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -324,7 +315,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -334,7 +325,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -344,7 +335,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -354,7 +345,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -364,7 +355,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -374,7 +365,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -384,7 +375,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -394,7 +385,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -404,7 +395,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -414,7 +405,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -424,7 +415,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -434,7 +425,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -444,7 +435,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -454,7 +445,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -464,7 +455,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -474,7 +465,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -484,7 +475,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -494,7 +485,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -504,7 +495,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -514,7 +505,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -524,7 +515,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -534,7 +525,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -544,7 +535,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -554,7 +545,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -564,7 +555,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -574,7 +565,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -584,7 +575,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -594,7 +585,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -604,7 +595,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -614,7 +605,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -624,7 +615,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -634,7 +625,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -644,7 +635,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -654,7 +645,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -664,7 +655,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -674,7 +665,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -684,7 +675,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -694,7 +685,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -704,7 +695,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -714,7 +705,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -724,7 +715,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -734,7 +725,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -744,7 +735,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -754,7 +745,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -764,7 +755,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -774,7 +765,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -784,7 +775,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -794,7 +785,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -804,7 +795,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -814,7 +805,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -824,7 +815,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -834,7 +825,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -844,7 +835,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -854,7 +845,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -864,7 +855,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -874,7 +865,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -884,7 +875,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -894,7 +885,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -904,7 +895,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -914,7 +905,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -924,7 +915,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -934,7 +925,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -944,7 +935,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -954,7 +945,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -964,7 +955,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -974,7 +965,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -984,7 +975,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -994,7 +985,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1004,7 +995,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1014,7 +1005,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1024,7 +1015,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1034,7 +1025,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1044,7 +1035,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1054,7 +1045,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1064,7 +1055,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1074,7 +1065,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1084,7 +1075,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1094,7 +1085,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1104,7 +1095,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1114,7 +1105,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1124,7 +1115,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1134,7 +1125,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1144,7 +1135,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1154,7 +1145,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1164,7 +1155,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1174,7 +1165,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1184,7 +1175,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1194,7 +1185,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1204,7 +1195,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1214,7 +1205,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1224,7 +1215,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1234,7 +1225,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1244,7 +1235,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1254,7 +1245,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1264,7 +1255,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1274,7 +1265,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1284,7 +1275,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1294,7 +1285,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1304,7 +1295,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1314,7 +1305,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1324,7 +1315,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1334,7 +1325,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1344,7 +1335,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1354,7 +1345,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1364,7 +1355,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1374,7 +1365,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1384,7 +1375,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1394,7 +1385,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1404,7 +1395,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1414,7 +1405,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1424,7 +1415,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1434,7 +1425,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1444,7 +1435,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1454,7 +1445,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1464,7 +1455,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1474,7 +1465,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1484,7 +1475,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1494,7 +1485,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1504,7 +1495,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1514,7 +1505,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1524,7 +1515,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1534,7 +1525,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1544,7 +1535,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1554,7 +1545,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1564,7 +1555,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1574,7 +1565,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1584,7 +1575,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1594,7 +1585,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1604,7 +1595,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1614,7 +1605,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1624,7 +1615,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1634,7 +1625,7 @@ const CommissionStructure = [
                 retailerCommission: "0",
                 distributorCommission: "0",
                 superDistributorCommission: "0",
-                isSurcharge: "No",
+                fixedCharge: "No",
                 isFlat: "No",
                 gst: ""
             },
@@ -1675,13 +1666,13 @@ const CommissionStructure = [
                 cellEditor: 'agTextCellEditor',
             },
             {
-                field: "isFlat",
-                headerName: "Is Flat",
-                cellRenderer: 'switchCellRender'
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
+                field: "isFlat",
+                headerName: "Is Flat",
                 cellRenderer: 'switchCellRender'
             },
             {
@@ -1700,9 +1691,11 @@ const CommissionStructure = [
             {
                 fromValue: "",
                 toValue: "",
-                commission: "",
-                isFlat: "No",
-                isSurcharge: "No",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
+                fixedCharge: "",
+                isFlat: "1",
                 gst: "",
                 actions: ""
             }
@@ -1743,13 +1736,13 @@ const CommissionStructure = [
                 cellEditor: 'agTextCellEditor',
             },
             {
-                field: "isFlat",
-                headerName: "Is Flat",
-                cellRenderer: 'switchCellRender'
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
+                field: "isFlat",
+                headerName: "Is Flat",
                 cellRenderer: 'switchCellRender'
             },
             {
@@ -1768,9 +1761,11 @@ const CommissionStructure = [
             {
                 fromValue: "",
                 toValue: "",
-                commission: "",
-                isFlat: "No",
-                isSurcharge: "No",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
+                fixedCharge: "",
+                isFlat: "1",
                 gst: "",
                 actions: ""
             }
@@ -1811,13 +1806,13 @@ const CommissionStructure = [
                 cellEditor: 'agTextCellEditor',
             },
             {
-                field: "isFlat",
-                headerName: "Is Flat",
-                cellRenderer: 'switchCellRender'
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
+                field: "isFlat",
+                headerName: "Is Flat",
                 cellRenderer: 'switchCellRender'
             },
             {
@@ -1836,9 +1831,11 @@ const CommissionStructure = [
             {
                 fromValue: "",
                 toValue: "",
-                commission: "",
-                isFlat: "No",
-                isSurcharge: "No",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
+                fixedCharge: "",
+                isFlat: "1",
                 gst: "",
                 actions: ""
             }
@@ -1848,10 +1845,6 @@ const CommissionStructure = [
         id: "5",
         title: "dmt",
         columnDefs: [
-            {
-                field: "serialNumber",
-                headerName: "#",
-            },
             {
                 field: "fromValue",
                 headerName: "From Value",
@@ -1883,6 +1876,11 @@ const CommissionStructure = [
                 cellEditor: 'agTextCellEditor',
             },
             {
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
+            },
+            {
                 field: "isFlat",
                 headerName: "Is Flat",
                 cellRenderer: 'switchCellRender'
@@ -1901,16 +1899,13 @@ const CommissionStructure = [
         ],
         rowData: [
             {
-                serialNumber: "1",
                 fromValue: "",
                 toValue: "",
-                retailerretailerCommission: "0",
-                distributorCommission: "0",
-                superDistributorCommission: "0",
-                // retailerSurcharge: "",
+                retailerCommission: "",
                 distributorCommission: "",
                 superDistributorCommission: "",
-                isFlat: "",
+                fixedCharge: "",
+                isFlat: "1",
                 gst: "",
                 actions: ""
             }
@@ -1951,13 +1946,13 @@ const CommissionStructure = [
                 cellEditor: 'agTextCellEditor',
             },
             {
-                field: "isFlat",
-                headerName: "Is Flat",
-                cellRenderer: 'switchCellRender'
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
+                field: "isFlat",
+                headerName: "Is Flat",
                 cellRenderer: 'switchCellRender'
             },
             {
@@ -1976,9 +1971,11 @@ const CommissionStructure = [
             {
                 fromValue: "",
                 toValue: "",
-                commission: "",
-                isFlat: "No",
-                isSurcharge: "No",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
+                fixedCharge: "",
+                isFlat: "1",
                 gst: "",
                 actions: ""
             }
@@ -2019,13 +2016,13 @@ const CommissionStructure = [
                 cellEditor: 'agTextCellEditor',
             },
             {
-                field: "isFlat",
-                headerName: "Is Flat",
-                cellRenderer: 'switchCellRender'
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
+                field: "isFlat",
+                headerName: "Is Flat",
                 cellRenderer: 'switchCellRender'
             },
             {
@@ -2044,9 +2041,11 @@ const CommissionStructure = [
             {
                 fromValue: "",
                 toValue: "",
-                commission: "",
-                isFlat: "No",
-                isSurcharge: "No",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
+                fixedCharge: "",
+                isFlat: "1",
                 gst: "",
                 actions: ""
             }
@@ -2083,13 +2082,13 @@ const CommissionStructure = [
                 cellEditor: 'agTextCellEditor',
             },
             {
-                field: "isFlat",
-                headerName: "Is Flat",
-                cellRenderer: 'switchCellRender'
+                field: "fixedCharge",
+                headerName: "Is Charge",
+                cellRenderer: 'agTextCellEditor'
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
+                field: "isFlat",
+                headerName: "Is Flat",
                 cellRenderer: 'switchCellRender'
             },
             {
@@ -2103,9 +2102,11 @@ const CommissionStructure = [
             {
                 billerId: "",
                 billerName: "",
-                commission: "",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
+                fixedCharge: "",
                 isFlat: "",
-                isSurcharge: "",
                 gst: ""
             }
         ]
@@ -2115,10 +2116,6 @@ const CommissionStructure = [
         title: "lic services",
         columnDefs: [
             {
-                field: "serial",
-                headerName: "#",
-            },
-            {
                 field: "serviceType",
                 headerName: "Service Type",
             },
@@ -2146,9 +2143,9 @@ const CommissionStructure = [
                 cellRenderer: 'switchCellRender'
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
-                cellRenderer: 'switchCellRender'
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
             },
             {
                 field: "gst",
@@ -2159,19 +2156,22 @@ const CommissionStructure = [
         ],
         rowData: [
             {
-                serial: "1",
                 serviceType: "Offline",
-                commission: "",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
                 isFlat: "",
-                isSurcharge: "",
+                fixedCharge: "",
                 gst: ""
             },
             {
                 serial: "2",
                 serviceType: "Online",
-                commission: "",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
                 isFlat: "",
-                isSurcharge: "",
+                fixedCharge: "",
                 gst: ""
             }
         ]
@@ -2181,10 +2181,6 @@ const CommissionStructure = [
         title: "pan services",
         columnDefs: [
             {
-                field: "serial",
-                headerName: "#",
-            },
-            {
                 field: "serviceType",
                 headerName: "Service Type",
             },
@@ -2212,9 +2208,9 @@ const CommissionStructure = [
                 cellRenderer: 'switchCellRender'
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
-                cellRenderer: 'switchCellRender'
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
             },
             {
                 field: "gst",
@@ -2225,19 +2221,22 @@ const CommissionStructure = [
         ],
         rowData: [
             {
-                serial: "1",
                 serviceType: "Physical",
-                commission: "",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
                 isFlat: "",
-                isSurcharge: "",
+                fixedCharge: "",
                 gst: ""
             },
             {
                 serial: "2",
                 serviceType: "Digital",
-                commission: "",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
                 isFlat: "",
-                isSurcharge: "",
+                fixedCharge: "",
                 gst: ""
             }
         ]
@@ -2247,10 +2246,6 @@ const CommissionStructure = [
         title: "AePS Mini Statement",
         columnDefs: [
             {
-                field: "serial",
-                headerName: "#",
-            },
-            {
                 field: "serviceType",
                 headerName: "Service Type",
             },
@@ -2278,9 +2273,9 @@ const CommissionStructure = [
                 cellRenderer: 'switchCellRender'
             },
             {
-                field: "isSurcharge",
-                headerName: "Is Surcharge",
-                cellRenderer: 'switchCellRender'
+                field: "fixedCharge",
+                headerName: "Fixed Charge",
+                cellRenderer: 'agTextCellEditor'
             },
             {
                 field: "gst",
@@ -2291,11 +2286,12 @@ const CommissionStructure = [
         ],
         rowData: [
             {
-                serial: "1",
                 serviceType: "Mini Statement",
-                commission: "",
+                retailerCommission: "",
+                distributorCommission: "",
+                superDistributorCommission: "",
                 isFlat: "",
-                isSurcharge: "",
+                fixedCharge: "",
                 gst: ""
             }
         ]
