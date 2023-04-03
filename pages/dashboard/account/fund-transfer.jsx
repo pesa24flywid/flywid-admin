@@ -129,7 +129,7 @@ const FundTransfer = () => {
         })
     }, [])
     useEffect(() => {
-        if(Router.isReady){
+        if(Router.isReady && user_id){
             verifyBeneficiary(user_id)
             TransferFormik.setFieldValue("beneficiaryId", user_id)
         }

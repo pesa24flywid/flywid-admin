@@ -21,6 +21,7 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
+  useToast,
 } from '@chakra-ui/react'
 import Head from 'next/head'
 import {
@@ -377,6 +378,7 @@ const menuOptions = [
 
 const Layout = (props) => {
   const Router = useRouter()
+  const Toast = useToast({ position: 'top-right' })
   const { pageid } = Router.query
   const { isOpen, onClose, onOpen } = useDisclosure()
 
@@ -401,10 +403,10 @@ const Layout = (props) => {
     // Fetching all user Permissions
     ClientAxios.post('/api/user/fetch', {
       user_id: localStorage.getItem("userId")
-    }).then((res)=>{
+    }).then((res) => {
       setPermissions(res.data.permissions)
       console.log(permissions)
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log("Could not feetch permissions")
     })
 
@@ -431,6 +433,20 @@ const Layout = (props) => {
       Cookies.remove("verified")
     })
     setTimeout(() => Router.push("/"), 2000)
+  }
+
+  function updateGlobal(data) {
+    ClientAxios.post('/api/global', data).then(res => {
+      Toast({
+        status: 'success',
+        title: 'Data updated'
+      })
+    }).catch(err => {
+      Toast({
+        status: 'error',
+        title: 'Error while updating'
+      })
+    })
   }
 
   return (
@@ -539,19 +555,19 @@ const Layout = (props) => {
             <HStack spacing={6}>
               <HStack spacing={2}>
                 <Text fontSize={'xs'}>AePS</Text>
-                <Switch id={'aepsStatus'} />
+                <Switch id={'aepsStatus'} onChange={(e) => updateGlobal({ aeps_status: e.target.checked })} />
               </HStack>
               <HStack spacing={2}>
                 <Text fontSize={'xs'}>DMT</Text>
-                <Switch id={'dmtStatus'} />
+                <Switch id={'dmtStatus'} onChange={(e) => updateGlobal({ dmt_status: e.target.checked })} />
               </HStack>
               <HStack spacing={2}>
                 <Text fontSize={'xs'}>BBPS</Text>
-                <Switch id={'bbpsStatus'} />
+                <Switch id={'bbpsStatus'} onChange={(e) => updateGlobal({ bbps_status: e.target.checked })} />
               </HStack>
               <HStack spacing={2}>
                 <Text fontSize={'xs'}>Recharge</Text>
-                <Switch id={'rechargeStatus'} />
+                <Switch id={'rechargeStatus'} onChange={(e) => updateGlobal({ recharge_status: e.target.checked })} />
               </HStack>
             </HStack>
           </Stack>
