@@ -37,7 +37,7 @@ const Index = () => {
             lastName: "",
             userEmail: "",
             userPhone: "",
-            alternativePhone: "",
+            alternatePhone: "",
             dob: null,
             gender: "",
             firmName: "",
@@ -110,7 +110,7 @@ const Index = () => {
     }
 
     useEffect(() => {
-        if (Router.isReady) {
+        if (Router.isReady && user_id) {
             searchUser(user_id)
             Formik.setFieldValue("userId", user_id)
         }

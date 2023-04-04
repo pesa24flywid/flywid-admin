@@ -18,8 +18,152 @@ import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import BackendAxios from '@/lib/utils/axios';
-import { BsTrash, BsUpload } from 'react-icons/bs';
+import { BsPlus, BsTrash, BsUpload } from 'react-icons/bs';
 import fileDownload from 'js-file-download';
+
+const ActionsCellRenderer = (params) => {
+    const Toast = useToast({
+        position: 'top-right'
+    })
+    function addAccount() {
+        BackendAxios.post('api/admin/paysprint/payout/add-account', {
+            id: params.data.id
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Account added!'
+            })
+        }).catch(err => {
+            console.log(err)
+            Toast({
+                status: 'error',
+                description: 'Error while adding account!'
+            })
+        })
+    }
+
+    function uploadDocuments() {
+        BackendAxios.post('api/admin/paysprint/payout/upload-documents', {
+            id: params.data.id
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Documents uploaded!'
+            })
+        }).catch(err => {
+            console.log(err)
+            Toast({
+                status: 'error',
+                description: 'Error while uploading!'
+            })
+        })
+    }
+
+    function verifyAccount(verificationStatus) {
+        BackendAxios.post(`api/admin/settlement-accounts`, {
+            id: params.data.id,
+            bank_status: verificationStatus,
+            is_verified: verificationStatus,
+            bank_account_remarks: params.data.bank_account_remarks
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Account updated!'
+            })
+        }).catch(err => {
+            console.log(err)
+            Toast({
+                status: 'error',
+                description: 'Error while updating!'
+            })
+        })
+    }
+
+    function resetAccount() {
+        BackendAxios.post(`api/admin/settlement-accounts`, {
+            id: params.data.id,
+            bank_status: 0,
+            is_verified: 0,
+            account_number: null,
+            bank_name: "",
+            bank_account_remarks: ""
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Account reset successful!'
+            })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                description: 'Error while resetting!'
+            })
+        })
+    }
+
+    function confirmReset() {
+        if (!params.data.bank_account_remarks) {
+            Toast({
+                description: 'Please add remarks first'
+            })
+            return
+        }
+        Toast({
+            duration: 3000,
+            position: 'top',
+            render: () => (
+                <Box bg={'blue.500'} p={2} w={'xs'}>
+                    <Text
+
+                        color={'white'}
+                        textAlign={'center'}
+                    >
+                        Reset This Account?
+                    </Text>
+                    <Text
+                        color={'white'}
+                        textAlign={'center'}
+                        fontSize={'xs'}
+                    >The user will have to add his account again to do settlements</Text>
+                    <HStack justifyContent={'space-between'} mt={4}>
+                        <Button bg={'transparent'} size={'sm'} color={'white'} onClick={resetAccount}>Yes Reset</Button>
+                    </HStack>
+                </Box>
+            )
+        })
+    }
+
+    return (
+        <HStack h={'full'} gap={4}>
+            <Switch
+                defaultChecked={params.value === 1}
+                onChange={() => {
+                    verifyAccount(params.data.is_verified == 1 ? 0 : 1)
+                }}
+            ></Switch>
+            <Button
+                size={'xs'}
+                rounded={'full'}
+                colorScheme={'yellow'}
+                onClick={addAccount}
+                fontSize={18}
+            ><BsPlus/></Button>
+            <Button
+                size={'xs'}
+                rounded={'full'}
+                colorScheme={'telegram'}
+                onClick={uploadDocuments}
+                fontSize={18}
+            ><BsUpload /></Button>
+            <Button
+                size={'xs'}
+                rounded={'full'}
+                colorScheme={'red'}
+                onClick={confirmReset}
+                fontSize={18}
+            ><BsTrash/></Button>
+        </HStack>
+    )
+}
 
 const SettlementAccounts = () => {
     const Toast = useToast({
@@ -62,125 +206,12 @@ const SettlementAccounts = () => {
             field: "is_verified",
             headerName: "Actions",
             cellRenderer: 'ActionsCellRenderer',
-            pinned: 'right'
+            pinned: 'right',
+            filter: false,
+            floatingFilter: false
         },
     ])
     const [rowData, setRowData] = useState([])
-
-    const ActionsCellRenderer = (params) => {
-        function uploadDocuments() {
-            BackendAxios.post('api/admin/paysprint/payout/upload/documents', {
-                id: params.data.id
-            }).then(res => {
-                Toast({
-                    status: 'success',
-                    description: 'Documents uploaded!'
-                })
-            }).catch(err => {
-                console.log(err)
-                Toast({
-                    status: 'error',
-                    description: 'Error while uploading!'
-                })
-            })
-        }
-
-        function verifyAccount(verificationStatus) {
-            BackendAxios.post(`api/admin/settlement-accounts`, {
-                id: params.data.id,
-                bank_status: verificationStatus,
-                is_verified: verificationStatus,
-                bank_account_remarks: params.data.bank_account_remarks
-            }).then(res => {
-                Toast({
-                    status: 'success',
-                    description: 'Account updated!'
-                })
-            }).catch(err => {
-                console.log(err)
-                Toast({
-                    status: 'error',
-                    description: 'Error while updating!'
-                })
-            })
-        }
-
-        function resetAccount() {
-            BackendAxios.post(`api/admin/settlement-accounts`, {
-                id: params.data.id,
-                bank_status: 0,
-                is_verified: 0,
-                account_number: null,
-                bank_name: "",
-                bank_account_remarks: ""
-            }).then(res => {
-                Toast({
-                    status: 'success',
-                    description: 'Account reset successful!'
-                })
-            }).catch(err => {
-                Toast({
-                    status: 'error',
-                    description: 'Error while resetting!'
-                })
-            })
-        }
-
-        function confirmReset() {
-            if (!params.data.bank_account_remarks) {
-                Toast({
-                    description: 'Please add remarks first'
-                })
-                return
-            }
-            Toast({
-                duration: 3000,
-                position: 'top',
-                render: () => (
-                    <Box bg={'blue.500'} p={2} w={'xs'}>
-                        <Text
-
-                            color={'white'}
-                            textAlign={'center'}
-                        >
-                            Reset This Account?
-                        </Text>
-                        <Text
-                            color={'white'}
-                            textAlign={'center'}
-                            fontSize={'xs'}
-                        >The user will have to add his account again to do settlements</Text>
-                        <HStack justifyContent={'space-between'} mt={4}>
-                            <Button bg={'transparent'} size={'sm'} color={'white'} onClick={resetAccount}>Yes Reset</Button>
-                        </HStack>
-                    </Box>
-                )
-            })
-        }
-
-        return (
-            <HStack h={'full'} gap={4}>
-                <Switch
-                    defaultChecked={params.value === 1}
-                    onChange={() => {
-                        verifyAccount(params.data.is_verified == 1 ? 0 : 1)
-                    }}
-                ></Switch>
-                <Button
-                    size={'xs'}
-                    rounded={'full'}
-                    colorScheme={'telegram'}
-                    onClick={uploadDocuments}
-                ><BsUpload /></Button>
-                <Button
-                    size={'xs'}
-                    rounded={'full'}
-                    colorScheme={'red'}
-                    onClick={confirmReset}
-                ><BsTrash /></Button>
-            </HStack>
-        )
-    }
 
     const ImageBtnRenderer = (params) => {
         function downloadFile() {

@@ -41,7 +41,7 @@ const Index = () => {
             userPlan: "",
             hasParent: "0",
             parent: "",
-            alternativePhone: "",
+            alternatePhone: "",
             dob: null,
             gender: "",
             firmName: "",
