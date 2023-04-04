@@ -141,7 +141,7 @@ const menuOptions = [
       {
         title: "axis bank account",
         link: "/dashboard/users/users-list?pageid=users",
-        status: true,
+        status: false,
       },
     ]
   },
@@ -168,12 +168,12 @@ const menuOptions = [
       {
         title: "wallet balance",
         link: "/dashboard/account/wallet-balance?pageid=account",
-        status: true,
+        status: false,
       },
       {
         title: "wallet transactions",
         link: "/dashboard/account/wallet-transactions?pageid=account",
-        status: true,
+        status: false,
       },
       {
         title: "add bank",
@@ -197,17 +197,17 @@ const menuOptions = [
       {
         title: "add operator type",
         link: "/dashboard/controls/add-operator-category?pageId=controls",
-        status: true,
+        status: false,
       },
       {
         title: "add new operator",
         link: "/dashboard/controls/add-operator?pageId=controls",
-        status: true,
+        status: false,
       },
       {
         title: "add cms biller",
         link: "/dashboard/controls/add-cms-biller?pageId=controls",
-        status: true,
+        status: false,
       },
       {
         title: "manage banks",
@@ -234,7 +234,7 @@ const menuOptions = [
       {
         title: "aeps",
         link: "/dashboard",
-        status: true,
+        status: false,
       },
       {
         title: "bbps",
@@ -287,7 +287,7 @@ const menuOptions = [
         status: true,
       },
       {
-        title: "wallet-wallet transfer",
+        title: "wallet transfer",
         link: "/dashboard",
         status: false,
       },

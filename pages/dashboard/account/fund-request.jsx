@@ -101,8 +101,8 @@ const FundRequests = () => {
             BackendAxios.post(`/api/admin/update-fund-requests`, {
                 id: params.data.id,
                 status: "reversed",
-                remarks: params.data.remarks,
-                amount: params.data.amount
+                amount: params.data.amount,
+                remarks: params.data.admin_remarks
             }).then(res => {
                 Toast({
                     status: 'success',
@@ -136,6 +136,30 @@ const FundRequests = () => {
                         status: 'error',
                         description: err.message
                     })
+                })
+            }
+            if (updateTo == "reversed" && params.data.admin_remarks) {
+                BackendAxios.post(`/api/admin/update-fund-requests`, {
+                    id: params.data.id,
+                    status: updateTo,
+                    amount: params.data.amount,
+                    remarks: params.data.admin_remarks
+                }).then(res => {
+                    Toast({
+                        status: 'success',
+                        description: 'Status Updated'
+                    })
+                    fetchRequests()
+                }).catch(err => {
+                    Toast({
+                        status: 'error',
+                        description: err.message
+                    })
+                })
+            }
+            if(updateTo == "reversed" && !params.data.admin_remarks){
+                Toast({
+                    description: 'Please add remarks also'
                 })
             }
         }
