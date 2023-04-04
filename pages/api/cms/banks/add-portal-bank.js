@@ -34,7 +34,7 @@ const AllCmsBanks = async (req, res) => {
                 "account": account,
                 "ifsc": ifsc
             }
-            let result = await CMSBank.findOneAndUpdate(filter, update)
+            let result = await CMSBank.findOneAndUpdate(filter, req.body)
             if (!result) res.status(500).send("Couldn't add record")
             if (result) res.status(200).send("Banks updated succesfully!")
         }

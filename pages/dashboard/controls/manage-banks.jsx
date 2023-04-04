@@ -17,6 +17,7 @@ import {
     Button,
     FormControl,
     FormLabel,
+    Switch
 } from '@chakra-ui/react'
 import { BsFillPlusCircleFill } from 'react-icons/bs'
 import axios from 'axios'
@@ -120,6 +121,31 @@ const ManageBanks = () => {
         })
     }
 
+    function updateBank(values) {
+        setIsPortalBtnLoading(true)
+        axios.post('/api/cms/banks/add-portal-bank', values, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((res) => {
+            Toast({
+                status: 'success',
+                description: 'Bank list was updated!'
+            })
+            setIsPortalBtnLoading(false)
+            setPortalBankModal({
+                status: false
+            })
+        }).catch((err) => {
+            Toast({
+                status: 'error',
+                description: 'Bank list could not be updated'
+            })
+            console.log(err)
+            setIsPortalBtnLoading(false)
+        })
+    }
+
     const PortalFormik = useFormik({
         initialValues: {
             id: portalBankModal.id,
@@ -129,32 +155,8 @@ const ManageBanks = () => {
             ifsc: portalBankModal.ifsc,
             intent: portalBankModal.intent,
         },
-        onSubmit: async (values) => {
-            setIsPortalBtnLoading(true)
-            await axios.post('/api/cms/banks/add-portal-bank', {
-                id: values.id,
-                personal_identifier: values.personal_identifier,
-                bank_name: values.bank_name,
-                account: values.account,
-                ifsc: values.ifsc,
-                intent: values.intent,
-            }).then((res) => {
-                Toast({
-                    status: 'success',
-                    description: 'Bank list was updated!'
-                })
-                setIsPortalBtnLoading(false)
-                setPortalBankModal({
-                    status: false
-                })
-            }).catch((err) => {
-                Toast({
-                    status: 'error',
-                    description: 'Bank list could not be updated'
-                })
-                console.log(err)
-                setIsPortalBtnLoading(false)
-            })
+        onSubmit: (values) => {
+            updateBank(values)
         }
     })
 
@@ -190,34 +192,51 @@ const ManageBanks = () => {
                     {
                         portalBanks.map((bank, key) => {
                             return (
-                                <Box
-                                    p={4} rounded={8}
-                                    bg={'white'} w={'56'}
-                                    boxShadow={'lg'}
-                                    cursor={'pointer'}
-                                    key={key} gap={1}
-                                    display={'flex'} my={2}
-                                    flexDirection={'column'}
-                                    alignItems={'flex-start'}
-                                    justifyContent={'flex-start'}
-                                    onClick={() => portalBankHandler(bank._id, "update")}
-                                >
-                                    <HStack spacing={2} fontSize={'xs'}>
-                                        <Text fontWeight={'semibold'} color={'twitter.700'}>{bank.personal_identifier}</Text>
-                                    </HStack>
-                                    <HStack spacing={2} fontSize={'xs'}>
-                                        <Text fontWeight={'semibold'}>Name:</Text>
-                                        <Text>{bank.bank_name}</Text>
-                                    </HStack>
-                                    <HStack spacing={2} fontSize={'xs'}>
-                                        <Text fontWeight={'semibold'}>Account:</Text>
-                                        <Text>{bank.account}</Text>
-                                    </HStack>
-                                    <HStack spacing={2} fontSize={'xs'}>
-                                        <Text fontWeight={'semibold'}>Bank IFSC:</Text>
-                                        <Text>{bank.ifsc}</Text>
-                                    </HStack>
-                                </Box>
+                                <>
+                                    <Box
+                                        p={4} rounded={8}
+                                        bg={'white'} w={'56'}
+                                        boxShadow={'lg'}
+                                        cursor={'pointer'}
+                                    >
+                                        <Box
+                                            key={key} gap={1}
+                                            display={'flex'} my={2}
+                                            flexDirection={'column'}
+                                            alignItems={'flex-start'}
+                                            justifyContent={'flex-start'}
+                                            onClick={() => portalBankHandler(bank._id, "update")}
+                                        >
+                                            <HStack spacing={2} fontSize={'xs'}>
+                                                <Text fontWeight={'semibold'} color={'twitter.700'}>{bank.personal_identifier}</Text>
+                                            </HStack>
+                                            <HStack spacing={2} fontSize={'xs'}>
+                                                <Text fontWeight={'semibold'}>Name:</Text>
+                                                <Text>{bank.bank_name}</Text>
+                                            </HStack>
+                                            <HStack spacing={2} fontSize={'xs'}>
+                                                <Text fontWeight={'semibold'}>Account:</Text>
+                                                <Text>{bank.account}</Text>
+                                            </HStack>
+                                            <HStack spacing={2} fontSize={'xs'}>
+                                                <Text fontWeight={'semibold'}>Bank IFSC:</Text>
+                                                <Text>{bank.ifsc}</Text>
+                                            </HStack>
+                                        </Box>
+                                        <HStack justifyContent={'flex-end'}>
+                                            <Switch
+                                                size={'sm'}
+                                                isChecked={bank.status}
+                                                onChange={(e) => {
+                                                    updateBank({
+                                                        id: bank._id,
+                                                        status: e.target.checked,
+                                                        intent: "update"
+                                                    })
+                                                }}></Switch>
+                                        </HStack>
+                                    </Box>
+                                </>
                             )
                         })
                     }
