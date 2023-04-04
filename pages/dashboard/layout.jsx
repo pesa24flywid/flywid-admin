@@ -91,6 +91,11 @@ const menuOptions = [
         link: "/dashboard/users/create-admin?pageid=users",
         status: true,
       },
+      {
+        title: "settlement account",
+        link: "/dashboard/users/settlement-accounts?pageid=users",
+        status: true,
+      },
     ]
   },
   {

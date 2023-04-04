@@ -16,7 +16,7 @@ import { FaFileCsv, FaFilePdf, FaPrint } from 'react-icons/fa'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { BsCheck, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsX } from 'react-icons/bs';
 import BackendAxios from '@/lib/utils/axios'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
@@ -38,11 +38,7 @@ const FundRequests = () => {
             field: "status",
             headerName: "Status",
             editable: true,
-            singleClickEdit: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: ['processing', 'processed', 'reversed', 'delete']
-            }
+            cellRenderer: 'statusCellRenderer'
         },
         { headerName: "Request Timestamp", field: 'created_at' },
         { headerName: "Trnxn ID", field: 'transaction_id' },
@@ -50,9 +46,8 @@ const FundRequests = () => {
         { headerName: "Requested Bank", field: 'bank_name' },
         { headerName: "Transaction Type", field: 'transaction_type' },
         { headerName: "Transaction Receipt", field: 'receipt' },
-        { headerName: "User Name", field: 'name' },
-        { headerName: "User ID", field: 'beneficiary_id' },
-        { headerName: "Phone No.", field: 'phone_number' },
+        { headerName: "User Name", field: 'name', cellRenderer: 'userCellRenderer' },
+        { headerName: "User Phone", field: 'phone_number' },
         { headerName: "Updated By", field: 'user_id' },
         { headerName: "Remarks", field: 'remarks' },
         {
@@ -97,23 +92,81 @@ const FundRequests = () => {
 
 
     function onCellValueChanged(params) {
-        if (params.data.status == "reversed" && !params.data.admin_rema) {
+        if (params.data.status == "reversed" && !params.data.admin_remarks) {
             return Toast({
                 description: 'Please add your remarks also'
             })
         }
-        BackendAxios.post(`/api/admin/update-fund-requests`, params.data).then(res=>{
-            Toast({
-                status: 'success',
-                description: 'Request Updated'
+        if (params.data.status == "reversed" && params.data.admin_remarks) {
+            BackendAxios.post(`/api/admin/update-fund-requests`, {
+                id: params.data.id,
+                status: "reversed",
+                remarks: params.data.remarks,
+                amount: params.data.amount
+            }).then(res => {
+                Toast({
+                    status: 'success',
+                    description: 'Request Updated'
+                })
+            }).catch(err => {
+                Toast({
+                    status: 'error',
+                    description: 'Error while updating'
+                })
+                console.log(err)
             })
-        }).catch(err=>{
-            Toast({
-                status: 'error',
-                description: 'Error while updating'
-            })
-            console.log(err)
-        })
+        }
+    }
+
+    const statusCellRenderer = (params) => {
+        function updateFundRequest(updateTo) {
+            if (updateTo == "approved") {
+                BackendAxios.post(`/api/admin/update-fund-requests`, {
+                    id: params.data.id,
+                    status: updateTo,
+                    amount: params.data.amount
+                }).then(res => {
+                    Toast({
+                        status: 'success',
+                        description: 'Status Updated'
+                    })
+                    fetchRequests()
+                }).catch(err => {
+                    Toast({
+                        status: 'error',
+                        description: err.message
+                    })
+                })
+            }
+        }
+
+        return (
+            <>
+                <HStack h={'full'}>
+                    {params.data.status == "pending" &&
+                        <Button size={'xs'} leftIcon={<BsCheck />} colorScheme='whatsapp' onClick={() => updateFundRequest("approved")}>Approve</Button>
+                    }
+                    {params.data.status != "pending" &&
+                        <Button
+                            size={'xs'}
+                            colorScheme={params.data.status == "approved" ? 'whatsapp' : 'red'}
+                            textTransform={'capitalize'}>{params.data.status}</Button>
+                    }
+                    {
+                        params.data.status == "pending" &&
+                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='red'>Reject</Button>
+                    }
+                </HStack>
+            </>
+        )
+    }
+
+    const userCellRenderer = (params) => {
+        return (
+            <>
+                <Text>{params.data.name} {params.data.user_id}</Text>
+            </>
+        )
     }
 
     return (
@@ -175,7 +228,6 @@ const FundRequests = () => {
                                 floatingFilter: true,
                                 resizable: true,
                             }}
-                            onCellValueChanged={onCellValueChanged}
                             onFilterChanged={
                                 (params) => {
                                     setPrintableRow(params.api.getRenderedNodes().map((item) => {
@@ -185,6 +237,10 @@ const FundRequests = () => {
                                     }))
                                 }
                             }
+                            components={{
+                                'statusCellRenderer': statusCellRenderer,
+                                'userCellRenderer': userCellRenderer
+                            }}
                         >
 
                         </AgGridReact>

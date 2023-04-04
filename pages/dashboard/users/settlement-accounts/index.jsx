@@ -18,31 +18,31 @@ const SettlementAccounts = () => {
     const [columnDefs, setColumnDefs] = useState([
 
         {
-            field: userId,
+            field: "userId",
             headerName: "User ID"
         },
         {
-            field: userName,
+            field: "userName",
             headerName: "User Name"
         },
         {
-            field: accountNumber,
+            field: "accountNumber",
             headerName: "Account Number"
         },
         {
-            field: bankName,
+            field: "bankName",
             headerName: "Bank Name"
         },
         {
-            field: ifsc,
-            field: headerName
+            field: "ifsc",
+            headerName: "ifsc"
         },
         {
             passbook: null,
             headerName: "Passbook"
         },
         {
-            field: status,
+            field: "status",
             headerName: "Status"
         },
     ])
@@ -66,17 +66,20 @@ const SettlementAccounts = () => {
     return (
         <>
             <Layout pageTitle={'Settlement Accounts'}>
-                <Text>Settlement Accounts Users</Text>
+                <Text>Users' Settlement Accounts</Text>
 
                 <Box
-                    h={'sm'}
+                    h={'lg'} my={16}
                     className='ag-theme-alpine'
                 >
                     <AgGridReact
                         rowData={rowData}
                         columnDefs={columnDefs}
                         defaultColDef={{
-
+                            filter: true,
+                            floatingFilter: true,
+                            resizable: true,
+                            sortable: true,
                         }}
                         components={{
                             'switchCellRender': SwitchCellRender,
