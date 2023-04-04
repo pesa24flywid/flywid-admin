@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useLayoutEffect } from 'react'
 import {
   HStack,
   VStack,
@@ -381,11 +381,23 @@ const Layout = (props) => {
   const Toast = useToast({ position: 'top-right' })
   const { pageid } = Router.query
   const { isOpen, onClose, onOpen } = useDisclosure()
-
+  const [aepsStatus, setAepsStatus] = useState(true)
+  const [bbpsStatus, setBbpsStatus] = useState(true)
+  const [dmtStatus, setDmtStatus] = useState(true)
+  const [rechargeStatus, setRechargeStatus] = useState(true)
   const [userName, setUserName] = useState("NA")
   const [userType, setUserType] = useState("NA")
 
-  const [permissions, setPermissions] = useState([])
+  function fetchServiceStatus(){
+    ClientAxios.get("/api/global").then(res => {
+      setAepsStatus(res.data.aeps_status)
+      setBbpsStatus(res.data.bbps_status)
+      setDmtStatus(res.data.dmt_status)
+      setRechargeStatus(res.data.recharge_status)
+    }).catch(err => {
+      console.log(err.message)
+    })
+  }
 
   useEffect(() => {
     const activePage = typeof window !== 'undefined' ? document.getElementById(pageid) : document.getElementById("dashboard")
@@ -399,19 +411,8 @@ const Layout = (props) => {
   useEffect(() => {
     setUserName(localStorage.getItem("userName"))
     setUserType(localStorage.getItem("userType"))
-
-    // Fetching all user Permissions
-    ClientAxios.post('/api/user/fetch', {
-      user_id: localStorage.getItem("userId")
-    }).then((res) => {
-      setPermissions(res.data.permissions)
-      console.log(permissions)
-    }).catch((err) => {
-      console.log("Could not feetch permissions")
-    })
-
+    fetchServiceStatus()
   }, [])
-
 
 
   useEffect(() => {
@@ -424,9 +425,6 @@ const Layout = (props) => {
     }
   }, [])
 
-  // useEffect(() => {
-  //   BackendAxios.get("/sanctum/csrf-cookie")
-  // }, [])
 
   async function logout() {
     await BackendAxios.post("/logout").then(() => {
@@ -436,8 +434,14 @@ const Layout = (props) => {
   }
 
   function updateGlobal(data) {
-    ClientAxios.post('/api/global', data).then(res => {
+    ClientAxios.post('/api/global', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      fetchServiceStatus()
       Toast({
+        position: 'top',
         status: 'success',
         title: 'Data updated'
       })
@@ -555,19 +559,27 @@ const Layout = (props) => {
             <HStack spacing={6}>
               <HStack spacing={2}>
                 <Text fontSize={'xs'}>AePS</Text>
-                <Switch id={'aepsStatus'} onChange={(e) => updateGlobal({ aeps_status: e.target.checked })} />
+                <Switch
+                  id={'aepsStatus'} isChecked={aepsStatus}
+                  onChange={(e) => updateGlobal({ aeps_status: e.target.checked })} />
               </HStack>
               <HStack spacing={2}>
                 <Text fontSize={'xs'}>DMT</Text>
-                <Switch id={'dmtStatus'} onChange={(e) => updateGlobal({ dmt_status: e.target.checked })} />
+                <Switch
+                  id={'dmtStatus'} isChecked={dmtStatus}
+                  onChange={(e) => updateGlobal({ dmt_status: e.target.checked })} />
               </HStack>
               <HStack spacing={2}>
                 <Text fontSize={'xs'}>BBPS</Text>
-                <Switch id={'bbpsStatus'} onChange={(e) => updateGlobal({ bbps_status: e.target.checked })} />
+                <Switch
+                  id={'bbpsStatus'} isChecked={bbpsStatus}
+                  onChange={(e) => updateGlobal({ bbps_status: e.target.checked })} />
               </HStack>
               <HStack spacing={2}>
                 <Text fontSize={'xs'}>Recharge</Text>
-                <Switch id={'rechargeStatus'} onChange={(e) => updateGlobal({ recharge_status: e.target.checked })} />
+                <Switch
+                  id={'rechargeStatus'} isChecked={rechargeStatus}
+                  onChange={(e) => updateGlobal({ recharge_status: e.target.checked })} />
               </HStack>
             </HStack>
           </Stack>

@@ -10,7 +10,7 @@ export default async function GlobalDetails(req, res) {
     }
 
     if (req.method == "POST") {
-        const result = await Global.findOneAndUpdate({organisation_code: "PESA24"}, req.body)
+        const result = await Global.findOneAndUpdate({organisation_code: "PESA24"}, req.body).exec()
         if (!result) return res.status(500).json({ message: "Error while updating" })
         return res.status(200).json(result)
     }

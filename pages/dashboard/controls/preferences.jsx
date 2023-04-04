@@ -22,7 +22,8 @@ const Preferences = () => {
     const Toast = useToast({
         position: 'top-right'
     })
-    useEffect(() => {
+
+    function fetchGlobalInfo() {
         ClientAxios.get('/api/global').then((res) => {
             setGlobalInfo(res.data)
             setDefaultRole(res.data.default_role)
@@ -34,11 +35,31 @@ const Preferences = () => {
                 description: err.message
             })
         })
+    }
+
+    useEffect(() => {
+        fetchGlobalInfo()
     }, [])
 
 
-    function changeDefaultRole(roleName) {
-        setDefaultRole(roleName)
+    function updateGlobalInfo(data) {
+        ClientAxios.post("/api/global", data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            fetchGlobalInfo()
+            Toast({
+                status: 'success',
+                title: 'Data Updated'
+            })
+        }).catch(err => {
+            console.log(err.message)
+            Toast({
+                status: 'success',
+                title: 'Error while updating'
+            })
+        })
     }
 
     return (
@@ -63,13 +84,14 @@ const Preferences = () => {
                                     <Td>Retailer</Td>
                                     <Td>
                                         <Switch id='retailerEnabled'
-                                            isChecked={globalInfo.retailer === 1 ? true : false}
+                                            isChecked={globalInfo.retailer}
+                                            onChange={(e) => updateGlobalInfo({ retailer: e.target.checked })}
                                         >
                                         </Switch></Td>
                                     <Td>
                                         <Switch
                                             isChecked={defaultRole === "retailer"}
-                                            onChange={() => setDefaultRole("retailer")}
+                                            onChange={(e) => updateGlobalInfo({ default_role: 'retailer' })}
                                         ></Switch>
                                     </Td>
                                 </Tr>
@@ -77,13 +99,14 @@ const Preferences = () => {
                                     <Td>Distributor</Td>
                                     <Td>
                                         <Switch
-                                            isChecked={globalInfo.distributor === 1 ? true : false}
+                                            isChecked={globalInfo.distributor}
+                                            onChange={(e) => updateGlobalInfo({ distributor: e.target.checked })}
                                         ></Switch>
                                     </Td>
                                     <Td>
                                         <Switch
                                             isChecked={defaultRole === "distributor"}
-                                            onChange={() => setDefaultRole("distributor")}
+                                            onChange={(e) => updateGlobalInfo({ default_role: 'distributor' })}
                                         ></Switch>
                                     </Td>
                                 </Tr>
@@ -91,13 +114,14 @@ const Preferences = () => {
                                     <Td>Super Distributor</Td>
                                     <Td>
                                         <Switch
-                                            isChecked={globalInfo.super_distributor === 1 ? true : false}
+                                            isChecked={globalInfo.super_distributor}
+                                            onChange={(e) => updateGlobalInfo({ super_distributor: e.target.checked })}
                                         ></Switch>
                                     </Td>
                                     <Td>
                                         <Switch
                                             isChecked={defaultRole === "super_distributor"}
-                                            onChange={() => setDefaultRole("super_distributor")}
+                                            onChange={(e) => updateGlobalInfo({ default_role: 'super_distributor' })}
                                         ></Switch>
                                     </Td>
                                 </Tr>
@@ -113,45 +137,60 @@ const Preferences = () => {
                     <Box>
                         <Text>Preferred AePS Provider</Text>
                         <HStack p={2} rounded={8}>
-                            <Button border={'1px solid #888'} w={36}
+                            <Button
+                                border={'1px solid #888'} w={36}
                                 colorScheme={
                                     globalInfo.aeps_provider == "eko" ?
                                         "twitter" : "gray"
-                                }>Eko</Button>
-                            <Button border={'1px solid #888'} w={36}
+                                }
+                                onClick={()=>updateGlobalInfo({aeps_provider: "eko"})}
+                            >Eko</Button>
+                            <Button
+                                border={'1px solid #888'} w={36}
                                 colorScheme={globalInfo.aeps_provider == "paysprint" ?
                                     "twitter" : "gray"
                                 }
+                            onClick={()=>updateGlobalInfo({aeps_provider: "paysprint"})}
                             >Paysprint</Button>
                         </HStack>
                     </Box>
                     <Box>
                         <Text>Preferred BBPS Provider</Text>
                         <HStack p={2} rounded={8}>
-                            <Button border={'1px solid #888'} w={36}
+                            <Button
+                                border={'1px solid #888'} w={36}
                                 colorScheme={
                                     globalInfo.bbps_provider == "eko" ?
                                         "twitter" : "gray"
-                                }>Eko</Button>
-                            <Button border={'1px solid #888'} w={36}
+                                }
+                                onClick={()=>updateGlobalInfo({bbps_provider: "eko"})}
+                            >Eko</Button>
+                            <Button
+                                border={'1px solid #888'} w={36}
                                 colorScheme={globalInfo.bbps_provider == "paysprint" ?
                                     "twitter" : "gray"
                                 }
+                            onClick={()=>updateGlobalInfo({bbps_provider: "paysprint"})}
                             >Paysprint</Button>
                         </HStack>
                     </Box>
                     <Box>
                         <Text>Preferred DMT Provider</Text>
                         <HStack p={2} rounded={8}>
-                            <Button border={'1px solid #888'} w={36}
+                            <Button
+                                border={'1px solid #888'} w={36}
                                 colorScheme={
                                     globalInfo.dmt_provider == "eko" ?
                                         "twitter" : "gray"
-                                }>Eko</Button>
-                            <Button border={'1px solid #888'} w={36}
+                                }
+                                onClick={()=>updateGlobalInfo({dmt_provider: "eko"})}
+                            >Eko</Button>
+                            <Button
+                                border={'1px solid #888'} w={36}
                                 colorScheme={globalInfo.dmt_provider == "paysprint" ?
                                     "twitter" : "gray"
                                 }
+                            onClick={()=>updateGlobalInfo({dmt_provider: "paysprint"})}
                             >Paysprint</Button>
                         </HStack>
                     </Box>
