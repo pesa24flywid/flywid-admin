@@ -246,7 +246,7 @@ const SettlementAccounts = () => {
         }).catch(err => {
             console.log(err)
             Toast({
-                status: 'success',
+                status: 'error',
                 description: 'Error while fetching settlement accounts'
             })
         })
