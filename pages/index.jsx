@@ -104,7 +104,7 @@ const Index = () => {
   async function handleLogin() {
     setIsLoading(true)
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, JSON.stringify({
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/login`, JSON.stringify({
         "authMethod": authMethod,
         ...(authMethod === "email" && { "email": formik.values.user_id }),
         ...(authMethod === "phone" && { "phone": formik.values.user_id }),
