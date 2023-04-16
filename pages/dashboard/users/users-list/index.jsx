@@ -454,7 +454,7 @@ const Index = () => {
                                                                         <Box>
                                                                             <Text><b>Current Balance: </b>&nbsp;&nbsp; ₹ {user.wallet} </Text>
                                                                             <Text><b>Capping Balance: </b>&nbsp;&nbsp; ₹ {user.minimum_balance} </Text>
-                                                                            <Text textTransform={'capitalize'}>{user.packages[0].name} Plan</Text>
+                                                                            <Text textTransform={'capitalize'}>{user.packages.length !=0 ? user.packages[0].name : "No"} Plan</Text>
                                                                             <Text>{user.company_name} {user.firm_type}</Text>
                                                                         </Box>
                                                                     </Td>

@@ -84,7 +84,7 @@ const Index = () => {
         Toast({
           status: "error",
           title: "Error Occured",
-          description: err.message,
+          description: err.response.data.message || err.response.data || err.message,
           position: "top-right"
         })
         setOtpBeingSent(false)
@@ -140,7 +140,7 @@ const Index = () => {
       Toast({
         status: "error",
         title: "Error Occured",
-        description: error.message,
+        description: error.response.data.message || error.response.data || error.message,
         isClosable: true,
         duration: 3000,
         position: "top-right"

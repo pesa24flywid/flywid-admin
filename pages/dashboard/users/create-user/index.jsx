@@ -92,17 +92,6 @@ const Index = () => {
 
     useEffect(() => {
 
-        // Fetching all users
-        BackendAxios.get(`/api/admin/all-users-list/distributor`).then(res => {
-            console.log(res.data)
-        }).catch(err => {
-            console.log(err)
-            Toast({
-                status: 'error',
-                description: 'Error while fetching users'
-            })
-        })
-
         // Fetching all plans
         BackendAxios.get('/api/admin/packages').then((res) => {
             setAvailablePlans(res.data)
@@ -114,6 +103,27 @@ const Index = () => {
             })
         })
     }, [])
+
+    useEffect(() => {
+        // Fetching all users
+        let parentRole
+        if (Formik.values.userRole == "3") {
+            parentRole = "distributor"
+        }
+        if (Formik.values.userRole == "2") {
+            parentRole = "super_distributor"
+        }
+        BackendAxios.get(`/api/admin/all-users-list/${parentRole}`).then(res => {
+            console.log(res.data)
+            setAvailableParents(res.data)
+        }).catch(err => {
+            console.log(err)
+            Toast({
+                status: 'error',
+                description: 'Error while fetching users'
+            })
+        })
+    }, [Formik.values.userRole])
 
     return (
         <>
@@ -159,8 +169,8 @@ const Index = () => {
                                     onChange={Formik.handleChange}
                                 >
                                     {
-                                        availablePlans.map((item, key) => {
-                                            <option value={item.id} key={key}>{item.name}</option>
+                                        availableParents.map((item, key) => {
+                                            return <option value={item.id} key={key}>{item.name}</option>
                                         })
                                     }
                                 </Select>

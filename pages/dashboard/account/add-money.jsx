@@ -22,16 +22,20 @@ import {
     ModalFooter,
     PinInputField,
     PinInput,
+    useToast
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import BackendAxios from '@/lib/utils/axios'
 
 
 const AddMoney = () => {
     const { isOpen, onClose, onOpen } = useDisclosure()
-
+    const Toast = useToast({
+        position: 'top-right'
+    })
 
     const Formik = useFormik({
         initialValues: {
@@ -41,6 +45,24 @@ const AddMoney = () => {
             mpin: ""
         }
     })
+
+    function addMoney() {
+        BackendAxios.post(`/api/admin/add-admin-funds`, {
+            amount: Formik.values.amount,
+            mpin: Formik.values.mpin,
+            remarks: Formik.values.remarks
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Funds added to your account',
+            })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                description: err.response.data.message || err.response.data || err.message
+            })
+        })
+    }
 
     const [rowData, setRowData] = useState([
         {}
@@ -86,14 +108,14 @@ const AddMoney = () => {
                                         />
                                     </InputGroup>
                                 </FormControl>
-                                <FormControl w={['full', 'xs']}>
+                                {/* <FormControl w={['full', 'xs']}>
                                     <FormLabel>Transaction Date</FormLabel>
                                     <Input
                                         name={'transactionDate'}
                                         onChange={Formik.handleChange}
                                         type={'date'} bg={'white'}
                                     />
-                                </FormControl>
+                                </FormControl> */}
                             </Stack>
                             <FormControl py={6}>
                                 <FormLabel>Remarks (optional)</FormLabel>
@@ -139,7 +161,7 @@ const AddMoney = () => {
                                     <HStack spacing={4}>
                                         <PinInput
                                             name={'mpin'} otp
-                                            onChange={Formik.handleChange}
+                                            onComplete={value => Formik.setFieldValue("mpin", value)}
                                         >
                                             <PinInputField bg={'aqua'} />
                                             <PinInputField bg={'aqua'} />
@@ -153,7 +175,7 @@ const AddMoney = () => {
 
                         <ModalFooter>
                             <Button variant='ghost' onClick={onClose}>Cancel</Button>
-                            <Button colorScheme='blue' mr={3} onClick={Formik.handleSubmit}>Done</Button>
+                            <Button colorScheme='blue' mr={3} onClick={() => addMoney()}>Done</Button>
                         </ModalFooter>
                     </ModalContent>
                 </Modal>

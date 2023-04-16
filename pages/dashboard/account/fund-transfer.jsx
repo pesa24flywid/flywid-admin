@@ -42,6 +42,7 @@ const FundTransfer = () => {
         position: 'top-right'
     })
     const [fetchedUser, setFetchedUser] = useState({
+        id: "",
         user_name: "",
         firm_name: "",
         wallet: "",
@@ -49,7 +50,7 @@ const FundTransfer = () => {
     })
     const TransferFormik = useFormik({
         initialValues: {
-            beneficiaryId: user_id || "",
+            beneficiaryId: fetchedUser.id || user_id || "",
             amount: "",
             transactionType: "transfer",
             remarks: "",
@@ -70,7 +71,7 @@ const FundTransfer = () => {
                 }).catch(err => {
                     Toast({
                         status: 'error',
-                        description: err.message
+                        description: err.response.data.message || err.response.data || err.message
                     })
                 })
             }
@@ -80,8 +81,10 @@ const FundTransfer = () => {
     const verifyBeneficiary = (queriedUserId) => {
         // Logic to verifiy beneficiary details
         BackendAxios.post(`/api/admin/user/info/${queriedUserId || TransferFormik.values.beneficiaryId}`).then((res) => {
+            TransferFormik.setFieldValue("beneficiaryId", res.data.data.id)
             setFetchedUser({
                 ...fetchedUser,
+                id: res.data.data.id,
                 user_name: res.data.data.first_name + " " + res.data.data.last_name,
                 firm_name: res.data.data.firm_name,
                 phone: res.data.data.phone_number,
@@ -91,7 +94,7 @@ const FundTransfer = () => {
         }).catch((err) => {
             Toast({
                 status: 'error',
-                description: 'User not found!'
+                description: err.response.data.message || err.response.data || 'User not found!'
             })
             setFetchedUser({
                 user_name: "",
@@ -124,12 +127,12 @@ const FundTransfer = () => {
         }).catch(err => {
             Toast({
                 status: 'error',
-                description: 'Could not fetch transactions'
+                description: err.response.data.message || err.response.data || 'Could not fetch transactions'
             })
         })
     }, [])
     useEffect(() => {
-        if(Router.isReady && user_id){
+        if (Router.isReady && user_id) {
             verifyBeneficiary(user_id)
             TransferFormik.setFieldValue("beneficiaryId", user_id)
         }

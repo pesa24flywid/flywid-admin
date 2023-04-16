@@ -81,6 +81,7 @@ const Index = () => {
 
     function searchUser(queryUserId) {
         BackendAxios.post(`/api/admin/user/info/${queryUserId || Formik.values.userId}`).then((res) => {
+            Formik.setFieldValue("userId", res.data.data.id)
             Formik.setFieldValue("firstName", res.data.data.first_name)
             Formik.setFieldValue("lastName", res.data.data.last_name)
             Formik.setFieldValue("userEmail", res.data.data.email)
@@ -88,7 +89,7 @@ const Index = () => {
             Formik.setFieldValue("alternativePhone", res.data.data.alternate_number)
             Formik.setFieldValue("dob", res.data.data.dob)
             Formik.setFieldValue("gender", res.data.data.gender)
-            Formik.setFieldValue("firmName", res.data.data.firm_name)
+            Formik.setFieldValue("firmName", res.data.data.company_name)
             Formik.setFieldValue("companyType", res.data.data.firm_type)
             Formik.setFieldValue("kycStatus", res.data.data.kyc)
             Formik.setFieldValue("aadhaarNum", res.data.data.aadhaar)

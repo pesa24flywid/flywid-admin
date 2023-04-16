@@ -102,7 +102,7 @@ const CommissionSetup = () => {
         })
     }
     function fetchAllCommission(selectedPackageId, serviceName) {
-        BackendAxios.get(`api/admin/commissions/${serviceName}`).then(res => {
+        BackendAxios.get(`api/admin/commissions/${serviceName}/${selectedPackageId}`).then(res => {
             setRowData(res.data)
             setModalStatus(true)
         }).catch(err => {

@@ -83,6 +83,11 @@ const FundRequests = () => {
             setPrintableRow(res.data.data)
         }).catch(err => {
             console.log(err)
+            Toast({
+                status: 'error',
+                title: 'Error Occured',
+                description: err.response.data.message || err.response.data || err.message
+            })
         })
     }
 
@@ -91,38 +96,13 @@ const FundRequests = () => {
     }, [])
 
 
-    function onCellValueChanged(params) {
-        if (params.data.status == "reversed" && !params.data.admin_remarks) {
-            return Toast({
-                description: 'Please add your remarks also'
-            })
-        }
-        if (params.data.status == "reversed" && params.data.admin_remarks) {
-            BackendAxios.post(`/api/admin/update-fund-requests`, {
-                id: params.data.id,
-                status: "reversed",
-                amount: params.data.amount,
-                remarks: params.data.admin_remarks
-            }).then(res => {
-                Toast({
-                    status: 'success',
-                    description: 'Request Updated'
-                })
-            }).catch(err => {
-                Toast({
-                    status: 'error',
-                    description: 'Error while updating'
-                })
-                console.log(err)
-            })
-        }
-    }
-
     const statusCellRenderer = (params) => {
         function updateFundRequest(updateTo) {
+            console.log(params)
             if (updateTo == "approved") {
                 BackendAxios.post(`/api/admin/update-fund-requests`, {
                     id: params.data.id,
+                    beneficiaryId: params.data.user_id,
                     status: updateTo,
                     amount: params.data.amount
                 }).then(res => {
@@ -134,15 +114,16 @@ const FundRequests = () => {
                 }).catch(err => {
                     Toast({
                         status: 'error',
-                        description: err.message
+                        description: err.response.data.message || err.response.data || err.message
                     })
                 })
             }
             if (updateTo == "reversed" && params.data.admin_remarks) {
                 BackendAxios.post(`/api/admin/update-fund-requests`, {
+                    beneficiaryId: params.data.user_id,
                     id: params.data.id,
                     status: updateTo,
-                    amount: params.data.amount,
+                    amount: 0,
                     remarks: params.data.admin_remarks
                 }).then(res => {
                     Toast({
@@ -151,13 +132,14 @@ const FundRequests = () => {
                     })
                     fetchRequests()
                 }).catch(err => {
+                    console.log(err)
                     Toast({
                         status: 'error',
-                        description: err.message
+                        description: err.response.data.message || err.response.data || err.message
                     })
                 })
             }
-            if(updateTo == "reversed" && !params.data.admin_remarks){
+            if (updateTo == "reversed" && !params.data.admin_remarks) {
                 Toast({
                     description: 'Please add remarks also'
                 })
@@ -174,11 +156,13 @@ const FundRequests = () => {
                         <Button
                             size={'xs'}
                             colorScheme={params.data.status == "approved" ? 'whatsapp' : 'red'}
-                            textTransform={'capitalize'}>{params.data.status}</Button>
+                            textTransform={'capitalize'}
+                        >{params.data.status}
+                        </Button>
                     }
                     {
                         params.data.status == "pending" &&
-                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='red'>Reject</Button>
+                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='red' onClick={() => updateFundRequest("reversed")}>Reject</Button>
                     }
                 </HStack>
             </>
