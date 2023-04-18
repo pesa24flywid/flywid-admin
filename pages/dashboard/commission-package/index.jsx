@@ -101,9 +101,14 @@ const CommissionSetup = () => {
             })
         })
     }
-    function fetchAllCommission(selectedPackageId, serviceName) {
+    function fetchAllCommission(selectedPackageId, serviceName, emptyRow) {
         BackendAxios.get(`api/admin/commissions/${serviceName}/${selectedPackageId}`).then(res => {
-            setRowData(res.data)
+            if (res.data.length == 0) {
+                setRowData(emptyRow)
+            }
+            else {
+                setRowData(res.data)
+            }
             setModalStatus(true)
         }).catch(err => {
             Toast({
@@ -191,7 +196,7 @@ const CommissionSetup = () => {
         if (structure) {
             setGridObject(structure)
             setColumnDefs(structure.columnDefs)
-            fetchAllCommission(packageId, keyword)
+            fetchAllCommission(packageId, keyword, structure.rowData)
         }
     }
 
