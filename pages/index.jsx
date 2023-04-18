@@ -204,6 +204,7 @@ const Index = () => {
               <InputRightAddon children={passwordVisible ? <BsEye /> : <BsEyeSlash />} cursor={'pointer'} onClick={() => setPasswordVisible(!passwordVisible)} />
             </InputGroup>
           </FormControl>
+          {/*  */}
           <HStack spacing={4}>
             <Link href={'https://dashboard.pesa24.in/auth/reset-password'}>
               <Button colorScheme={'twitter'} variant={'outline'}>Reset Password</Button>
