@@ -27,44 +27,8 @@ const Ledger = () => {
     const [rowData, setRowData] = useState([])
     const [columnDefs, setColumnDefs] = useState([
         {
-            headerName: "Transaction ID",
-            field: "transaction_id"
-        },
-        {
-            headerName: "Done By",
-            field: "trigered_by"
-        },
-        {
-            headerName: "Beneficiary",
-            field: "name"
-        },
-        {
-            headerName: "Description",
-            field: "transaction_for"
-        },
-        {
-            headerName: "Type",
-            field: "service_type"
-        },
-        {
-            headerName: "Credit Amount",
-            field: "credit_amount"
-        },
-        {
-            headerName: "Debit Amount",
-            field: "debit_amount"
-        },
-        {
-            headerName: "Opening Balance",
-            field: "opening_balance"
-        },
-        {
-            headerName: "Closing Balance",
-            field: "closing_balance"
-        },
-        {
-            headerName: "Timestamp",
-            field: "created_at"
+            headerName: "User ID",
+            field: "id"
         },
     ])
     const [printableRow, setPrintableRow] = useState(rowData)
@@ -78,7 +42,7 @@ const Ledger = () => {
     })
 
     function fetchLedger(pageLink) {
-        BackendAxios.get(pageLink || `/api/admin/transactions?page=1`).then((res) => {
+        BackendAxios.get(pageLink || `/api/admin/transactions-period?page=1`).then((res) => {
             setPagination({
                 current_page: res.data.current_page,
                 total_pages: parseInt(res.data.last_page),
@@ -87,18 +51,11 @@ const Ledger = () => {
                 next_page_url: res.data.next_page_url,
                 prev_page_url: res.data.prev_page_url,
             })
-            setRowData(res.data.data.filter(data => {
-                let dataDate = new Date(data.created_at)
-                if (dataDate.getDate() == today.getDate() && dataDate.getMonth() == today.getMonth() && dataDate.getFullYear() == today.getFullYear()){
-                    return data
-                }
-            }))
-            setPrintableRow(res.data.data.filter(data => {
-                let dataDate = new Date(data.created_at)
-                if (dataDate.getDate() == today.getDate() && dataDate.getMonth() == today.getMonth() && dataDate.getFullYear() == today.getFullYear()){
-                    return data
-                }
-            }))
+            setRowData([...rowData, {id: Object.keys(res.data)}])
+            for (let i = 0; i < res.data.length; i++) {
+                const element = res.data[i];
+                setRowData([{rowData, id: element.id}])
+            }
         }).catch(err => {
             console.log(err)
         })
