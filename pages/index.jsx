@@ -205,7 +205,7 @@ const Index = () => {
             </InputGroup>
           </FormControl>
           <HStack spacing={4}>
-            <Link href={'/reset-password'}>
+            <Link href={'https://dashboard.pesa24.in/auth/reset-password'}>
               <Button colorScheme={'twitter'} variant={'outline'}>Reset Password</Button>
             </Link>
             <Button colorScheme={'twitter'} onClick={() => sendOtp()} isDisabled={!hasGps} isLoading={otpBeingSent}>Send OTP</Button>
