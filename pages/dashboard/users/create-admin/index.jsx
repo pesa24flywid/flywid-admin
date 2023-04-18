@@ -159,7 +159,7 @@ const CreateAdmin = () => {
     }).catch(err => {
       console.log(err)
       Toast({
-        description: err.response.data.message || err.message
+        description: err.response.data.message || err.response.data || err.message
       })
     })
   }, [])
@@ -175,7 +175,7 @@ const CreateAdmin = () => {
       })
     }).catch(err => {
       Toast({
-        description: err.response.data.message || err.message
+        description: err.response.data.message || err.response.data || err.message
       })
     })
   }
@@ -191,7 +191,7 @@ const CreateAdmin = () => {
       })
     }).catch(err => {
       Toast({
-        description: err.response.data.message || err.message
+        description: err.response.data.message || err.response.data || err.message
       })
     })
   }

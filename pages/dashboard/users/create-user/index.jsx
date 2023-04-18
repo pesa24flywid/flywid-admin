@@ -76,7 +76,7 @@ const Index = () => {
                 }).catch((err) => {
                     Toast({
                         status: 'error',
-                        title: err.message,
+                        description: err.response.data.message || err.response.data || err.message
                     })
                     console.log(err)
                 })
@@ -84,7 +84,7 @@ const Index = () => {
             else {
                 Toast({
                     status: 'error',
-                    description: 'All images are mandatory'
+                    description: 'All images are required'
                 })
             }
         }
@@ -99,7 +99,7 @@ const Index = () => {
             console.log(err)
             Toast({
                 status: 'error',
-                description: 'Error while fetching packages'
+                description: err.response.data.message || err.response.data || err.message
             })
         })
     }, [])
@@ -120,7 +120,7 @@ const Index = () => {
             console.log(err)
             Toast({
                 status: 'error',
-                description: 'Error while fetching users'
+                description: err.response.data.message || err.response.data || err.message
             })
         })
     }, [Formik.values.userRole])

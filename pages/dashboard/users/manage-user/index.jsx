@@ -72,7 +72,7 @@ const Index = () => {
             }).catch((err) => {
                 Toast({
                     status: 'error',
-                    title: err.message,
+                    description: err.response.data.message || err.response.data || err.message
                 })
                 console.log(err)
             })
@@ -104,7 +104,7 @@ const Index = () => {
         }).catch((err) => {
             Toast({
                 status: 'error',
-                description: "User not found!"
+                description: err.response.data.message || err.response.data || err.message
             })
             console.log(err)
         })

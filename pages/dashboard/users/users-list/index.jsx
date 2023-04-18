@@ -156,7 +156,7 @@ const Index = () => {
             console.log(err)
             Toast({
                 status: 'error',
-                description: err.response.data.message || err.message
+                description: err.response.data.message || err.response.data || err.message
             })
         })
     }
@@ -173,7 +173,7 @@ const Index = () => {
             console.log(err)
             Toast({
                 status: 'error',
-                description: err.response.data.message || err.message
+                description: err.response.data.message || err.response.data || err.message
             })
         })
     }
