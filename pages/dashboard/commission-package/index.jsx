@@ -9,6 +9,8 @@ import {
     FormLabel,
     Input,
     Select,
+    PinInput,
+    PinInputField,
     TableContainer,
     Table,
     Thead,
@@ -26,6 +28,7 @@ import {
     ModalCloseButton,
     Stack,
     useToast,
+    useDisclosure
 } from '@chakra-ui/react'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
@@ -41,12 +44,16 @@ const CommissionSetup = () => {
     const Toast = useToast({
         position: 'top-right'
     })
+    const [mpin, setMpin] = useState("")
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const [modalStatus, setModalStatus] = useState(false)
     const [modalTitle, setModalTitle] = useState("")
     const [gridObject, setGridObject] = useState({})
     const [allPackages, setAllPackages] = useState([])
     const [selectedPackage, setSelectedPackage] = useState("")
     const [selectedService, setSelectedService] = useState("")
+    const [focussedPackageTitle, setFocussedPackageTitle] = useState("")
+    const [focussedPackageId, setFocussedPackageId] = useState("")
     const [pagination, setPagination] = useState({
         current_page: "1",
         total_pages: "1",
@@ -120,7 +127,12 @@ const CommissionSetup = () => {
 
     function onCellValueChange(params) {
         if (params.data.from && params.data.to) {
-            BackendAxios.post(`/api/admin/commissions/${selectedService}`, { ...params.data, package_id: selectedPackage }).then(() => {
+            BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
+                ...params.data,
+                package_id: selectedPackage,
+                from: parseInt(params.data.from),
+                to: parseInt(params.data.to),
+            }).then(() => {
                 Toast({
                     status: 'success',
                     description: `Commission Updated`
@@ -215,7 +227,39 @@ const CommissionSetup = () => {
         fetchAllPackages('/api/admin/packages?page=1')
     }, [])
 
+    function updatePackageDetails(dataToUpdate, selectedPackageId) {
+        BackendAxios.post(`/api/admin/update-package-defaults`, {
+            packageId: selectedPackageId,
+            column: Object.keys(dataToUpdate)[0],
+            value: Object.values(dataToUpdate)[0],
+        }).then(res => {
+            Toast({
+                status: "success",
+                description: "Details Updated Successfully"
+            })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                description: err.response.data.message || err.response.data || err.message
+            })
+        })
+    }
 
+    function deletePackage() {
+        BackendAxios.post(`/api/admin/packages/delete/${focussedPackageId}`, {
+            mpin: mpin
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: "Package was deleted successfully"
+            })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                description: err.response.data.message || err.response.data || err.message
+            })
+        })
+    }
 
 
     return (
@@ -308,7 +352,7 @@ const CommissionSetup = () => {
                             <Thead>
                                 <Tr>
                                     <Th>#</Th>
-                                    <Th>User Name</Th>
+                                    <Th>Creator Name</Th>
                                     <Th>Package Name</Th>
                                     <Th>Total Users</Th>
                                     <Th>Default</Th>
@@ -316,6 +360,7 @@ const CommissionSetup = () => {
                                     <Th>Payout</Th>
                                     <Th>DMT</Th>
                                     <Th>Recharge</Th>
+                                    <Th>Delete Package</Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
@@ -325,11 +370,29 @@ const CommissionSetup = () => {
                                             <Tr key={key}>
                                                 <Td>{key + 1}</Td>
                                                 {/* Name of person who created these packages */}
-                                                <Td>{item.user_id}</Td>
-                                                <Td>{item.name}</Td>
+                                                <Td>{item.user_name}</Td>
+                                                <Td>
+                                                    <Input
+                                                        w={'36'}
+                                                        defaultValue={item.name}
+                                                        onChange={e => setFocussedPackageTitle(e.target.value)}
+                                                        p={0} border={0} variant={'unstyled'}
+                                                        onBlur={() => updatePackageDetails({ name: focussedPackageTitle }, item.id)}
+                                                    />
+                                                </Td>
                                                 <Td>0</Td>
-                                                <Td><Switch defaultChecked={item.is_default === 1}></Switch></Td>
-                                                <Td><Switch defaultChecked={item.is_active === 1}></Switch></Td>
+                                                <Td>
+                                                    <Switch
+                                                        defaultChecked={item.is_default === 1}
+                                                        onChange={e => updatePackageDetails({ is_default: e.target.checked }, item.id)}
+                                                    ></Switch>
+                                                </Td>
+                                                <Td>
+                                                    <Switch
+                                                        defaultChecked={item.status === 1}
+                                                        onChange={e => updatePackageDetails({ status: e.target.checked }, item.id)}
+                                                    ></Switch>
+                                                </Td>
                                                 <Td>
                                                     {/* Payout */}
                                                     <Button
@@ -358,6 +421,16 @@ const CommissionSetup = () => {
                                                         onClick={() => handleModal(item.id, "recharge")}
                                                     >
                                                         Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* Delete */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'red'}
+                                                        onClick={() => { setFocussedPackageId(item.id); onOpen() }}
+                                                    >
+                                                        Delete
                                                     </Button>
                                                 </Td>
                                             </Tr>
@@ -442,6 +515,41 @@ const CommissionSetup = () => {
                             <Button colorScheme={'twitter'}>
                                 Save
                             </Button>
+                        </HStack>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+
+            {/* MPIN Confirmation Modal */}
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>
+                        This action can not be undone!
+                    </ModalHeader>
+                    <ModalBody>
+                        <Text>
+                            By deleting this package, you understand that it can't be recovered back.
+                        </Text>
+                        <Text fontWeight={'bold'}>
+                            Enter your MPIN to confirm.
+                        </Text>
+                        <HStack gap={4} pt={4} justifyContent={'center'}>
+                            <PinInput otp onComplete={value => setMpin(value)}>
+                                <PinInputField bg={'aqua'} />
+                                <PinInputField bg={'aqua'} />
+                                <PinInputField bg={'aqua'} />
+                                <PinInputField bg={'aqua'} />
+                            </PinInput>
+                        </HStack>
+                    </ModalBody>
+                    <ModalFooter>
+                        <HStack justifyContent={'flex-end'}>
+                            <Button colorScheme='red' onClick={deletePackage}>Delete Now</Button>
                         </HStack>
                     </ModalFooter>
                 </ModalContent>

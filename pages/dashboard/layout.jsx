@@ -99,51 +99,10 @@ const menuOptions = [
     ]
   },
   {
-    type: "accordion",
-    name: "services",
+    type: "link",
+    name: "manage services",
+    link: "/dashboard/manage-services?pageid=services",
     icon: <BsBriefcaseFill />,
-    children: [
-      {
-        title: "aeps",
-        link: "/dashboard/users/create-user?pageid=users",
-        status: true,
-      },
-      {
-        title: "bbps",
-        link: "/dashboard/users/users-list?pageid=users",
-        status: true,
-      },
-      {
-        title: "recharge",
-        link: "/dashboard/users/users-list?pageid=users",
-        status: true,
-      },
-      {
-        title: "dmt",
-        link: "/dashboard/users/users-list?pageid=users",
-        status: true,
-      },
-      {
-        title: "payout",
-        link: "/dashboard/users/users-list?pageid=users",
-        status: true,
-      },
-      {
-        title: "cms",
-        link: "/dashboard/users/users-list?pageid=users",
-        status: true,
-      },
-      {
-        title: "lic",
-        link: "/dashboard/users/users-list?pageid=users",
-        status: true,
-      },
-      {
-        title: "axis bank account",
-        link: "/dashboard/users/users-list?pageid=users",
-        status: false,
-      },
-    ]
   },
   {
     type: "accordion",

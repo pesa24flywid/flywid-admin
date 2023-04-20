@@ -14,11 +14,12 @@ import {
     Stack,
     useToast
 } from '@chakra-ui/react'
-import { ClientAxios } from '@/lib/utils/axios'
+import BackendAxios, { ClientAxios } from '@/lib/utils/axios'
 
 const Preferences = () => {
     const [globalInfo, setGlobalInfo] = useState({})
     const [defaultRole, setDefaultRole] = useState("")
+    const [services, setServices] = useState([])
     const Toast = useToast({
         position: 'top-right'
     })
@@ -61,6 +62,7 @@ const Preferences = () => {
             })
         })
     }
+
 
     return (
         <>
@@ -143,14 +145,14 @@ const Preferences = () => {
                                     globalInfo.aeps_provider == "eko" ?
                                         "twitter" : "gray"
                                 }
-                                onClick={()=>updateGlobalInfo({aeps_provider: "eko"})}
+                                onClick={() => updateGlobalInfo({ aeps_provider: "eko" })}
                             >Eko</Button>
                             <Button
                                 border={'1px solid #888'} w={36}
                                 colorScheme={globalInfo.aeps_provider == "paysprint" ?
                                     "twitter" : "gray"
                                 }
-                            onClick={()=>updateGlobalInfo({aeps_provider: "paysprint"})}
+                                onClick={() => updateGlobalInfo({ aeps_provider: "paysprint" })}
                             >Paysprint</Button>
                         </HStack>
                     </Box>
@@ -163,14 +165,14 @@ const Preferences = () => {
                                     globalInfo.bbps_provider == "eko" ?
                                         "twitter" : "gray"
                                 }
-                                onClick={()=>updateGlobalInfo({bbps_provider: "eko"})}
+                                onClick={() => updateGlobalInfo({ bbps_provider: "eko" })}
                             >Eko</Button>
                             <Button
                                 border={'1px solid #888'} w={36}
                                 colorScheme={globalInfo.bbps_provider == "paysprint" ?
                                     "twitter" : "gray"
                                 }
-                            onClick={()=>updateGlobalInfo({bbps_provider: "paysprint"})}
+                                onClick={() => updateGlobalInfo({ bbps_provider: "paysprint" })}
                             >Paysprint</Button>
                         </HStack>
                     </Box>
@@ -183,14 +185,14 @@ const Preferences = () => {
                                     globalInfo.dmt_provider == "eko" ?
                                         "twitter" : "gray"
                                 }
-                                onClick={()=>updateGlobalInfo({dmt_provider: "eko"})}
+                                onClick={() => updateGlobalInfo({ dmt_provider: "eko" })}
                             >Eko</Button>
                             <Button
                                 border={'1px solid #888'} w={36}
                                 colorScheme={globalInfo.dmt_provider == "paysprint" ?
                                     "twitter" : "gray"
                                 }
-                            onClick={()=>updateGlobalInfo({dmt_provider: "paysprint"})}
+                                onClick={() => updateGlobalInfo({ dmt_provider: "paysprint" })}
                             >Paysprint</Button>
                         </HStack>
                     </Box>
