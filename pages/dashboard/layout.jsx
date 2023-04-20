@@ -186,23 +186,23 @@ const menuOptions = [
     icon: <HiDocumentReport />,
     children: [
       {
-        title: "dmt",
-        link: "/dashboard/reports/payout?pageid=reports",
+        title: "aeps",
+        link: "/dashboard/reports/aeps?pageid=reports",
         status: true,
       },
       {
-        title: "aeps",
-        link: "/dashboard",
-        status: false,
+        title: "bbps",
+        link: "/dashboard/reports/bbps?pageid=reports",
+        status: true,
       },
       {
-        title: "bbps",
-        link: "/dashboard",
-        status: false,
+        title: "dmt",
+        link: "/dashboard/reports/dmt?pageid=reports",
+        status: true,
       },
       {
         title: "recharge",
-        link: "/dashboard",
+        link: "/dashboard/reports/recharge?pageid=reports",
         status: true,
       },
       {

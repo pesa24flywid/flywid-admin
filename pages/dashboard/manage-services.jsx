@@ -5,6 +5,7 @@ import {
     Text,
     Switch,
     Input,
+    Select,
     Button,
     Flex,
     Image,
@@ -24,14 +25,20 @@ const ManageServices = () => {
     const Toast = useToast({ position: 'top-right' })
     const [selectedService, setSelectedService] = useState({
         showModal: false,
+        type: "",
         service_name: "",
         image_url: "",
         id: "",
         is_active: false,
         can_subscribe: false,
+        api_call: false,
         down_message: "",
+        price: "",
+        eko_id: "",
+        paysprint_id: "",
+        intent: "update"
     })
-    function fetchServices(){
+    function fetchServices() {
         BackendAxios.get("/api/admin/services").then(res => {
             setServices(res.data)
         })
@@ -47,11 +54,28 @@ const ManageServices = () => {
                 description: 'Service status updated'
             })
             fetchServices()
-            setSelectedService({showModal: false})
+            setSelectedService({ showModal: false })
         }).catch(err => {
             Toast({
                 status: 'error',
                 description: err.response.data.message || err.response.data || err.message
+            })
+        })
+    }
+
+    function createService() {
+        BackendAxios.post("/api/admin/services", {...selectedService}).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Service created'
+            })
+            fetchServices()
+            setSelectedService({ showModal: false })
+        }).catch(err => {
+            console.log(err)
+            Toast({
+                status: 'error',
+                description: "Error"
             })
         })
     }
@@ -61,14 +85,17 @@ const ManageServices = () => {
             <Layout pageTitle={'Manage Services'}>
 
                 <Box mt={12} mb={6}>
-                    <Text pb={4}>Services Status</Text>
+                    <HStack justifyContent={'space-between'}>
+                        <Text pb={4} fontSize={'lg'}>Services Status</Text>
+                        <Button onClick={() => setSelectedService({ intent: "create", showModal: true })}>Add New Service</Button>
+                    </HStack>
                     <Flex alignItems={'center'} direction={'row'} justifyContent={'flex-start'} gap={6}>
                         {services.map((service, key) => (
                             <Box
                                 key={key} pos={'relative'}
                                 p={4} w={'56'}
                                 height={'72'}
-                                rounded={8}
+                                rounded={8} cursor={'pointer'}
                                 boxShadow={'lg'}
                                 display={'flex'}
                                 flexDir={'column'}
@@ -81,7 +108,8 @@ const ManageServices = () => {
                                     image_url: service.image_url,
                                     is_active: service.is_active,
                                     can_subscribe: service.can_subscribe,
-                                    down_message: service.down_message
+                                    down_message: service.down_message,
+                                    intent: "update"
                                 })}
                                 paddingTop={12}
                             >
@@ -117,10 +145,42 @@ const ManageServices = () => {
                         Edit Service Status
                     </ModalHeader>
                     <ModalBody>
-                        <Text>Service Name</Text>
+                        {
+                            selectedService.intent == "create" &&
+                            <>
+                                <Text>Service Category</Text>
+                                <Select name={'type'} onChange={e => setSelectedService({ ...selectedService, type: e.target.value })}>
+                                    <option value="aeps">AePS</option>
+                                    <option value="bbps">BBPS</option>
+                                    <option value="bbps">DMT</option>
+                                    <option value="bbps">Payout</option>
+                                    <option value="bbps">Recharge</option>
+                                </Select>
+                            </>
+                        }
+                        <Text mt={4}>Service Name</Text>
                         <Input value={selectedService.service_name} onChange={e => setSelectedService({ ...selectedService, service_name: e.target.value })} />
                         <br />
-                        <HStack gap={4} mt={4}>
+                        <Text mt={4}>Image URL</Text>
+                        <Input value={selectedService.image_url} onChange={e => setSelectedService({ ...selectedService, image_url: e.target.value })} />
+                        <br />
+                        {selectedService.intent == "create" &&
+                            <>
+                                <Text mt={4}>Amount</Text>
+                                <Input value={selectedService.price} onChange={e => setSelectedService({ ...selectedService, price: e.target.value })} />
+                                <Text mt={4}>Eko ID</Text>
+                                <Input value={selectedService.eko_id} onChange={e => setSelectedService({ ...selectedService, eko_id: e.target.value })} />
+                                <Text mt={4}>Paysprint ID</Text>
+                                <Input value={selectedService.paysprint_id} onChange={e => setSelectedService({ ...selectedService, paysprint_id: e.target.value })} />
+
+                                <HStack gap={4} mt={4}>
+                                    <Text>Has API Call</Text>
+                                    <Switch defaultChecked={selectedService.api_call} onChange={e => setSelectedService({ ...selectedService, api_call: e.target.checked })}></Switch>
+                                </HStack>
+                            </>
+                        }
+                        <br />
+                        <HStack gap={4}>
                             <Text>Is Active</Text>
                             <Switch defaultChecked={selectedService.is_active} onChange={e => setSelectedService({ ...selectedService, is_active: e.target.checked })}></Switch>
                         </HStack>
@@ -135,7 +195,11 @@ const ManageServices = () => {
                     </ModalBody>
                     <ModalFooter>
                         <HStack justifyContent={'flex-end'}>
-                            <Button colorScheme='twitter' onClick={updateServiceStatus}>Save</Button>
+                            {
+                                selectedService.intent == "update" ?
+                                    <Button colorScheme='twitter' onClick={()=>updateServiceStatus()}>Save</Button> :
+                                    <Button colorScheme='twitter' onClick={()=>createService()}>Create</Button>
+                            }
                         </HStack>
                     </ModalFooter>
                 </ModalContent>

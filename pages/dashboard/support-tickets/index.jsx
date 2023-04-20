@@ -4,50 +4,55 @@ import {
     Stack,
     Text,
     Button,
+    useToast,
 } from '@chakra-ui/react'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import Layout from '../layout';
+import BackendAxios from '@/lib/utils/axios';
 
 const SupportTickets = () => {
+    const Toast = useToast({ position: 'top-right' })
     const [rowData, setRowData] = useState([])
     const [columnDefs, setColumnDefs] = useState([
         {
-            field: "ticketId",
+            field: "id",
             headerName: "Ticket ID"
         },
         {
-            field: "user",
-            headerName: "User"
+            field: "name",
+            headerName: "User",
+            cellRenderer: 'userCellRenderer'
         },
         {
-            field: "message",
+            field: "body",
             headerName: "Message",
         },
         {
-            field: "attachments",
+            field: "document",
             headerName: "Attachments",
         },
         {
-            field: "linkedTransaction",
+            field: "transaction_id",
             headerName: "Linked Transaction ID",
         },
         {
             field: "status",
             headerName: "Status",
+            editable: true,
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
-                values: ['New', 'Read', 'Responded', 'Resolved', 'Refund Processed'],
+                values: ['raised', 'read', 'responded', 'resolved', 'refund processed'],
             },
             singleClickEdit: true,
         },
         {
-            field: "createdAt",
+            field: "created_at",
             headerName: "Created At",
         },
         {
-            field: "updatedAt",
+            field: "updated_at",
             headerName: "Updated At",
         },
     ])
@@ -59,6 +64,26 @@ const SupportTickets = () => {
             floatingFilter: true,
         };
     }, []);
+
+    useEffect(() => {
+        BackendAxios.get(`/api/admin/tickets`).then(res => {
+            setRowData(res.data)
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                description: err.response.data.messagae || err.response.data || err.message
+            })
+        })
+    }, [])
+
+    const userCellRenderer = (params) => {
+        return (
+            <Box>
+                <Text>({params.data.user_id}) {params.value} - {params.data.phone_number}</Text>
+            </Box>
+        )
+    }
+
     return (
         <>
             <Layout pageTitle={'Support Tickets'}>
@@ -68,6 +93,9 @@ const SupportTickets = () => {
                         rowData={rowData}
                         columnDefs={columnDefs}
                         defaultColDef={defaultColDef}
+                        components={{
+                            'userCellRenderer': userCellRenderer
+                        }}
                     >
 
                     </AgGridReact>

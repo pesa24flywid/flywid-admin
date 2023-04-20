@@ -34,6 +34,7 @@ specifiers:
   react-dom: 18.2.0
   react-icons: ^4.7.1
   react-responsive-carousel: ^3.2.23
+  react-to-pdf: ^0.0.14
   tui-grid: ^4.21.7
   typescript: 4.9.5
 
@@ -69,6 +70,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
   react-responsive-carousel: 3.2.23
+  react-to-pdf: 0.0.14_biqbaboplfbrettd7655fr4n2y
   tui-grid: 4.21.7
 
 devDependencies:
@@ -1728,6 +1730,11 @@ packages:
       resolve: 1.22.1
     dev: false
 
+  /base64-arraybuffer/0.1.5:
+    resolution: {integrity: sha512-437oANT9tP582zZMwSvZGy2nmSeAb8DW2me3y+Uv1Wp2Rulr8Mqlyrv3E7MLxmsiaPSMMDmiDVzgE+e8zlMx9g==}
+    engines: {node: '>= 0.6.0'}
+    dev: false
+
   /base64-arraybuffer/1.0.2:
     resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
     engines: {node: '>= 0.6.0'}
@@ -1870,6 +1877,12 @@ packages:
     resolution: {integrity: sha512-a7Vr4Q/kd/aw96bnJG332W9V9LkJO69JRcaCYDUqjp6/z0w6VcZjgAcTbgFxEPfBgdnAwlh3iwu+hLopa+flJw==}
     dependencies:
       tiny-invariant: 1.3.1
+    dev: false
+
+  /css-line-break/1.0.1:
+    resolution: {integrity: sha512-Y/Us0vILnzQj21UxqoZTLaHGrePQKXcZygQIoxNmpII06LJVCgB2sFKmD7PItNDHIAqHWjrmJPVohIywWYKAmQ==}
+    dependencies:
+      base64-arraybuffer: 0.1.5
     dev: false
 
   /css-line-break/2.1.0:
@@ -2053,6 +2066,13 @@ packages:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
     dependencies:
       react-is: 16.13.1
+    dev: false
+
+  /html2canvas/1.0.0-alpha.12:
+    resolution: {integrity: sha512-+mr9jumxMQO9ZZwf7nUp3tonOIaI6tAAV0yciDMuX0tetV4wz/lFc2AxAYndxANe7/O67DKLgDLjT+ZcVUSQrw==}
+    engines: {node: '>=4.0.0'}
+    dependencies:
+      css-line-break: 1.0.1
     dev: false
 
   /html2canvas/1.4.1:
@@ -2548,6 +2568,18 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.5.0
+    dev: false
+
+  /react-to-pdf/0.0.14_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-u4gwkV7Byr1uU3FgR5n99tufNgMVEYE3reyjNsYK3WuRReE1IqolYXzCoj3n/Xhk8KOFYSiS3V4xEaGFGR9H5Q==}
+    peerDependencies:
+      react: ^16.5.2
+      react-dom: ^16.5.2
+    dependencies:
+      html2canvas: 1.0.0-alpha.12
+      jspdf: 2.5.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react/18.2.0:
