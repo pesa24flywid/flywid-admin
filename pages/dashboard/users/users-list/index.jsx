@@ -57,6 +57,7 @@ import Script from 'next/script'
 import Link from 'next/link'
 import { BiPen, BiRupee } from 'react-icons/bi'
 import fileDownload from 'js-file-download'
+import { aepsList, bbpsList, cmsList, dmtList, matmList, panList, payoutList, rechargeList } from '@/lib/utils/permissions/structure'
 
 const ExportPDF = (currentRowData) => {
     const doc = new jsPDF('landscape')
@@ -84,48 +85,27 @@ const Index = () => {
 
     const [aepsPermissions, setAepsPermissions] = useState([])
     const [aepsExpansion, setAepsExpansion] = useState([])
-    const aepsList = [{
-        value: "allAeps",
-        label: "All AePS Services",
-        children: [
-            { value: 'aepsBasic', label: 'Basic Transactions' },
-            { value: 'aepsPayout', label: 'AePS Payouts' },
-            { value: 'aepsReport', label: 'AePS Reports' },
-        ]
-    }]
 
     const [bbpsPermissions, setBbpsPermissions] = useState([])
     const [bbpsExpansion, setBbpsExpansion] = useState([])
-    const bbpsList = [{
-        value: "allBbps",
-        label: "All BBPS Services",
-        children: [
-            { value: 'bbps', label: 'BBPS Transactions' },
-            { value: 'bbpsReport', label: 'BBPS Reports' },
-        ]
-    }]
-
-    const [payoutPermissions, setPayoutPermissions] = useState([])
-    const [payoutExpansion, setPayoutExpansion] = useState([])
-    const payoutList = [{
-        value: "allPayout",
-        label: "All Payout Services",
-        children: [
-            { value: 'payout', label: 'Payout Transactions' },
-            { value: 'payoutReport', label: 'Payout Reports' },
-        ]
-    }]
 
     const [dmtPermissions, setDmtPermissions] = useState([])
     const [dmtExpansion, setDmtExpansion] = useState([])
-    const dmtList = [{
-        value: "alldmt",
-        label: "All DMT Services",
-        children: [
-            { value: 'dmt', label: 'DMT Transactions' },
-            { value: 'dmtReport', label: 'DMT Reports' },
-        ]
-    }]
+
+    const [payoutPermissions, setPayoutPermissions] = useState([])
+    const [payoutExpansion, setPayoutExpansion] = useState([])
+
+    const [rechargePermissions, setRechargePermissions] = useState([])
+    const [rechargeExpansion, setRechargeExpansion] = useState([])
+
+    const [panPermissions, setPanPermissions] = useState([])
+    const [panExpansion, setPanExpansion] = useState([])
+
+    const [cmsPermissions, setCmsPermissions] = useState([])
+    const [cmsExpansion, setCmsExpansion] = useState([])
+
+    const [matmPermissions, setMatmPermissions] = useState([])
+    const [matmExpansion, setMatmExpansion] = useState([])
 
     const availableTabs = ['retailers', 'distributor']
     const [selectedTab, setSelectedTab] = useState("retailer")
@@ -431,7 +411,7 @@ const Index = () => {
                                                                                     size={'sm'} rounded={0}
                                                                                     colorScheme={'teal'}
                                                                                     title={'Reports'}
-                                                                                    onClick={()=>openPermissionsDrawer(user.id)}
+                                                                                    onClick={() => openPermissionsDrawer(user.id)}
                                                                                 >
                                                                                     <BsShield />
                                                                                 </Button>
@@ -647,51 +627,6 @@ const Index = () => {
                         <DrawerBody>
                             <form id='userPermission'>
                                 <input type="hidden" name='userId' value={selectedUser} />
-                                {/* <TableContainer>
-                                    <Table variant={'simple'}>
-                                        <Thead>
-                                            <Tr>
-                                                <Th>Section Name</Th>
-                                                <Th>Permissions</Th>
-                                            </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            <Tr>
-                                                <Td borderRight={'1px solid #999'}>
-                                                    <Checkbox
-                                                        isChecked={allAepsChecked}
-                                                        isIndeterminate={isAepsIndeterminate}
-                                                        onChange={(e) => setCheckedAepsItems([e.target.checked, e.target.checked])}
-                                                    >
-                                                        AePS Section
-                                                    </Checkbox>
-                                                </Td>
-                                                <Td>
-                                                    <HStack spacing={6}>
-                                                        <Checkbox
-                                                            isChecked={checkedAepsItems[0]}
-                                                            onChange={(e) => setCheckedAepsItems([e.target.checked, checkedAepsItems[1]])}
-                                                        >
-                                                            AePS Basics
-                                                        </Checkbox>
-                                                        <Checkbox
-                                                            isChecked={checkedAepsItems[0]}
-                                                            onChange={(e) => setCheckedAepsItems([e.target.checked, checkedAepsItems[1]])}
-                                                        >
-                                                            AePS Payout
-                                                        </Checkbox>
-                                                        <Checkbox
-                                                            isChecked={checkedAepsItems[0]}
-                                                            onChange={(e) => setCheckedAepsItems([e.target.checked, checkedAepsItems[1]])}
-                                                        >
-                                                            AePS Report
-                                                        </Checkbox>
-                                                    </HStack>
-                                                </Td>
-                                            </Tr>
-                                        </Tbody>
-                                    </Table>
-                                </TableContainer> */}
                                 <VStack spacing={6} w={'full'} alignItems={'flex-start'}>
                                     <CheckboxTree
                                         nodes={aepsList}
@@ -710,19 +645,54 @@ const Index = () => {
                                     />
 
                                     <CheckboxTree
+                                        nodes={dmtList}
+                                        checked={dmtPermissions}
+                                        onCheck={(checked) => setDmtPermissions(checked)}
+                                        expanded={dmtExpansion}
+                                        onExpand={(expanded) => setDmtExpansion(expanded)}
+                                    />
+                                    
+                                    <CheckboxTree
                                         nodes={payoutList}
                                         checked={payoutPermissions}
                                         onCheck={(checked) => setPayoutPermissions(checked)}
                                         expanded={payoutExpansion}
                                         onExpand={(expanded) => setPayoutExpansion(expanded)}
                                     />
+                                    
+                                    <CheckboxTree
+                                        nodes={rechargeList}
+                                        checked={rechargePermissions}
+                                        onCheck={(checked) => setRechargePermissions(checked)}
+                                        expanded={rechargeExpansion}
+                                        onExpand={(expanded) => setRechargeExpansion(expanded)}
+                                    />
+                                    
 
                                     <CheckboxTree
-                                        nodes={dmtList}
-                                        checked={dmtPermissions}
-                                        onCheck={(checked) => setDmtPermissions(checked)}
-                                        expanded={dmtExpansion}
-                                        onExpand={(expanded) => setDmtExpansion(expanded)}
+                                        nodes={panList}
+                                        checked={panPermissions}
+                                        onCheck={(checked) => setPanPermissions(checked)}
+                                        expanded={panExpansion}
+                                        onExpand={(expanded) => setPanExpansion(expanded)}
+                                    />
+
+                                    
+                                    <CheckboxTree
+                                        nodes={matmList}
+                                        checked={matmPermissions}
+                                        onCheck={(checked) => setMatmPermissions(checked)}
+                                        expanded={matmExpansion}
+                                        onExpand={(expanded) => setMatmExpansion(expanded)}
+                                    />
+
+                                    
+                                    <CheckboxTree
+                                        nodes={cmsList}
+                                        checked={cmsPermissions}
+                                        onCheck={(checked) => setCmsPermissions(checked)}
+                                        expanded={cmsExpansion}
+                                        onExpand={(expanded) => setCmsExpansion(expanded)}
                                     />
                                 </VStack>
                             </form>
