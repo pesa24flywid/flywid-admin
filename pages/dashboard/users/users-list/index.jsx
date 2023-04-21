@@ -429,7 +429,7 @@ const Index = () => {
                                                                                 </Link>
                                                                                 <Button
                                                                                     size={'sm'} rounded={0}
-                                                                                    colorScheme={'red'}
+                                                                                    colorScheme={'teal'}
                                                                                     title={'Reports'}
                                                                                     onClick={()=>openPermissionsDrawer(user.id)}
                                                                                 >
