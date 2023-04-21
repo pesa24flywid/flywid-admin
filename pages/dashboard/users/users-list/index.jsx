@@ -44,7 +44,8 @@ import {
     BsChevronDoubleLeft,
     BsChevronDoubleRight,
     BsChevronLeft,
-    BsChevronRight
+    BsChevronRight,
+    BsShield
 } from 'react-icons/bs'
 import Layout from '../../layout';
 import jsPDF from 'jspdf';
@@ -398,42 +399,50 @@ const Index = () => {
                                                                                 </Box>
                                                                             </HStack>
                                                                             <Text>{user.email}</Text>
-                                                                        <HStack spacing={0} my={2}>
-                                                                            <Link href={`/dashboard/users/manage-user?pageId=users&user_id=${user.id}`}>
-                                                                                <Button
-                                                                                    size={'sm'} rounded={0}
-                                                                                    colorScheme={'twitter'}
-                                                                                    title={'Edit'}
-                                                                                >
-                                                                                    <BsPenFill />
-                                                                                </Button>
-                                                                            </Link>
-                                                                            <Link href={`/dashboard/account/fund-transfer?pageId=transfer&user_id=${user.id}`}>
-                                                                                <Button
-                                                                                    size={'sm'} rounded={0}
-                                                                                    colorScheme={'whatsapp'}
-                                                                                    title={'Transfer/Reversal'}
-                                                                                >
-                                                                                    <BiRupee fontSize={18} />
-                                                                                </Button>
-                                                                            </Link>
-                                                                            <Link href={`/dashboard/reports/transactions/user-ledger?pageId=reports&user_id=${user.id}`}>
+                                                                            <HStack spacing={0} my={2}>
+                                                                                <Link href={`/dashboard/users/manage-user?pageId=users&user_id=${user.id}`}>
+                                                                                    <Button
+                                                                                        size={'sm'} rounded={0}
+                                                                                        colorScheme={'twitter'}
+                                                                                        title={'Edit'}
+                                                                                    >
+                                                                                        <BsPenFill />
+                                                                                    </Button>
+                                                                                </Link>
+                                                                                <Link href={`/dashboard/account/fund-transfer?pageId=transfer&user_id=${user.id}`}>
+                                                                                    <Button
+                                                                                        size={'sm'} rounded={0}
+                                                                                        colorScheme={'whatsapp'}
+                                                                                        title={'Transfer/Reversal'}
+                                                                                    >
+                                                                                        <BiRupee fontSize={18} />
+                                                                                    </Button>
+                                                                                </Link>
+                                                                                <Link href={`/dashboard/reports/transactions/user-ledger?pageId=reports&user_id=${user.id}`}>
+                                                                                    <Button
+                                                                                        size={'sm'} rounded={0}
+                                                                                        colorScheme={'red'}
+                                                                                        title={'Reports'}
+                                                                                    >
+                                                                                        <BsFileBarGraphFill />
+                                                                                    </Button>
+                                                                                </Link>
                                                                                 <Button
                                                                                     size={'sm'} rounded={0}
                                                                                     colorScheme={'red'}
                                                                                     title={'Reports'}
+                                                                                    onClick={()=>openPermissionsDrawer(user.id)}
                                                                                 >
-                                                                                    <BsFileBarGraphFill />
+                                                                                    <BsShield />
                                                                                 </Button>
-                                                                            </Link>
-                                                                            <HStack p={2} bg={'white'}>
-                                                                                <Switch
-                                                                                    size={'sm'}
-                                                                                    onChange={() => changeUserStatus(user.id, user.is_active == 1 ? 0 : 1)}
-                                                                                    defaultChecked={user.is_active === 1}
-                                                                                ></Switch>
+                                                                                <HStack p={2} bg={'white'}>
+                                                                                    <Switch
+                                                                                        size={'sm'}
+                                                                                        onChange={() => changeUserStatus(user.id, user.is_active == 1 ? 0 : 1)}
+                                                                                        defaultChecked={user.is_active === 1}
+                                                                                    ></Switch>
+                                                                                </HStack>
                                                                             </HStack>
-                                                                        </HStack>
                                                                             <Text>
                                                                                 <a href={`tel:${user.alternate_phone}`}>{user.alternate_phone}</a>
                                                                             </Text>
@@ -454,7 +463,7 @@ const Index = () => {
                                                                         <Box>
                                                                             <Text><b>Current Balance: </b>&nbsp;&nbsp; ₹ {user.wallet} </Text>
                                                                             <Text><b>Capping Balance: </b>&nbsp;&nbsp; ₹ {user.minimum_balance} </Text>
-                                                                            <Text textTransform={'capitalize'}>{user.packages.length !=0 ? user.packages[0].name : "No"} Plan</Text>
+                                                                            <Text textTransform={'capitalize'}>{user.packages.length != 0 ? user.packages[0].name : "No"} Plan</Text>
                                                                             <Text>{user.company_name} {user.firm_type}</Text>
                                                                         </Box>
                                                                     </Td>
@@ -466,15 +475,15 @@ const Index = () => {
                                                                         </Box>
                                                                     </Td>
                                                                     <Td>{/* PAN Card */}
-                                                                        
+
                                                                         {
                                                                             user.pan_photo &&
                                                                             <Button size={'xs'}
                                                                                 onClick={() => BackendAxios.post(`/api/admin/file`, {
                                                                                     address: user.pan_photo
-                                                                                },{
+                                                                                }, {
                                                                                     responseType: 'blob'
-                                                                                }).then(res=>{
+                                                                                }).then(res => {
                                                                                     fileDownload(res.data, `PAN.jpeg`)
                                                                                 })}
                                                                             >View PAN Card</Button>
@@ -486,12 +495,12 @@ const Index = () => {
                                                                             <Button size={'xs'}
                                                                                 onClick={() => BackendAxios.post(`/api/admin/file`, {
                                                                                     address: user.aadhaar_front
-                                                                                },{
+                                                                                }, {
                                                                                     responseType: 'blob'
-                                                                                }).then(res=>{
+                                                                                }).then(res => {
                                                                                     fileDownload(res.data, `AadhaarFront.jpeg`)
                                                                                 })
-                                                                            }
+                                                                                }
                                                                             >View Aadhaar Front</Button>
                                                                         }
                                                                         <br /><br />
@@ -501,12 +510,12 @@ const Index = () => {
                                                                             <Button size={'xs'}
                                                                                 onClick={() => BackendAxios.post(`/api/admin/file`, {
                                                                                     address: user.aadhaar_back
-                                                                                },{
+                                                                                }, {
                                                                                     responseType: 'blob'
-                                                                                }).then(res=>{
+                                                                                }).then(res => {
                                                                                     fileDownload(res.data, `AadhaarBack.jpeg`)
                                                                                 })
-                                                                            }
+                                                                                }
                                                                             >View Aadhaar Back</Button>
                                                                         }
 
