@@ -184,6 +184,24 @@ const Index = () => {
             setDmtPermissions(res.data[0].allowed_pages.filter((page) => {
                 return page.includes("dmt")
             }))
+            setRechargePermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("recharge")
+            }))
+            setPayoutPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("payout")
+            }))
+            setPanPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("pan")
+            }))
+            setCmsPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("cms")
+            }))
+            setLicPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("lic")
+            }))
+            setMatmPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("matm")
+            }))
         }).catch((err) => {
             console.log("No permissions found")
             console.log(err.message)
