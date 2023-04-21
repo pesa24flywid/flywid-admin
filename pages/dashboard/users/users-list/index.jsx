@@ -57,7 +57,7 @@ import Script from 'next/script'
 import Link from 'next/link'
 import { BiPen, BiRupee } from 'react-icons/bi'
 import fileDownload from 'js-file-download'
-import { aepsList, bbpsList, cmsList, dmtList, matmList, panList, payoutList, rechargeList } from '@/lib/utils/permissions/structure'
+import { aepsList, bbpsList, cmsList, dmtList, licList, matmList, panList, payoutList, rechargeList } from '@/lib/utils/permissions/structure'
 
 const ExportPDF = (currentRowData) => {
     const doc = new jsPDF('landscape')
@@ -106,6 +106,9 @@ const Index = () => {
 
     const [matmPermissions, setMatmPermissions] = useState([])
     const [matmExpansion, setMatmExpansion] = useState([])
+
+    const [licPermissions, setLicPermissions] = useState([])
+    const [licExpansion, setLicExpansion] = useState([])
 
     const availableTabs = ['retailers', 'distributor']
     const [selectedTab, setSelectedTab] = useState("retailer")
@@ -199,7 +202,7 @@ const Index = () => {
 
     function saveUserPermissions() {
         ClientAxios.post('/api/user/update-permissions', {
-            allowed_pages: aepsPermissions.concat(bbpsPermissions, dmtPermissions, payoutPermissions),
+            allowed_pages: aepsPermissions.concat(aepsPermissions, bbpsPermissions, dmtPermissions, payoutPermissions, cmsPermissions, rechargePermissions, matmPermissions, panPermissions, licPermissions),
             user_id: selectedUser
         }, {
             headers: {
@@ -693,6 +696,15 @@ const Index = () => {
                                         onCheck={(checked) => setCmsPermissions(checked)}
                                         expanded={cmsExpansion}
                                         onExpand={(expanded) => setCmsExpansion(expanded)}
+                                    />
+
+                                    
+                                    <CheckboxTree
+                                        nodes={licList}
+                                        checked={licPermissions}
+                                        onCheck={(checked) => setLicPermissions(checked)}
+                                        expanded={licExpansion}
+                                        onExpand={(expanded) => setLicExpansion(expanded)}
                                     />
                                 </VStack>
                             </form>
