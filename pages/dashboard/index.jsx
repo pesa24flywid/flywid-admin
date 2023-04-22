@@ -77,25 +77,25 @@ const Index = () => {
           >
             <DataCard
               title={'Logins'}
-              data={126}
+              data={0}
               icon={<BiLogIn color='white' size={'32'} />}
               color={'#FF7B54'}
             />
             <DataCard
               title={'Registrations'}
-              data={36}
+              data={0}
               icon={<FaUserPlus color='white' size={'28'} />}
               color={'#6C00FF'}
             />
             <DataCard
               title={'Support Tickets'}
-              data={5}
+              data={0}
               icon={<IoMdHelpBuoy color='white' size={'32'} />}
               color={'#FFB100'}
             />
             <DataCard
               title={'Payout Requests'}
-              data={29}
+              data={0}
               icon={<SiRazorpay color='white' size={'32'} />}
               color={'#88A47C'}
             />
@@ -117,22 +117,22 @@ const Index = () => {
             <TransactionCard
               color={'#6C00FF'}
               title={"AePS"}
-              quantity={"8"}
-              amount={"8600"}
+              quantity={"0"}
+              amount={"0"}
             />
 
             <TransactionCard
               color={'#3C79F5'}
               title={"BBPS"}
-              quantity={"8"}
-              amount={"8600"}
+              quantity={"0"}
+              amount={"0"}
             />
 
             <TransactionCard
               color={'#2DCDDF'}
               title={"DMT"}
-              quantity={"8"}
-              amount={"8600"}
+              quantity={"0"}
+              amount={"0"}
             />
           </Stack>
 
@@ -143,22 +143,22 @@ const Index = () => {
             <TransactionCard
               color={'#F2DEBA'}
               title={"PAN"}
-              quantity={"8"}
-              amount={"8600"}
+              quantity={"0"}
+              amount={"0"}
             />
 
             <TransactionCard
               color={'#FF8B13'}
               title={"LIC"}
-              quantity={"8"}
-              amount={"8600"}
+              quantity={"0"}
+              amount={"0"}
             />
 
             <TransactionCard
               color={'#13005A'}
               title={"CMS"}
-              quantity={"8"}
-              amount={"8600"}
+              quantity={"0"}
+              amount={"0"}
             />
 
           </Stack>
@@ -170,15 +170,15 @@ const Index = () => {
             <TransactionCard
               color={'#ABC270'}
               title={"Recharges"}
-              quantity={"8"}
-              amount={"8600"}
+              quantity={"0"}
+              amount={"0"}
             />
 
             <TransactionCard
               color={'#678983'}
               title={"Fund Requests"}
-              quantity={"8"}
-              amount={"8600"}
+              quantity={"0"}
+              amount={"0"}
             />
 
           </Stack>

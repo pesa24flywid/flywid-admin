@@ -55,10 +55,31 @@ import Link from 'next/link'
 
 const menuOptions = [
   {
-    type: "link",
+    type: "accordion",
     name: "profile",
-    link: "/dashboard/profile?pageid=profile",
-    icon: <FaUser />
+    icon: <FaUser />,
+    children: [
+      {
+        title: "view profile",
+        link: "/dashboard/profile?pageid=profile",
+        status: true
+      },
+      {
+        title: "edit profile",
+        link: "/dashboard/profile/edit?pageid=profile",
+        status: true
+      },
+      {
+        title: "reset mpin",
+        link: "/dashboard/profile/reset-mpin?pageid=profile",
+        status: true
+      },
+      {
+        title: "reset password",
+        link: "/dashboard/profile/reset-password?pageid=profile",
+        status: true
+      },
+    ]
   },
   {
     type: "link",
@@ -419,7 +440,7 @@ const Layout = (props) => {
 
   return (
     <>
-      <Head><title>{`Pesa24 Admin | ${props.pageTitle || "No Title"}`}</title></Head>
+      <Head><title>{`Flywid Admin | ${props.pageTitle || "No Title"}`}</title></Head>
       <HStack spacing={0} alignItems={'flex-start'}>
         {/* Sidebar */}
         <Show above='md'>
@@ -432,7 +453,7 @@ const Layout = (props) => {
             <VStack py={8}>
               <Image src='https://xsgames.co/randomusers/assets/avatars/male/8.jpg' boxSize={24} rounded={'full'} />
               <Text fontSize={'xl'} color={'#444'} textTransform={'capitalize'}>{userName}</Text>
-              <Text fontSize={'sm'} color={'#666'} textTransform={'capitalize'}>FirmName - {userType}</Text>
+              <Text fontSize={'sm'} color={'#666'} textTransform={'capitalize'}>Flywid - {userType}</Text>
             </VStack>
             <VStack spacing={2} w={'full'}>
               {
@@ -518,7 +539,8 @@ const Layout = (props) => {
                   <HiOutlineMenuAlt1 fontSize={20} />
                 </Button>
               </Show>
-              <Image src='/logo_long.png' w={16} />
+              {/* <Image src='/logo_long.png' w={16} /> */}
+              <Text fontSize={'lg'} fontWeight={'bold'}>Flywid</Text>
             </HStack>
             <HStack spacing={6}>
               <HStack spacing={2}>
@@ -570,8 +592,8 @@ const Layout = (props) => {
             <HStack spacing={4}>
               <Image src='https://xsgames.co/randomusers/assets/avatars/male/8.jpg' boxSize={12} rounded={'full'} />
               <Box>
-                <Text fontSize={'lg'}>Sangam Kumar</Text>
-                <Text fontSize={'xs'}>Pesa24</Text>
+                <Text fontSize={'lg'}>{Cookies.get("userName")}</Text>
+                <Text fontSize={'xs'}>Flywid</Text>
               </Box>
             </HStack>
           </DrawerHeader>
