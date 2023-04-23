@@ -147,6 +147,30 @@ const CommissionSetup = () => {
         }
     }
 
+    const operatorNamesCellEditor = (params) => {
+        const [operators, setOperators] = useState([])
+        useEffect(() => {
+            BackendAxios.get("/api/admin/operators").then(res => {
+                setOperators(res.data)
+            }).catch(err => {
+                Toast({
+                    status: "error",
+                    title: "Error while fetching operators",
+                    description: err.response.data.message || err.response.data || err.message
+                })
+            })
+        }, [])
+        return (
+            <Select name='operatorId' >
+                {
+                    operators.map((operator, key) => (
+                        <option value={operator.id} key={key}>{operator.name}</option>
+                    ))
+                }
+            </Select>
+        )
+    }
+
     const SwitchCellRender = (params) => {
         return (
             <Switch
@@ -354,9 +378,13 @@ const CommissionSetup = () => {
                                     <Th>#</Th>
                                     <Th>Creator Name</Th>
                                     <Th>Package Name</Th>
-                                    <Th>Total Users</Th>
+                                    {/* <Th>Total Users</Th> */}
                                     <Th>Default</Th>
                                     <Th>Status</Th>
+                                    <Th>AePS Cash Wihtdrawal</Th>
+                                    <Th>AePS Aadhaar Pay</Th>
+                                    <Th>AePS Mini Statement</Th>
+                                    <Th>BBPS</Th>
                                     <Th>Payout</Th>
                                     <Th>DMT</Th>
                                     <Th>Recharge</Th>
@@ -380,7 +408,7 @@ const CommissionSetup = () => {
                                                         onBlur={() => updatePackageDetails({ name: focussedPackageTitle }, item.id)}
                                                     />
                                                 </Td>
-                                                <Td>0</Td>
+                                                {/* <Td>0</Td> */}
                                                 <Td>
                                                     <Switch
                                                         defaultChecked={item.is_default === 1}
@@ -392,6 +420,46 @@ const CommissionSetup = () => {
                                                         defaultChecked={item.status === 1}
                                                         onChange={e => updatePackageDetails({ status: e.target.checked }, item.id)}
                                                     ></Switch>
+                                                </Td>
+                                                <Td>
+                                                    {/* AEPS Cash Wihtdrawal */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "aeps-cash-withdrawal")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* AEPS Aadhaar Pay */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "aeps-aadhaar-pay")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* AEPS Mini Statement */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "aeps-mini-statement")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* BBPS */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "bbps")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
                                                 </Td>
                                                 <Td>
                                                     {/* Payout */}
@@ -497,6 +565,7 @@ const CommissionSetup = () => {
                                 components={{
                                     'switchCellRender': SwitchCellRender,
                                     'actionsCellRender': ActionsCellRender,
+                                    'operatorNamesCellEditor': operatorNamesCellEditor
                                 }}
                                 rowSelection={'single'}
                                 onCellValueChanged={onCellValueChange}

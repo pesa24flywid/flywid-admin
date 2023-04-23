@@ -120,10 +120,26 @@ const menuOptions = [
     ]
   },
   {
-    type: "link",
+    type: "accordion",
     name: "manage services",
-    link: "/dashboard/manage-services?pageid=services",
     icon: <BsBriefcaseFill />,
+    children: [
+      {
+        title: "manage services",
+        link: "/dashboard/services/manage-services?pageid=services",
+        status: true,
+      },
+      {
+        title: "manage operator categories",
+        link: "/dashboard/services/manage-categories?pageId=controls",
+        status: true,
+      },
+      {
+        title: "manage operators",
+        link: "/dashboard/services/manage-operators?pageId=controls",
+        status: true,
+      },
+    ]
   },
   {
     type: "accordion",
@@ -174,11 +190,6 @@ const menuOptions = [
     name: "controls",
     icon: <AiFillApi />,
     children: [
-      {
-        title: "add operator type",
-        link: "/dashboard/controls/add-operator-category?pageId=controls",
-        status: false,
-      },
       {
         title: "add new operator",
         link: "/dashboard/controls/add-operator?pageId=controls",
