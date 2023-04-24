@@ -126,12 +126,34 @@ const CommissionSetup = () => {
     }
 
     function onCellValueChange(params) {
-        if (params.data.from && params.data.to) {
+        if (selectedService == "payout" || 
+        selectedService == "aeps-cash-withdrawal" || 
+        selectedService == "dmt" ||
+        selectedService == "aeps-aadhaar-pay"
+        ) {
+            if (params.data.from && params.data.to) {
+                BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
+                    ...params.data,
+                    package_id: selectedPackage,
+                    from: parseInt(params.data.from),
+                    to: parseInt(params.data.to),
+                }).then(() => {
+                    Toast({
+                        status: 'success',
+                        description: `Commission Updated`
+                    })
+                }).catch(err => {
+                    Toast({
+                        status: 'error',
+                        description: `Error while updating commission`
+                    })
+                })
+            }
+        }
+        if (selectedService == "aeps-mini-statement") {
             BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
                 ...params.data,
-                package_id: selectedPackage,
-                from: parseInt(params.data.from),
-                to: parseInt(params.data.to),
+                package_id: selectedPackage
             }).then(() => {
                 Toast({
                     status: 'success',
@@ -143,7 +165,24 @@ const CommissionSetup = () => {
                     description: `Error while updating commission`
                 })
             })
-            console.log({ ...params.data, package_id: selectedPackage })
+        }
+        if (selectedService == "bbps") {
+            if(params.data.operator_name && params.data.fixed_charge){
+                BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
+                    ...params.data,
+                    package_id: selectedPackage
+                }).then(() => {
+                    Toast({
+                        status: 'success',
+                        description: `Commission Updated`
+                    })
+                }).catch(err => {
+                    Toast({
+                        status: 'error',
+                        description: `Error while updating commission`
+                    })
+                })
+            }
         }
     }
 
