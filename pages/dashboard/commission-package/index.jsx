@@ -8,6 +8,8 @@ import {
     FormControl,
     FormLabel,
     Input,
+    InputGroup,
+    InputRightAddon,
     Select,
     PinInput,
     PinInputField,
@@ -62,6 +64,13 @@ const CommissionSetup = () => {
         next_page_url: "",
         prev_page_url: "",
     })
+    const [fetchedUser, setFetchedUser] = useState({
+        id: "",
+        user_name: "",
+        firm_name: "",
+        wallet: "",
+        phone: "",
+    })
 
     const Formik = useFormik({
         initialValues: {
@@ -90,6 +99,61 @@ const CommissionSetup = () => {
         }
     })
 
+
+    const VerificationFormik = useFormik({
+        initialValues: {
+            beneficiaryId: fetchedUser.id || "",
+            packageId: ""
+        },
+        onSubmit: values => {
+            if (!values.beneficiaryId && !values.packageId) {
+                Toast({
+                    description: 'Please enter correct details'
+                })
+            }
+            else {
+                BackendAxios.post(`/api/admin/new-fund`, values).then(res => {
+                    Toast({
+                        status: 'success',
+                        description: 'Package assigned successfully!'
+                    })
+                }).catch(err => {
+                    Toast({
+                        status: 'error',
+                        description: err.response.data.message || err.response.data || err.message
+                    })
+                })
+            }
+        }
+    })
+
+    const verifyBeneficiary = (queriedUserId) => {
+        // Logic to verifiy beneficiary details
+        BackendAxios.post(`/api/admin/user/info/${VerificationFormik.values.beneficiaryId}`).then((res) => {
+            Formik.setFieldValue("beneficiaryId", res.data.data.id)
+            setFetchedUser({
+                ...fetchedUser,
+                id: res.data.data.id,
+                user_name: res.data.data.first_name + " " + res.data.data.last_name,
+                firm_name: res.data.data.firm_name,
+                phone: res.data.data.phone_number,
+                wallet: res.data.data.wallet,
+
+            })
+        }).catch((err) => {
+            Toast({
+                status: 'error',
+                description: err.response.data.message || err.response.data || 'User not found!'
+            })
+            setFetchedUser({
+                user_name: "",
+                firm_name: "",
+                wallet: "",
+                phone: "",
+            })
+        })
+    }
+
     function fetchAllPackages(pageLink) {
         BackendAxios.get(pageLink || '/api/admin/packages?page=1').then(res => {
             setPagination({
@@ -108,6 +172,7 @@ const CommissionSetup = () => {
             })
         })
     }
+
     function fetchAllCommission(selectedPackageId, serviceName, emptyRow) {
         BackendAxios.get(`api/admin/commissions/${serviceName}/${selectedPackageId}`).then(res => {
             if (res.data.length == 0) {
@@ -126,10 +191,10 @@ const CommissionSetup = () => {
     }
 
     function onCellValueChange(params) {
-        if (selectedService == "payout" || 
-        selectedService == "aeps-cash-withdrawal" || 
-        selectedService == "dmt" ||
-        selectedService == "aeps-aadhaar-pay"
+        if (selectedService == "payout" ||
+            selectedService == "aeps-cash-withdrawal" ||
+            selectedService == "dmt" ||
+            selectedService == "aeps-aadhaar-pay"
         ) {
             if (params.data.from && params.data.to) {
                 BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
@@ -167,7 +232,7 @@ const CommissionSetup = () => {
             })
         }
         if (selectedService == "bbps") {
-            if(params.data.operator_name && params.data.fixed_charge){
+            if (params.data.operator_name && params.data.fixed_charge) {
                 BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
                     ...params.data,
                     package_id: selectedPackage
@@ -275,6 +340,12 @@ const CommissionSetup = () => {
         }
     }
 
+    const [isAssignModalOpen, setIsAssignModalOpen] = useState({
+        status: false,
+        selectedPackageId: "",
+        name: ""
+    })
+
 
     const defaultColDef = useMemo(() => {
         return {
@@ -316,6 +387,36 @@ const CommissionSetup = () => {
                 status: 'success',
                 description: "Package was deleted successfully"
             })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                description: err.response.data.message || err.response.data || err.message
+            })
+        })
+    }
+
+    function assignPackage() {
+        if(!VerificationFormik.values.beneficiaryId){
+            Toast({
+                description: "Please enter User ID"
+            })
+            return
+        }
+        BackendAxios.post("/api/admin/assign-package", {
+            user_id: VerificationFormik.values.beneficiaryId,
+            package_id: isAssignModalOpen.selectedPackageId
+        }).then(res => {
+            if (res.data) {
+                Toast({
+                    status: 'success',
+                    description: "Package assigned to user successfully!"
+                })
+            } else {
+                Toast({
+                    description: "Package could not be assigned"
+                })
+            }
+            setIsAssignModalOpen({status: false})
         }).catch(err => {
             Toast({
                 status: 'error',
@@ -415,6 +516,7 @@ const CommissionSetup = () => {
                             <Thead>
                                 <Tr>
                                     <Th>#</Th>
+                                    <Th>Assign To User</Th>
                                     <Th>Creator Name</Th>
                                     <Th>Package Name</Th>
                                     {/* <Th>Total Users</Th> */}
@@ -436,6 +538,19 @@ const CommissionSetup = () => {
                                         return (
                                             <Tr key={key}>
                                                 <Td>{key + 1}</Td>
+                                                <Td>
+                                                    <Button
+                                                        colorScheme='orange'
+                                                        size={'sm'}
+                                                        onClick={() => {
+                                                            setIsAssignModalOpen({
+                                                                status: true,
+                                                                selectedPackageId: item.id,
+                                                                name: item.name
+                                                            })
+                                                        }}
+                                                    >Select User</Button>
+                                                </Td>
                                                 {/* Name of person who created these packages */}
                                                 <Td>{item.user_name}</Td>
                                                 <Td>
@@ -658,6 +773,74 @@ const CommissionSetup = () => {
                     <ModalFooter>
                         <HStack justifyContent={'flex-end'}>
                             <Button colorScheme='red' onClick={deletePackage}>Delete Now</Button>
+                        </HStack>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            {/* Package assign modal */}
+            <Modal
+                isOpen={isAssignModalOpen.status}
+                onClose={() => setIsAssignModalOpen({ status: false })}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Assign {isAssignModalOpen.name} Package To Any User</ModalHeader>
+                    <ModalBody>
+                        <Stack
+                            direction={['column', 'row']}
+                            spacing={6} py={6}
+                        >
+                            <FormControl w={['full', 'xs']}>
+                                <FormLabel>User ID</FormLabel>
+                                <InputGroup>
+                                    <Input
+                                        name={'beneficiaryId'}
+                                        value={VerificationFormik.values.beneficiaryId}
+                                        onChange={VerificationFormik.handleChange}
+                                        placeholder={'Enter Beneficiary User ID'}
+                                    />
+                                    <InputRightAddon
+                                        children={'Verify'}
+                                        cursor={'pointer'}
+                                        onClick={() => verifyBeneficiary()}
+                                    />
+                                </InputGroup>
+                            </FormControl>
+                        </Stack>
+                        {
+                            fetchedUser.user_name ?
+                                <Stack
+                                    p={4} bg={'blue.50'}
+                                    border={'1px'}
+                                    borderColor={'blue.200'}
+                                    rounded={16}
+                                    direction={['column']}
+                                    spacing={6} justifyContent={'space-between'}
+                                    textTransform={'capitalize'}
+                                >
+                                    <Box>
+                                        <Text fontWeight={'medium'}>Beneficiary Name</Text>
+                                        <Text>{fetchedUser.user_name}</Text>
+                                    </Box>
+                                    <Box>
+                                        <Text fontWeight={'medium'}>Firm Name</Text>
+                                        <Text>{fetchedUser.firm_name}</Text>
+                                    </Box>
+                                    <Box>
+                                        <Text fontWeight={'medium'}>Current Balance</Text>
+                                        <Text>₹ {fetchedUser.wallet}</Text>
+                                    </Box>
+                                    <Box>
+                                        <Text fontWeight={'medium'}>Phone</Text>
+                                        <Text>{fetchedUser.phone}</Text>
+                                    </Box>
+                                </Stack> : null
+                        }
+                    </ModalBody>
+                    <ModalFooter>
+                        <HStack justifyContent={'flex-end'}>
+                            <Button colorScheme='twitter' onClick={() => assignPackage()}>Confirm</Button>
                         </HStack>
                     </ModalFooter>
                 </ModalContent>

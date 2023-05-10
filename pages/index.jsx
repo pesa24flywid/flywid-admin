@@ -183,9 +183,9 @@ const Index = () => {
 
   return (
     <>
-      <Head><title>Pesa24 - Admin Panel</title></Head>
+      <Head><title>Flywid - Admin Panel</title></Head>
       <VStack p={4}>
-        <Text fontSize={'2xl'} fontWeight={'semibold'} mb={6}>Pesa24 Admin Login</Text>
+        <Text fontSize={'2xl'} fontWeight={'semibold'} mb={6}>Flywid Admin Login</Text>
         <VStack
           p={4} bg={'blue.50'}
           border={'1px'}
@@ -206,7 +206,7 @@ const Index = () => {
           </FormControl>
           {/*  */}
           <HStack spacing={4}>
-            <Link href={'https://dashboard.pesa24.in/auth/reset-password'}>
+            <Link href={'https://dashboard.flywid.in/auth/reset-password'}>
               <Button colorScheme={'twitter'} variant={'outline'}>Reset Password</Button>
             </Link>
             <Button colorScheme={'twitter'} onClick={() => sendOtp()} isDisabled={!hasGps} isLoading={otpBeingSent}>Send OTP</Button>

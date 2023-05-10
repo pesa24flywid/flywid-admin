@@ -179,11 +179,22 @@ const menuOptions = [
     ]
   },
   {
-    type: "link",
+    type: "accordion",
     id: "package",
     name: "commission package",
     icon: <FaPercentage />,
-    link: "/dashboard/commission-package/?pageid=package",
+    children: [
+      {
+        title: "Commission Package",
+        link: "/dashboard/commission-package/?pageid=package",
+        status: true
+      },
+      {
+        title: "Assign Package",
+        link: "/dashboard/commission-package/assign?pageid=package",
+        status: true
+      },
+    ]
   },
   {
     type: "accordion",
