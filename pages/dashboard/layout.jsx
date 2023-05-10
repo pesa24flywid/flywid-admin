@@ -179,22 +179,23 @@ const menuOptions = [
     ]
   },
   {
-    type: "accordion",
+    type: "link",
     id: "package",
     name: "commission package",
     icon: <FaPercentage />,
-    children: [
-      {
-        title: "Commission Package",
-        link: "/dashboard/commission-package/?pageid=package",
-        status: true
-      },
-      {
-        title: "Assign Package",
-        link: "/dashboard/commission-package/assign?pageid=package",
-        status: true
-      },
-    ]
+    link: "/dashboard/commission-package/?pageid=package",
+    // children: [
+    //   {
+    //     title: "Commission Package",
+    //     link: "/dashboard/commission-package/?pageid=package",
+    //     status: true
+    //   },
+    //   {
+    //     title: "Assign Package",
+    //     link: "/dashboard/commission-package/assign?pageid=package",
+    //     status: true
+    //   },
+    // ]
   },
   {
     type: "accordion",
