@@ -38,6 +38,11 @@ const SupportTickets = () => {
             headerName: "Linked Transaction ID",
         },
         {
+            field: "admin_remarks",
+            headerName: "Admin Remarks",
+            editable: true
+        },
+        {
             field: "status",
             headerName: "Status",
             editable: true,
@@ -71,7 +76,7 @@ const SupportTickets = () => {
         }).catch(err => {
             Toast({
                 status: 'error',
-                description: err.response.data.messagae || err.response.data || err.message
+                description: err.response.data.message || err.response.data || err.message
             })
         })
     }, [])
@@ -82,6 +87,31 @@ const SupportTickets = () => {
                 <Text>({params.data.user_id}) {params.value} - {params.data.phone_number}</Text>
             </Box>
         )
+    }
+
+    function onCellValueChange(params) {
+        BackendAxios.post(`/api/admin/tickets`, {
+            id: params.data.id,
+            status: params.data.status,
+            admin_remarks: params.data.admin_remarks
+        }).then((res) => {
+            if(res.data===1){
+                Toast({
+                    status: 'success',
+                    description: `Ticket Updated`
+                })
+            }
+            else{
+                Toast({
+                    description: `Ticket Not Updated`
+                })
+            }
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                description: err.response.data.message || err.response.data || err.message
+            })
+        })
     }
 
     return (
@@ -96,6 +126,7 @@ const SupportTickets = () => {
                         components={{
                             'userCellRenderer': userCellRenderer
                         }}
+                        onCellValueChanged={onCellValueChange}
                     >
 
                     </AgGridReact>

@@ -9,11 +9,13 @@ import {
   Text,
   HStack,
   VisuallyHidden,
+  useToast
 } from '@chakra-ui/react'
 import BackendAxios from '@/lib/utils/axios';
+import Pdf from 'react-to-pdf'
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'
-import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsEye } from 'react-icons/bs';
 
 
 const ExportPDF = () => {
@@ -24,6 +26,7 @@ const ExportPDF = () => {
 }
 
 const Index = () => {
+  const Toast = useToast({position: 'top-right'})
   const [rowData, setRowData] = useState([])
   const [colDefs, setColDefs] = useState([
     {
@@ -75,17 +78,7 @@ const Index = () => {
     prev_page_url: "",
   })
 
-  function onColumnMoved(params) {
-    var columnState = JSON.stringify(params.columnApi.getColumnState());
-    localStorage.setItem('payout_reportsColumns', columnState);
-  }
-
-  function onGridReady(params) {
-    var columnState = JSON.parse(localStorage.getItem('payout_reportsColumns'));
-    if (columnState) {
-      params.columnApi.applyColumnState({ state: columnState, applyOrder: true });
-    }
-  }
+  
 
   function fetchPayouts(pageLink) {
     BackendAxios.post(pageLink || '/api/admin/razorpay/fetch-payout?page=1').then((res) => {
@@ -101,12 +94,44 @@ const Index = () => {
       setPrintableRow(res.data.data)
     }).catch((err) => {
       console.log(err)
+      Toast({
+        status: 'error',
+        description: err.response.data.message || err.response.data || err.message
+      })
     })
   }
 
   useEffect(() => {
     fetchPayouts()
   }, [])
+
+
+  const pdfRef = React.createRef()
+  const [receipt, setReceipt] = useState({
+    show: false,
+    status: "success",
+    data: {}
+  })
+  const receiptCellRenderer = (params) => {
+    function showReceipt() {
+      if (!params.data.metadata) {
+        Toast({
+          description: 'No Receipt Available'
+        })
+        return
+      }
+      setReceipt({
+        status: JSON.parse(params.data.metadata).status,
+        show: true,
+        data: JSON.parse(params.data.metadata)
+      })
+    }
+    return (
+      <HStack height={'full'} w={'full'} gap={4}>
+        <Button rounded={'full'} colorScheme='twitter' size={'xs'} onClick={() => showReceipt()}><BsEye /></Button>
+      </HStack>
+    )
+  }
 
   return (
     <>
