@@ -270,6 +270,14 @@ const Index = () => {
                         >
                             Distributor
                         </Tab>
+                        <Tab
+                            fontSize={['xs', 'lg']}
+                            _selected={{ bg: 'twitter.500', color: 'white' }}
+                            onClick={() => setSelectedTab("super_distributor")}
+                            width={'xs'} flex={'unset'}
+                        >
+                            Super Distributor
+                        </Tab>
                     </TabList>
                     <TabPanels pt={8}>
                         {

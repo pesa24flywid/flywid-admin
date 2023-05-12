@@ -106,7 +106,7 @@ const UserLedger = () => {
     }
 
     useEffect(() => {
-        if (Router.isReady) {
+        if (Router.isReady && user_id) {
             BackendAxios.get(`/api/admin/transactions-user/${user_id}?page=1`).then((res) => {
                 setPagination({
                     current_page: res.data.current_page,
