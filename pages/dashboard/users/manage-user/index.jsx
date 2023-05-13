@@ -214,12 +214,12 @@ const Index = () => {
                                     <FormLabel>Gender</FormLabel>
                                     <RadioGroup
                                         name='gender'
-                                        onChange={Formik.handleChange}
+                                        onChange={value => Formik.setFieldValue('gender', value)}
                                         value={Formik.values.gender}
                                     >
                                         <HStack spacing={6} >
-                                            <Radio value='male'>Male</Radio>
-                                            <Radio value='female'>Female</Radio>
+                                            <Radio value='M'>Male</Radio>
+                                            <Radio value='F'>Female</Radio>
                                         </HStack>
                                     </RadioGroup>
                                 </FormControl>

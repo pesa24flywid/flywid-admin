@@ -269,7 +269,7 @@ const Index = () => {
                                         </HStack>
                                     </RadioGroup>
                                 </FormControl>
-                                <FormControl w={['full', '56']} isRequired>
+                                <FormControl w={['full', '56']}>
                                     <FormLabel fontSize={12}>Firm Name</FormLabel>
                                     <Input
                                         fontSize={12}
@@ -278,7 +278,7 @@ const Index = () => {
                                         placeholder={'Enter Firm Name'}
                                     />
                                 </FormControl>
-                                <FormControl w={['full', '56']} isRequired>
+                                <FormControl w={['full', '56']}>
                                     <FormLabel fontSize={12}>Company Type</FormLabel>
                                     <Select
                                         name={'companyType'}
@@ -337,7 +337,7 @@ const Index = () => {
                                 py={4} spacing={4}
                                 direction={['column', 'row']}
                             >
-                                <FormControl w={['full', '56']} isRequired>
+                                <FormControl w={['full', '56']}>
                                     <FormLabel fontSize={12}>GST Number</FormLabel>
                                     <Input
                                         fontSize={12}
