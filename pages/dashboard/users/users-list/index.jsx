@@ -22,10 +22,6 @@ import {
     Th,
     Td,
     TableContainer,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverBody,
     Drawer,
     DrawerBody,
     DrawerFooter,
@@ -236,7 +232,25 @@ const Index = () => {
             Toast({
                 status: 'error',
                 title: 'Error Occured',
-                description: err.response.data.message || err.message
+                description: err.response.data.message || err.response.data || err.message
+            })
+        })
+    }
+
+    function saveRemarks(userId, remarks) {
+        BackendAxios.post(`/api/admin/user/remarks`, {
+            userId: userId,
+            remarks: remarks
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Remarks Updated'
+            })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                title: 'Error while adding remarks',
+                description: err.response.data.message || err.response.data || err.message
             })
         })
     }
@@ -482,6 +496,14 @@ const Index = () => {
                                                                             <Text>{user.city}, {user.state},</Text>
                                                                             <Text>Pincode - {user.pincode}</Text>
                                                                         </Box>
+                                                                        <Box pt={16}>
+                                                                            <Text fontSize={'xs'}>Remarks</Text>
+                                                                            <Input
+                                                                                onBlur={(e) => saveRemarks(user.id, e.target.value)}
+                                                                                placeholder={user.delete_remarks}
+                                                                            />
+                                                                            <Text color={'red'} onClick={()=>saveRemarks(user.id, " ")}>Remove remarks</Text>
+                                                                        </Box>
                                                                     </Td>
                                                                     <Td>{/* PAN Card */}
 
@@ -680,7 +702,7 @@ const Index = () => {
                                         expanded={dmtExpansion}
                                         onExpand={(expanded) => setDmtExpansion(expanded)}
                                     />
-                                    
+
                                     <CheckboxTree
                                         nodes={payoutList}
                                         checked={payoutPermissions}
@@ -688,7 +710,7 @@ const Index = () => {
                                         expanded={payoutExpansion}
                                         onExpand={(expanded) => setPayoutExpansion(expanded)}
                                     />
-                                    
+
                                     <CheckboxTree
                                         nodes={rechargeList}
                                         checked={rechargePermissions}
@@ -696,7 +718,7 @@ const Index = () => {
                                         expanded={rechargeExpansion}
                                         onExpand={(expanded) => setRechargeExpansion(expanded)}
                                     />
-                                    
+
 
                                     <CheckboxTree
                                         nodes={panList}
@@ -706,7 +728,7 @@ const Index = () => {
                                         onExpand={(expanded) => setPanExpansion(expanded)}
                                     />
 
-                                    
+
                                     <CheckboxTree
                                         nodes={matmList}
                                         checked={matmPermissions}
@@ -715,7 +737,7 @@ const Index = () => {
                                         onExpand={(expanded) => setMatmExpansion(expanded)}
                                     />
 
-                                    
+
                                     <CheckboxTree
                                         nodes={cmsList}
                                         checked={cmsPermissions}
@@ -724,7 +746,7 @@ const Index = () => {
                                         onExpand={(expanded) => setCmsExpansion(expanded)}
                                     />
 
-                                    
+
                                     <CheckboxTree
                                         nodes={licList}
                                         checked={licPermissions}

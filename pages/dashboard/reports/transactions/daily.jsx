@@ -5,7 +5,12 @@ import {
     Button,
     Text,
     HStack,
+    Stack,
     VisuallyHidden,
+    FormControl,
+    FormLabel,
+    Input,
+    Select
 } from '@chakra-ui/react'
 import BackendAxios from '@/lib/utils/axios';
 import jsPDF from 'jspdf';
@@ -14,10 +19,10 @@ import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { useFormik } from 'formik';
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
-
     doc.autoTable({ html: '#printable-table' })
     doc.output('dataurlnewwindow');
 }
@@ -73,9 +78,18 @@ const Ledger = () => {
         next_page_url: "",
         prev_page_url: "",
     })
+    const Formik = useFormik({
+        initialValues: {
+            from: "",
+            to: ""
+        }
+    })
 
     function fetchLedger(pageLink) {
-        BackendAxios.get(pageLink || `/api/admin/transactions-period?page=1`).then((res) => {
+        BackendAxios.post(pageLink || `/api/admin/transactions-period?page=1`, {
+            from: Formik.values.from,
+            to: Formik.values.to
+        }).then((res) => {
             setPagination({
                 current_page: res.data.current_page,
                 total_pages: parseInt(res.data.last_page),
@@ -109,10 +123,40 @@ const Ledger = () => {
             <Layout pageTitle={'Transactions Ledger'}>
                 <HStack my={4} justifyContent={'space-between'}>
                     <Text fontSize={'lg'} fontWeight={'semibold'}>Transactions Ledger</Text>
-                    <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>
                 </HStack>
 
+                <Box p={2} bg={'twitter.500'}>
+                    <Text color={'#FFF'}>Search Transactions</Text>
+                </Box>
+                <Stack
+                    p={4} spacing={8} w={'full'}
+                    direction={['column', 'row']}
+                >
+                    <FormControl w={['full', 'xs']}>
+                        <FormLabel>From Date</FormLabel>
+                        <Input
+                            name='from' onChange={Formik.handleChange}
+                            type='date' bg={'white'}
+                        />
+                    </FormControl>
+                    <FormControl w={['full', 'xs']}>
+                        <FormLabel>To Date</FormLabel>
+                        <Input
+                            name='to' onChange={Formik.handleChange}
+                            type='date' bg={'white'}
+                        />
+                    </FormControl>
+                </Stack>
+                <HStack mb={4} justifyContent={'flex-end'}>
+                    <Button
+                        onClick={() => fetchLedger()}
+                        colorScheme={'twitter'}
+                    >Search</Button>
+                </HStack>
 
+                <HStack mt={24} mb={4} justifyContent={'flex-end'}>
+                    <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>
+                </HStack>
                 <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
                     <Button
                         colorScheme={'twitter'}
@@ -204,7 +248,7 @@ const Ledger = () => {
                         colorScheme={'twitter'}
                         fontSize={12} size={'xs'}
                         variant={'outline'}
-                        onClick={() => fetchLedger(pagination.last_page_url)}
+                        onClick={() => fetchLedger()}
                     ><BsChevronDoubleRight />
                     </Button>
                 </HStack>

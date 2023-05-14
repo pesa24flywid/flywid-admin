@@ -463,7 +463,7 @@ const Layout = (props) => {
 
   return (
     <>
-      <Head><title>{`Flywid Admin | ${props.pageTitle || "No Title"}`}</title></Head>
+      <Head><title>{`Pesa24 Admin | ${props.pageTitle || "No Title"}`}</title></Head>
       <HStack spacing={0} alignItems={'flex-start'}>
         {/* Sidebar */}
         <Show above='md'>
@@ -476,7 +476,7 @@ const Layout = (props) => {
             <VStack py={8}>
               <Image src='https://xsgames.co/randomusers/assets/avatars/male/8.jpg' boxSize={24} rounded={'full'} />
               <Text fontSize={'xl'} color={'#444'} textTransform={'capitalize'}>{userName}</Text>
-              <Text fontSize={'sm'} color={'#666'} textTransform={'capitalize'}>Flywid - {userType}</Text>
+              <Text fontSize={'sm'} color={'#666'} textTransform={'capitalize'}>Pesa24 - {userType}</Text>
             </VStack>
             <VStack spacing={2} w={'full'}>
               {
@@ -563,7 +563,7 @@ const Layout = (props) => {
                 </Button>
               </Show>
               {/* <Image src='/logo_long.png' w={16} /> */}
-              <Text fontSize={'lg'} fontWeight={'bold'}>Flywid</Text>
+              <Text fontSize={'lg'} fontWeight={'bold'}>Pesa24</Text>
             </HStack>
             <HStack spacing={6}>
               <HStack spacing={2}>
@@ -616,7 +616,7 @@ const Layout = (props) => {
               <Image src='https://xsgames.co/randomusers/assets/avatars/male/8.jpg' boxSize={12} rounded={'full'} />
               <Box>
                 <Text fontSize={'lg'}>{Cookies.get("userName")}</Text>
-                <Text fontSize={'xs'}>Flywid</Text>
+                <Text fontSize={'xs'}>Pesa24</Text>
               </Box>
             </HStack>
           </DrawerHeader>
