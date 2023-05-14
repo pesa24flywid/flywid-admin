@@ -28,7 +28,40 @@ const Ledger = () => {
     const [columnDefs, setColumnDefs] = useState([
         {
             headerName: "User ID",
-            field: "id"
+            field: "transaction_by",
+            cellRenderer: 'userCellRenderer'
+        },
+        {
+            headerName: "Transaction ID",
+            field: "transaction_id",
+        },
+        {
+            headerName: 'Credit Amount',
+            field: 'credit_amount'
+        },
+        {
+            headerName: 'Debit Amount',
+            field: 'debit_amount'
+        },
+        {
+            headerName: 'Transaction For',
+            field: 'service_type'
+        },
+        {
+            headerName: 'Opening Balance',
+            field: 'opening_balance'
+        },
+        {
+            headerName: 'Closing Balance',
+            field: 'closing_balance'
+        },
+        {
+            headerName: 'Description',
+            field: 'metadata'
+        },
+        {
+            headerName: 'Timestamp',
+            field: 'created_at'
         },
     ])
     const [printableRow, setPrintableRow] = useState(rowData)
@@ -51,11 +84,8 @@ const Ledger = () => {
                 next_page_url: res.data.next_page_url,
                 prev_page_url: res.data.prev_page_url,
             })
-            setRowData([...rowData, {id: Object.keys(res.data)}])
-            for (let i = 0; i < res.data.length; i++) {
-                const element = res.data[i];
-                setRowData([{rowData, id: element.id}])
-            }
+            setRowData(res.data)
+            setPrintableRow(res.data)
         }).catch(err => {
             console.log(err)
         })
@@ -64,6 +94,14 @@ const Ledger = () => {
     useEffect(() => {
         fetchLedger()
     }, [])
+
+    const userCellRenderer = (params) => {
+        return (
+            <Text>
+                ({params.data.trigered_by}) {params.data.trigered_by_name} - {params.data.trigered_by_phone}
+            </Text>
+        )
+    }
 
 
     return (
@@ -110,7 +148,7 @@ const Ledger = () => {
                     ><BsChevronDoubleRight />
                     </Button>
                 </HStack>
-                <Box className={'ag-theme-alpine'} h={'sm'}>
+                <Box className={'ag-theme-alpine'} h={'2xl'}>
                     <AgGridReact
                         columnDefs={columnDefs}
                         rowData={rowData}
@@ -118,6 +156,9 @@ const Ledger = () => {
                             filter: true,
                             floatingFilter: true,
                             resizable: true,
+                        }}
+                        components={{
+                            'userCellRenderer': userCellRenderer
                         }}
                         onFilterChanged={
                             (params) => {
@@ -194,12 +235,11 @@ const Ledger = () => {
                                     return (
                                         <tr key={key}>
                                             <td>{key + 1}</td>
+                                            <td>({data.trigered_by}) {data.trigered_by_name}</td>
                                             <td>{data.transaction_id}</td>
-                                            <td>{data.trigered_by}</td>
-                                            <td>{data.name}</td>
-                                            <td>{data.service_type}</td>
                                             <td>{data.credit_amount}</td>
                                             <td>{data.debit_amount}</td>
+                                            <td>{data.service_type}</td>
                                             <td>{data.opening_balance}</td>
                                             <td>{data.closing_balance}</td>
                                             <td>{data.created_at}</td>
