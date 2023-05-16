@@ -109,6 +109,7 @@ const Index = () => {
         BackendAxios.get(`/api/admin/change-role-parent?userId=${queryUserId || Formik.values.userId}`).then((res) => {
             Formik.setFieldValue("userId", res.data.id)
             Formik.setFieldValue("role", res.data.role[0])
+            Formik.setFieldValue("parent", res.data.parent[0].id)
         }).catch((err) => {
             Toast({
                 status: 'error',
@@ -151,7 +152,7 @@ const Index = () => {
 
     function removeParent() {
         BackendAxios.post(`/api/admin/remove-parent`, {
-            user_id: fetchedUser.user_id
+            userId: fetchedUser.user_id
         }).then(res => {
             Toast({
                 status: 'success',
@@ -251,6 +252,7 @@ const Index = () => {
                                                         placeholder='Select Parent'
                                                         name={'parent'}
                                                         onChange={Formik.handleChange}
+                                                        value={Formik.values.parent}
                                                     >
                                                         {
                                                             availableParents.map((item, key) => {
