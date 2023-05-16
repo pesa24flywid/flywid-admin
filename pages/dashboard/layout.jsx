@@ -108,6 +108,11 @@ const menuOptions = [
         status: true,
       },
       {
+        title: "manage role & parent",
+        link: "/dashboard/users/manage-user/edit-role-parent?pageId=users",
+        status: true,
+      },
+      {
         title: "manage admin",
         link: "/dashboard/users/create-admin?pageid=users",
         status: true,

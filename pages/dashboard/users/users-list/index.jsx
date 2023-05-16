@@ -255,6 +255,24 @@ const Index = () => {
         })
     }
 
+    function sendCredentials(userEmail, name) {
+        BackendAxios.post(`/admin-send-creds`, {
+            email: userEmail,
+            name: name
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Credentials Sent!'
+            })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                title: 'Error while sending credentials',
+                description: err.response.data.message || err.response.data || err.message
+            })
+        })
+    }
+
     return (
         <>
             <Script
@@ -422,6 +440,7 @@ const Index = () => {
                                                                                 </Box>
                                                                             </HStack>
                                                                             <Text>{user.email}</Text>
+                                                                            <a href={`tel:${user.alternate_phone}`}><Text>{user.alternate_phone}</Text></a>
                                                                             <HStack spacing={0} my={2}>
                                                                                 <Link href={`/dashboard/users/manage-user?pageId=users&user_id=${user.id}`}>
                                                                                     <Button
@@ -466,9 +485,24 @@ const Index = () => {
                                                                                     ></Switch>
                                                                                 </HStack>
                                                                             </HStack>
-                                                                            <Text>
-                                                                                <a href={`tel:${user.alternate_phone}`}>{user.alternate_phone}</a>
-                                                                            </Text>
+
+                                                                            <HStack spacing={4}>
+                                                                                <Button
+                                                                                    size={'xs'}
+                                                                                    bgColor={'white'}
+                                                                                    onClick={() => sendCredentials(user.email, user.first_name)}
+                                                                                >Send Credentials
+                                                                                </Button>
+
+                                                                                <Link href={`/dashboard/users/manage-user/edit-role-parent?pageId=users&user_id=${user.id}`}>
+                                                                                    <Button
+                                                                                        size={'xs'}
+                                                                                        bgColor={'white'}
+                                                                                    >Edit Role & Parent
+                                                                                    </Button>
+                                                                                </Link>
+
+                                                                            </HStack>
                                                                         </Box>
                                                                     </Td>
                                                                     <Td>
@@ -500,9 +534,9 @@ const Index = () => {
                                                                             <Text fontSize={'xs'}>Remarks</Text>
                                                                             <Input
                                                                                 onBlur={(e) => saveRemarks(user.id, e.target.value)}
-                                                                                placeholder={user.delete_remarks}
+                                                                                placeholder={user.delete_remarks} bg={'aqua'}
                                                                             />
-                                                                            <Text color={'red'} onClick={()=>saveRemarks(user.id, " ")}>Remove remarks</Text>
+                                                                            <Text color={'red'} onClick={() => saveRemarks(user.id, " ")}>Remove remarks</Text>
                                                                         </Box>
                                                                     </Td>
                                                                     <Td>{/* PAN Card */}

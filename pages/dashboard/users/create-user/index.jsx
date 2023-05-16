@@ -160,9 +160,9 @@ const Index = () => {
                             </Select>
                         </FormControl>
                         {
-                            Formik.values.userRole == "3" &&
+                            Formik.values.userRole == "3" || Formik.values.userRole == "2" &&
                             <FormControl w={['full', 'xs']} bg={'white'}>
-                                <FormLabel>Parent Distributor</FormLabel>
+                                <FormLabel>Parent {Formik.values.userRole == "3" ? "Distributor" : "Super Distributor"}</FormLabel>
                                 <Select
                                     placeholder='Select Parent'
                                     name={'parent'}
