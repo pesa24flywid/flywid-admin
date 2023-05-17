@@ -46,7 +46,6 @@ const Index = () => {
 
   const formik = useFormik({
     initialValues: {
-      authMethod: authMethod,
       user_id: "",
       password: "",
       otp: "",
@@ -57,7 +56,7 @@ const Index = () => {
     setOtpBeingSent(true)
     if (formik.values.user_id && formik.values.password) {
       axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/send-otp`, {
-        authMethod: formik.values.authMethod,
+        authMethod: authMethod,
         ...(authMethod === "email" && { "email": formik.values.user_id }),
         ...(authMethod === "phone" && { "phone": formik.values.user_id }),
         password: formik.values.password,
@@ -84,7 +83,7 @@ const Index = () => {
         Toast({
           status: "error",
           title: "Error Occured",
-          description: err.response.data.message || err.response.data || err.message,
+          description: err.response?.data?.message || err.response?.data || err.message,
           position: "top-right"
         })
         setOtpBeingSent(false)
@@ -96,6 +95,28 @@ const Index = () => {
         description: "Email and password can't be blank.",
         position: "top-right"
       })
+    }
+  }
+
+
+  useEffect(() => {
+    getLocation()
+  }, [])
+
+  // Getting user location
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        Cookies.set("latlong", position.coords.latitude + "," + position.coords.longitude)
+      })
+      setHasGps(true)
+    } else {
+      Toast({
+        status: "error",
+        title: "Location Error",
+        description: "No GPS detected. Try logging in with another device."
+      })
+      setHasGps(false)
     }
   }
 
@@ -157,36 +178,6 @@ const Index = () => {
     }
   }
 
-
-  useEffect(() => {
-    // axios.get("/sanctum/csrf-cookie").then(() => {
-    //   console.log("Connection established")
-    // }).catch((err) => {
-    //   Toast({
-    //     status: 'error',
-    //     title: 'Server Error',
-    //     description: 'We are facing some issues, please try again later.'
-    //   })
-    // })
-    getLocation()
-  }, [])
-
-  // Getting user location
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        Cookies.set("latlong", position.coords.latitude + "," + position.coords.longitude)
-      })
-      setHasGps(true)
-    } else {
-      Toast({
-        status: "error",
-        title: "Location Error",
-        description: "No GPS detected. Try logging in with another device."
-      })
-      setHasGps(false)
-    }
-  }
 
 
   return (
