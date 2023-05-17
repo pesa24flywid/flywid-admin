@@ -58,7 +58,7 @@ const Index = () => {
       axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/send-otp`, {
         authMethod: authMethod,
         ...(authMethod === "email" && { "email": formik.values.user_id }),
-        ...(authMethod === "phone" && { "phone": formik.values.user_id }),
+        ...(authMethod === "phone" && { "phone_number": formik.values.user_id }),
         password: formik.values.password,
       }, {
         withCredentials: true,
