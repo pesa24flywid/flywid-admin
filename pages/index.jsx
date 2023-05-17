@@ -99,6 +99,14 @@ const Index = () => {
     }
   }
 
+  useEffect(() => {
+    if (isNaN(formik.values.user_id)) {
+      setAuthMethod("email")
+    }
+    else {
+      setAuthMethod("phone")
+    }
+  }, [formik.values.user_id])
 
   // Handle login after OTP submission
   async function handleLogin() {
@@ -195,7 +203,11 @@ const Index = () => {
         >
           <FormControl>
             <FormLabel>User ID</FormLabel>
-            <Input placeholder="Enter User ID" bg={'white'} name={"user_id"} onChange={formik.handleChange} />
+            <Input
+              placeholder="Enter User ID"
+              bg={'white'} name={"user_id"}
+              onChange={formik.handleChange}
+            />
           </FormControl>
           <FormControl>
             <FormLabel>Password</FormLabel>
