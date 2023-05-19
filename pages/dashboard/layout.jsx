@@ -179,7 +179,7 @@ const menuOptions = [
       {
         title: "add bank",
         link: "/dashboard/account/add-bank?pageid=account",
-        status: true,
+        status: false,
       },
     ]
   },
