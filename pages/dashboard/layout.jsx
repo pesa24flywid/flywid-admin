@@ -266,8 +266,8 @@ const menuOptions = [
       },
       {
         title: "cms",
-        link: "/dashboard",
-        status: false,
+        link: "/dashboard/reports/cms?pageid=reports",
+        status: true,
       },
       {
         title: "pg",

@@ -191,10 +191,9 @@ const CommissionSetup = () => {
     }
 
     function onCellValueChange(params) {
-        if (selectedService == "payout" ||
-            selectedService == "aeps-cash-withdrawal" ||
-            selectedService == "dmt" ||
-            selectedService == "aeps-aadhaar-pay"
+        if (
+            selectedService != "aeps-mini-statement" &&
+            selectedService != "bbps"
         ) {
             if (params.data.from && params.data.to) {
                 BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
@@ -251,6 +250,21 @@ const CommissionSetup = () => {
         }
     }
 
+    async function deleteCommission(keyword, id){
+        await BackendAxios.post(`/api/admin/commissions/delete/${keyword}/${id}`).then(res=>{
+            Toast({
+                status: 'success',
+                description: 'Commission Deleted Successfully!'
+            })
+        }).catch(err=>{
+            Toast({
+                status: 'error',
+                title: 'Error while deleting commission',
+                description: err.response?.data?.message || err.response?.data || err.message
+            })
+        })
+    }
+
     const operatorNamesCellEditor = (params) => {
         const [operators, setOperators] = useState([])
         useEffect(() => {
@@ -302,7 +316,11 @@ const CommissionSetup = () => {
                     rounded={'full'}
                     size={'xs'}
                     colorScheme={'red'}
-                    onClick={() => params.api.applyTransaction({ remove: params.api.getSelectedRows() })}
+                    onClick={() => {
+                        deleteCommission(selectedService, params.data.id).then(()=>{
+                            params.api.applyTransaction({ remove: params.api.getSelectedRows() })
+                        })
+                    }}
                 >
                     <BsTrash />
                 </Button>
@@ -396,7 +414,7 @@ const CommissionSetup = () => {
     }
 
     function assignPackage() {
-        if(!VerificationFormik.values.beneficiaryId){
+        if (!VerificationFormik.values.beneficiaryId) {
             Toast({
                 description: "Please enter User ID"
             })
@@ -416,7 +434,7 @@ const CommissionSetup = () => {
                     description: "Package could not be assigned"
                 })
             }
-            setIsAssignModalOpen({status: false})
+            setIsAssignModalOpen({ status: false })
         }).catch(err => {
             Toast({
                 status: 'error',
@@ -529,6 +547,9 @@ const CommissionSetup = () => {
                                     <Th>Payout</Th>
                                     <Th>DMT</Th>
                                     <Th>Recharge</Th>
+                                    <Th>LIC</Th>
+                                    <Th>CMS</Th>
+                                    <Th>Fastag</Th>
                                     <Th>Delete Package</Th>
                                 </Tr>
                             </Thead>
@@ -641,6 +662,36 @@ const CommissionSetup = () => {
                                                         size={'sm'}
                                                         colorScheme={'blue'}
                                                         onClick={() => handleModal(item.id, "recharge")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* LIC */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "lic")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* CMS */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "cms")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* Fastag */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "fastag")}
                                                     >
                                                         Set Commission
                                                     </Button>
