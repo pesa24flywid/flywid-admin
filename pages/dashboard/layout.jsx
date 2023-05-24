@@ -144,6 +144,11 @@ const menuOptions = [
         link: "/dashboard/services/manage-operators?pageId=controls",
         status: true,
       },
+      {
+        title: "manage CMS billers",
+        link: "/dashboard/services/manage-cms-billers?pageId=controls",
+        status: true,
+      },
     ]
   },
   {

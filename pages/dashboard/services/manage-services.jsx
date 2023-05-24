@@ -115,9 +115,9 @@ const ManageServices = () => {
                                 {
                                     service.is_active == 0 && <Text fontSize={10} pos={'absolute'} top={4} right={4} p={1} bg={'orange.500'} color={'white'}>INACTIVE</Text>
                                 }
-                                {
+                                {/* {
                                     service.api_call == 0 && <Text fontSize={10} pos={'absolute'} top={4} right={4} p={1} bg={'red.500'} color={'white'}>DISABLED</Text>
-                                }
+                                } */}
                                 <Image src={service.image_url} w={'80%'} mb={4} />
                                 <Box>
                                     <Text textTransform={'capitalize'}>{service.service_name}</Text>

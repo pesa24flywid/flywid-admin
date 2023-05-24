@@ -182,7 +182,7 @@ const Index = () => {
 
   return (
     <>
-      <Head><title>Flywid - Admin Panel</title></Head>
+      <Head><title>Pesa24 - Admin Panel</title></Head>
       <VStack p={4}>
         <Text fontSize={'2xl'} fontWeight={'semibold'} mb={6}>Pesa24 Admin Login</Text>
         <VStack
