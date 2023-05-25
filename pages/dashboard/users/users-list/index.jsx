@@ -53,7 +53,7 @@ import Script from 'next/script'
 import Link from 'next/link'
 import { BiPen, BiRupee } from 'react-icons/bi'
 import fileDownload from 'js-file-download'
-import { aepsList, bbpsList, cmsList, dmtList, licList, matmList, panList, payoutList, rechargeList } from '@/lib/utils/permissions/structure'
+import { aepsList, axisList, basicList, bbpsList, cmsList, dmtList, fastagList, licList, matmList, panList, payoutList, rechargeList, userManagementList } from '@/lib/utils/permissions/structure'
 
 const ExportPDF = (currentRowData) => {
     const doc = new jsPDF('landscape')
@@ -78,6 +78,9 @@ const Index = () => {
     })
     const [userObjId, setUserObjId] = useState("")
     const [permissionsDrawer, setPermissionsDrawer] = useState(false)
+
+    const [basicPermissions, setBasicPermissions] = useState([])
+    const [basicExpansion, setBasicExpansion] = useState([])
 
     const [aepsPermissions, setAepsPermissions] = useState([])
     const [aepsExpansion, setAepsExpansion] = useState([])
@@ -105,6 +108,15 @@ const Index = () => {
 
     const [licPermissions, setLicPermissions] = useState([])
     const [licExpansion, setLicExpansion] = useState([])
+
+    const [axisPermissions, setAxisPermissions] = useState([])
+    const [axisExpansion, setAxisExpansion] = useState([])
+
+    const [fastagPermissions, setFastagPermissions] = useState([])
+    const [fastagExpansion, setFastagExpansion] = useState([])
+
+    const [userManagementPermissions, setUserManagementPermissions] = useState([])
+    const [userManagementExpansion, setUserManagementExpansion] = useState([])
 
     const availableTabs = ['retailers', 'distributor']
     const [selectedTab, setSelectedTab] = useState("retailer")
@@ -216,18 +228,32 @@ const Index = () => {
 
     function saveUserPermissions() {
         ClientAxios.post('/api/user/update-permissions', {
-            allowed_pages: aepsPermissions.concat(aepsPermissions, bbpsPermissions, dmtPermissions, payoutPermissions, cmsPermissions, rechargePermissions, matmPermissions, panPermissions, licPermissions),
+            allowed_pages: aepsPermissions.concat(
+                basicPermissions,
+                aepsPermissions,
+                bbpsPermissions,
+                dmtPermissions,
+                payoutPermissions,
+                cmsPermissions,
+                rechargePermissions,
+                matmPermissions,
+                panPermissions,
+                licPermissions,
+                axisPermissions,
+                fastagPermissions,
+                userManagementPermissions
+            ),
             user_id: selectedUser
         }, {
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then((res) => {
+            fetchUserPermissions()
             Toast({
                 status: 'success',
                 description: 'User permissions were updated!'
             })
-            fetchUserPermissions()
         }).catch((err) => {
             Toast({
                 status: 'error',
@@ -714,6 +740,14 @@ const Index = () => {
                                 <input type="hidden" name='userId' value={selectedUser} />
                                 <VStack spacing={6} w={'full'} alignItems={'flex-start'}>
                                     <CheckboxTree
+                                        nodes={basicList}
+                                        checked={basicPermissions}
+                                        onCheck={(checked) => setBasicPermissions(checked)}
+                                        expanded={basicExpansion}
+                                        onExpand={(expanded) => setBasicExpansion(expanded)}
+                                    />
+
+                                    <CheckboxTree
                                         nodes={aepsList}
                                         checked={aepsPermissions}
                                         onCheck={(checked) => setAepsPermissions(checked)}
@@ -787,6 +821,33 @@ const Index = () => {
                                         onCheck={(checked) => setLicPermissions(checked)}
                                         expanded={licExpansion}
                                         onExpand={(expanded) => setLicExpansion(expanded)}
+                                    />
+
+
+                                    <CheckboxTree
+                                        nodes={axisList}
+                                        checked={axisPermissions}
+                                        onCheck={(checked) => setAxisPermissions(checked)}
+                                        expanded={axisExpansion}
+                                        onExpand={(expanded) => setAxisExpansion(expanded)}
+                                    />
+
+
+                                    <CheckboxTree
+                                        nodes={fastagList}
+                                        checked={fastagPermissions}
+                                        onCheck={(checked) => setFastagPermissions(checked)}
+                                        expanded={fastagExpansion}
+                                        onExpand={(expanded) => setFastagExpansion(expanded)}
+                                    />
+
+
+                                    <CheckboxTree
+                                        nodes={userManagementList}
+                                        checked={userManagementPermissions}
+                                        onCheck={(checked) => setUserManagementPermissions(checked)}
+                                        expanded={userManagementExpansion}
+                                        onExpand={(expanded) => setUserManagementExpansion(expanded)}
                                     />
                                 </VStack>
                             </form>

@@ -37,7 +37,7 @@ const Index = () => {
             lastName: "",
             userEmail: "",
             userPhone: "",
-            userRole: "",
+            userRole: "3",
             userPlan: "",
             hasParent: "0",
             parent: "",
@@ -106,7 +106,7 @@ const Index = () => {
 
     useEffect(() => {
         // Fetching all users
-        let parentRole
+        let parentRole = "distributor"
         if (Formik.values.userRole == "3") {
             parentRole = "distributor"
         }
@@ -137,11 +137,13 @@ const Index = () => {
                             <Select
                                 placeholder='Select Role'
                                 name={'userRole'}
+                                value={Formik.values.userRole}
                                 onChange={Formik.handleChange}
                             >
                                 <option value="3">Retailer</option>
                                 <option value="2">Distributor</option>
-                                <option value="1">Admin</option>
+                                <option value="4">Super Distributor</option>
+                                <option value="1">Admin Employee</option>
                             </Select>
                         </FormControl>
                         <input type="hidden" name="hasParent" value={Formik.values.parent ? "1" : "0"} />
@@ -160,21 +162,36 @@ const Index = () => {
                             </Select>
                         </FormControl>
                         {
-                            Formik.values.userRole == "3" || Formik.values.userRole == "2" &&
-                            <FormControl w={['full', 'xs']} bg={'white'}>
-                                <FormLabel>Parent {Formik.values.userRole == "3" ? "Distributor" : "Super Distributor"}</FormLabel>
-                                <Select
-                                    placeholder='Select Parent'
-                                    name={'parent'}
-                                    onChange={Formik.handleChange}
-                                >
-                                    {
-                                        availableParents.map((item, key) => {
-                                            return <option value={item.id} key={key}>{item.name}</option>
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
+                            Formik.values.userRole == "3" ?
+                                <FormControl w={['full', 'xs']} bg={'white'}>
+                                    <FormLabel>Parent Distributor</FormLabel>
+                                    <Select
+                                        placeholder='Select Parent'
+                                        name={'parent'}
+                                        onChange={Formik.handleChange}
+                                    >
+                                        {
+                                            availableParents.map((item, key) => {
+                                                return <option value={item.id} key={key}>{item.name}</option>
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl> :
+                                Formik.values.userRole == "2" ?
+                                    <FormControl w={['full', 'xs']} bg={'white'}>
+                                        <FormLabel>Parent Super Distributor</FormLabel>
+                                        <Select
+                                            placeholder='Select Parent'
+                                            name={'parent'}
+                                            onChange={Formik.handleChange}
+                                        >
+                                            {
+                                                availableParents.map((item, key) => {
+                                                    return <option value={item.id} key={key}>{item.name}</option>
+                                                })
+                                            }
+                                        </Select>
+                                    </FormControl> : null
                         }
                     </Stack>
 

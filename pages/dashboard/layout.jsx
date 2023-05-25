@@ -345,49 +345,49 @@ const menuOptions = [
     link: "/dashboard/support-tickets?pageid=support",
     icon: <IoMdHelpBuoy />,
   },
-  {
-    type: "accordion",
-    name: "website setup",
-    link: "/dashboard/commission?pageid=commission",
-    icon: <FaWrench />,
-    children: [
-      {
-        title: "basic details",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "header",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "footer",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "email",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "sms",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "banner setup",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "notifications",
-        link: "/dashboard",
-        status: false,
-      },
-    ]
-  },
+  // {
+  //   type: "accordion",
+  //   name: "website setup",
+  //   link: "/dashboard/commission?pageid=commission",
+  //   icon: <FaWrench />,
+  //   children: [
+  //     {
+  //       title: "basic details",
+  //       link: "/dashboard",
+  //       status: false,
+  //     },
+  //     {
+  //       title: "header",
+  //       link: "/dashboard",
+  //       status: false,
+  //     },
+  //     {
+  //       title: "footer",
+  //       link: "/dashboard",
+  //       status: false,
+  //     },
+  //     {
+  //       title: "email",
+  //       link: "/dashboard",
+  //       status: false,
+  //     },
+  //     {
+  //       title: "sms",
+  //       link: "/dashboard",
+  //       status: false,
+  //     },
+  //     {
+  //       title: "banner setup",
+  //       link: "/dashboard",
+  //       status: false,
+  //     },
+  //     {
+  //       title: "notifications",
+  //       link: "/dashboard",
+  //       status: false,
+  //     },
+  //   ]
+  // },
 ]
 
 

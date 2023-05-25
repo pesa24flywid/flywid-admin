@@ -130,7 +130,7 @@ const Index = () => {
 
     useEffect(() => {
         // Fetching all users
-        let parentRole
+        let parentRole = "distributor"
         if (Formik.values.role == "super_distributor") {
             return
         }
@@ -172,110 +172,110 @@ const Index = () => {
             <form onSubmit={Formik.handleSubmit} id={'editUserForm'}>
                 <Layout pageTitle={'Edit User'}>
                     {/* <input type="hidden" name={'userId'} value={Formik.values.userId} /> */}
-                    <Stack
-                        direction={['column', 'row']}
-                        spacing={6} py={6}
-                    >
-                        <FormControl w={['full', 'xs']}>
-                            <FormLabel>User ID</FormLabel>
-                            <InputGroup>
-                                <Input
-                                    name={'userId'} value={fetchedUser.user_id}
-                                    onChange={(e) => setFetchedUser({ ...fetchedUser, user_id: e.target.value })}
-                                    placeholder={'Enter User ID'}
-                                />
-                                <InputRightAddon
-                                    children={'Verify'}
-                                    cursor={'pointer'}
-                                    onClick={() => verifyBeneficiary()}
-                                />
-                            </InputGroup>
-                        </FormControl>
-                    </Stack>
-                    {
-                        fetchedUser.user_name ?
-                            (<Stack
-                                p={4} bg={'blue.50'}
-                                border={'1px'}
-                                borderColor={'blue.200'}
-                                rounded={16} my={4}
-                                direction={['column', 'row']}
-                                spacing={6} justifyContent={'space-between'}
-                                textTransform={'capitalize'}
-                            >
-                                <Box>
-                                    <Text fontWeight={'medium'}>User Name</Text>
-                                    <Text>{fetchedUser.user_name}</Text>
-                                </Box>
-                                <Box>
-                                    <Text fontWeight={'medium'}>Firm Name</Text>
-                                    <Text>{fetchedUser.firm_name}</Text>
-                                </Box>
-                                <Box>
-                                    <Text fontWeight={'medium'}>Current Balance</Text>
-                                    <Text>₹ {fetchedUser.wallet}</Text>
-                                </Box>
-                                <Box>
-                                    <Text fontWeight={'medium'}>Phone</Text>
-                                    <Text>{fetchedUser.phone}</Text>
-                                </Box>
-                            </Stack>
+                        <Stack
+                            direction={['column', 'row']}
+                            spacing={6} py={6}
+                        >
+                            <FormControl w={['full', 'xs']}>
+                                <FormLabel>User ID</FormLabel>
+                                <InputGroup>
+                                    <Input
+                                        name={'userId'} value={fetchedUser.user_id}
+                                        onChange={(e) => setFetchedUser({ ...fetchedUser, user_id: e.target.value })}
+                                        placeholder={'Enter User ID'}
+                                    />
+                                    <InputRightAddon
+                                        children={'Verify'}
+                                        cursor={'pointer'}
+                                        onClick={() => verifyBeneficiary()}
+                                    />
+                                </InputGroup>
+                            </FormControl>
+                        </Stack>
+                        {
+                            fetchedUser.user_name ?
+                                (<Stack
+                                    p={4} bg={'blue.50'}
+                                    border={'1px'}
+                                    borderColor={'blue.200'}
+                                    rounded={16} my={4}
+                                    direction={['column', 'row']}
+                                    spacing={6} justifyContent={'space-between'}
+                                    textTransform={'capitalize'}
+                                >
+                                    <Box>
+                                        <Text fontWeight={'medium'}>User Name</Text>
+                                        <Text>{fetchedUser.user_name}</Text>
+                                    </Box>
+                                    <Box>
+                                        <Text fontWeight={'medium'}>Firm Name</Text>
+                                        <Text>{fetchedUser.firm_name}</Text>
+                                    </Box>
+                                    <Box>
+                                        <Text fontWeight={'medium'}>Current Balance</Text>
+                                        <Text>₹ {fetchedUser.wallet}</Text>
+                                    </Box>
+                                    <Box>
+                                        <Text fontWeight={'medium'}>Phone</Text>
+                                        <Text>{fetchedUser.phone}</Text>
+                                    </Box>
+                                </Stack>
 
-                            ) : null
-                    }
+                                ) : null
+                        }
 
-                    {fetchedUser.user_name ?
-                        <>
-                            <Stack
-                                direction={['column', 'row']}
-                                spacing={4}
-                            >
-                                <Box pb={4} w={['full', '3xl']} flex={['unset', 7]}>
-                                    <Stack
-                                        direction={['column', 'row']}
-                                        spacing={4} py={4}
-                                    >
-                                        <FormControl w={['full', 'xs']}>
-                                            <FormLabel>Select Role</FormLabel>
-                                            <Select name='role' onChange={Formik.handleChange}>
-                                                <option value="retailer">Retailer</option>
-                                                <option value="distributor">Distributor</option>
-                                                <option value="super_distributor">Super Distributor</option>
-                                            </Select>
-                                        </FormControl>
+                        {fetchedUser.user_name ?
+                            <>
+                                <Stack
+                                    direction={['column', 'row']}
+                                    spacing={4}
+                                >
+                                    <Box pb={4} w={['full', '3xl']} flex={['unset', 7]}>
+                                        <Stack
+                                            direction={['column', 'row']}
+                                            spacing={4} py={4}
+                                        >
+                                            <FormControl w={['full', 'xs']}>
+                                                <FormLabel>Select Role</FormLabel>
+                                                <Select name='role' onChange={Formik.handleChange}>
+                                                    <option value="retailer">Retailer</option>
+                                                    <option value="distributor">Distributor</option>
+                                                    <option value="super_distributor">Super Distributor</option>
+                                                </Select>
+                                            </FormControl>
 
-                                        {
-                                            Formik.values.role == "retailer" || Formik.values.role == "distributor" ?
-                                                <FormControl w={['full', 'xs']} bg={'white'}>
-                                                    <FormLabel>Parent {Formik.values.role == "retailer" ? "Distributor" : "Super Distributor"}</FormLabel>
-                                                    <Select
-                                                        placeholder='Select Parent'
-                                                        name={'parent'}
-                                                        onChange={Formik.handleChange}
-                                                        value={Formik.values.parent}
-                                                    >
-                                                        {
-                                                            availableParents.map((item, key) => {
-                                                                return <option value={item.id} key={key}>{item.name}</option>
-                                                            })
-                                                        }
-                                                    </Select>
-                                                </FormControl> : null
-                                        }
-                                    </Stack>
-                                </Box>
-                                <Button colorScheme='facebook' onClick={removeParent}>Remove Parent</Button>
-                            </Stack>
+                                            {
+                                                Formik.values.role == "retailer" || Formik.values.role == "distributor" ?
+                                                    <FormControl w={['full', 'xs']} bg={'white'}>
+                                                        <FormLabel>Parent {Formik.values.role == "retailer" ? "Distributor" : "Super Distributor"}</FormLabel>
+                                                        <Select
+                                                            placeholder='Select Parent'
+                                                            name={'parent'}
+                                                            onChange={Formik.handleChange}
+                                                            value={Formik.values.parent}
+                                                        >
+                                                            {
+                                                                availableParents.map((item, key) => {
+                                                                    return <option value={item.id} key={key}>{item.name}</option>
+                                                                })
+                                                            }
+                                                        </Select>
+                                                    </FormControl> : null
+                                            }
+                                        </Stack>
+                                    </Box>
+                                    <Button colorScheme='facebook' onClick={removeParent}>Remove Parent</Button>
+                                </Stack>
 
-                            <HStack
-                                spacing={4}
-                                p={4} bg={'aqua'}
-                                justifyContent={'flex-end'}
-                            >
-                                <Button type={'submit'} colorScheme={'twitter'}>Update Details</Button>
-                            </HStack>
-                        </> : null
-                    }
+                                <HStack
+                                    spacing={4}
+                                    p={4} bg={'aqua'}
+                                    justifyContent={'flex-end'}
+                                >
+                                    <Button type={'submit'} colorScheme={'twitter'}>Update Details</Button>
+                                </HStack>
+                            </> : null
+                        }
                 </Layout>
             </form>
         </>

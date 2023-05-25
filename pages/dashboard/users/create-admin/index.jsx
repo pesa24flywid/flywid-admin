@@ -119,7 +119,7 @@ const CreateAdmin = () => {
         role: "",
         permissions: []
       })
-      
+
       setFetchedUser({
         ...fetchedUser,
         user_name: res.data.data.first_name + " " + res.data.data.last_name,
@@ -180,7 +180,7 @@ const CreateAdmin = () => {
     })
   }
 
-  function changeRole(role){
+  function changeRole(role) {
     BackendAxios.post('/api/admin/new-admin', {
       userId: fetchedUser.user_id,
       role: role,
@@ -200,91 +200,130 @@ const CreateAdmin = () => {
   return (
     <>
       <Layout pageTitle={'Create Admin'}>
-        <Text fontSize={'lg'} fontWeight={'semibold'} my={4}>Manage Admin Members</Text>
+        <Stack
+          direction={['column', 'row']}
+          gap={8} justifyContent={'space-between'}
+        >
+          <Box p={4}>
+            <Text fontSize={'lg'} fontWeight={'semibold'} my={4}>Manage Admin Members</Text>
+            <Stack
+              direction={['column', 'row']}
+              spacing={6} py={6}
+            >
+              <FormControl w={['full', 'xs']}>
+                <FormLabel>User ID</FormLabel>
+                <InputGroup>
+                  <Input
+                    name={'userId'}
+                    onChange={(e) => setFetchedUser({ ...fetchedUser, user_id: e.target.value })}
+                    placeholder={'Enter User ID'}
+                  />
+                  <InputRightAddon
+                    children={'Verify'}
+                    cursor={'pointer'}
+                    onClick={() => verifyBeneficiary()}
+                  />
+                </InputGroup>
+              </FormControl>
+            </Stack>
+            {
+              fetchedUser.user_name ?
+                (<Stack
+                  p={4} bg={'blue.50'}
+                  border={'1px'}
+                  borderColor={'blue.200'}
+                  rounded={16} my={4}
+                  direction={['column', 'row']}
+                  spacing={6} justifyContent={'space-between'}
+                  textTransform={'capitalize'}
+                >
+                  <Box>
+                    <Text fontWeight={'medium'}>Beneficiary Name</Text>
+                    <Text>{fetchedUser.user_name}</Text>
+                  </Box>
+                  <Box>
+                    <Text fontWeight={'medium'}>Firm Name</Text>
+                    <Text>{fetchedUser.firm_name}</Text>
+                  </Box>
+                  <Box>
+                    <Text fontWeight={'medium'}>Current Balance</Text>
+                    <Text>₹ {fetchedUser.wallet}</Text>
+                  </Box>
+                  <Box>
+                    <Text fontWeight={'medium'}>Phone</Text>
+                    <Text>{fetchedUser.phone}</Text>
+                  </Box>
+                </Stack>
 
-        <Box p={4}>
-          <Stack
-            direction={['column', 'row']}
-            spacing={6} py={6}
+                ) : null
+            }
+
+            {
+              fetchedUser.role == "admin" ? (
+                <Box my={4}>
+                  <Button colorScheme={'whatsapp'} mb={6} onClick={() => changeRole('retailer')}>Make Retailer</Button>
+
+                  <Text pb={4} pt={8} fontSize={'lg'}>Manage Permissions</Text>
+                  <Flex direction={'row'} gap={10} flexWrap={'wrap'}>
+                    <CheckboxGroup onChange={values => setPermissions(values)} defaultValue={fetchedUser.permissions}>
+                      {
+                        predefinedPermissions.map((permission, key) => {
+                          return (
+                            <Checkbox
+                              value={permission.value}
+                              textTransform={'capitalize'}
+                              key={key} px={4} bg={'aqua'}
+                              py={3} rounded={8}
+                            >
+                              {permission.value.replace(/-/g, " ")}
+                            </Checkbox>
+                          )
+                        })
+                      }
+                    </CheckboxGroup>
+                    <Button colorScheme={'twitter'} leftIcon={<BiCheck fontSize={20} />} onClick={saveUserPermissions}>Save Permissions</Button>
+                  </Flex>
+                </Box>
+
+              ) : fetchedUser.role == "retailer" ? <Button colorScheme={'twitter'} onClick={() => changeRole('admin')}>Make Admin</Button> : null
+            }
+          </Box>
+
+          <VStack
+            w={['full', 'xs']}
+            padding={4}
+            alignItems={'flex-start'}
+            justifyContent={'flex-start'}
+            boxShadow={'lg'}
+            h={['auto', '90vh']}
+            overflowY={'scroll'}
           >
-            <FormControl w={['full', 'xs']}>
-              <FormLabel>User ID</FormLabel>
-              <InputGroup>
-                <Input
-                  name={'userId'}
-                  onChange={(e) => setFetchedUser({ ...fetchedUser, user_id: e.target.value })}
-                  placeholder={'Enter User ID'}
-                />
-                <InputRightAddon
-                  children={'Verify'}
-                  cursor={'pointer'}
-                  onClick={() => verifyBeneficiary()}
-                />
-              </InputGroup>
-            </FormControl>
-          </Stack>
-          {
-            fetchedUser.user_name ?
-              (<Stack
-                p={4} bg={'blue.50'}
-                border={'1px'}
-                borderColor={'blue.200'}
-                rounded={16} my={4}
-                direction={['column', 'row']}
-                spacing={6} justifyContent={'space-between'}
-                textTransform={'capitalize'}
+            <Text fontSize={'lg'} fontWeight={'semibold'} my={4}>Existing Admin Employees</Text>
+
+            <VStack
+              gap={8} pt={8}
+              w={'full'} alignItems={'flex-start'}
+              justifyContent={'flex-start'}
+            >
+              <Box
+                w={'full'}
+                p={4} rounded={8}
+                boxShadow={'md'}
               >
-                <Box>
-                  <Text fontWeight={'medium'}>Beneficiary Name</Text>
-                  <Text>{fetchedUser.user_name}</Text>
-                </Box>
-                <Box>
-                  <Text fontWeight={'medium'}>Firm Name</Text>
-                  <Text>{fetchedUser.firm_name}</Text>
-                </Box>
-                <Box>
-                  <Text fontWeight={'medium'}>Current Balance</Text>
-                  <Text>₹ {fetchedUser.wallet}</Text>
-                </Box>
-                <Box>
-                  <Text fontWeight={'medium'}>Phone</Text>
-                  <Text>{fetchedUser.phone}</Text>
-                </Box>
-              </Stack>
-
-              ) : null
-          }
-
-          {
-            fetchedUser.role == "admin" ? (
-              <Box my={4}>
-                <Button colorScheme={'whatsapp'} mb={6} onClick={()=>changeRole('retailer')}>Make Retailer</Button>
-
-                <Text pb={4} pt={8} fontSize={'lg'}>Manage Permissions</Text>
-                <Flex direction={'row'} gap={10} flexWrap={'wrap'}>
-                  <CheckboxGroup onChange={values => setPermissions(values)} defaultValue={fetchedUser.permissions}>
-                    {
-                      predefinedPermissions.map((permission, key) => {
-                        return (
-                          <Checkbox
-                            value={permission.value}
-                            textTransform={'capitalize'}
-                            key={key} px={4} bg={'aqua'}
-                            py={3} rounded={8}
-                          >
-                            {permission.value.replace(/-/g, " ")}
-                          </Checkbox>
-                        )
-                      })
-                    }
-                  </CheckboxGroup>
-                  <Button colorScheme={'twitter'} leftIcon={<BiCheck fontSize={20} />} onClick={saveUserPermissions}>Save Permissions</Button>
-                </Flex>
+                <Text fontSize={'md'} fontWeight={'semibold'}>Full Name (User ID)</Text>
+                <Text fontSize={'md'}>Phone Number</Text>
+                <Text fontSize={'xs'}>Email ID</Text>
+                <HStack
+                  w={'full'} pt={4}
+                  justifyContent={'space-between'}
+                >
+                  <Button size={'sm'}>Permissions</Button>
+                  <Button colorScheme='red' size={'sm'}>Make Retailer</Button>
+                </HStack>
               </Box>
-
-            ) : fetchedUser.role == "retailer" ? <Button colorScheme={'twitter'} onClick={()=>changeRole('admin')}>Make Admin</Button> : null
-          }
-        </Box>
+            </VStack>
+          </VStack>
+        </Stack>
       </Layout>
     </>
   )
