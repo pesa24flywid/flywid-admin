@@ -28,7 +28,8 @@ import {
   BsPower,
   BsSpeedometer,
   BsBriefcaseFill,
-  BsCoin
+  BsCoin,
+  BsWallet
 } from 'react-icons/bs'
 import {
   FaUser,
@@ -397,6 +398,7 @@ const Layout = (props) => {
   const Toast = useToast({ position: 'top-right' })
   const { pageid } = Router.query
   const { isOpen, onClose, onOpen } = useDisclosure()
+  const [wallet, setWallet] = useState("0")
   const [aepsStatus, setAepsStatus] = useState(true)
   const [bbpsStatus, setBbpsStatus] = useState(true)
   const [dmtStatus, setDmtStatus] = useState(true)
@@ -404,7 +406,18 @@ const Layout = (props) => {
   const [userName, setUserName] = useState("NA")
   const [userType, setUserType] = useState("NA")
 
-  function fetchServiceStatus(){
+  function fetchServiceStatus() {
+    ClientAxios.get("/api/global").then(res => {
+      setAepsStatus(res.data.aeps_status)
+      setBbpsStatus(res.data.bbps_status)
+      setDmtStatus(res.data.dmt_status)
+      setRechargeStatus(res.data.recharge_status)
+    }).catch(err => {
+      console.log(err.message)
+    })
+  }
+
+  function fetchOrganisationServiceStatus() {
     ClientAxios.get("/api/global").then(res => {
       setAepsStatus(res.data.aeps_status)
       setBbpsStatus(res.data.bbps_status)
@@ -440,6 +453,15 @@ const Layout = (props) => {
       setTimeout(() => Router.push("/"), 2000)
     }
   }, [])
+  
+  useEffect(() => {
+    // Check wallet balance
+    BackendAxios.post('/api/user/wallet').then((res) => {
+        setWallet(res.data[0].wallet)
+    }).catch((err) => {
+        setWallet('0')
+    })
+}, [])
 
 
   async function logout() {
@@ -459,7 +481,27 @@ const Layout = (props) => {
       Toast({
         position: 'top',
         status: 'success',
-        title: 'Data updated'
+        title: 'Data updated globally'
+      })
+    }).catch(err => {
+      Toast({
+        status: 'error',
+        title: 'Error while updating'
+      })
+    })
+  }
+
+  function updateOrganisation(data) {
+    ClientAxios.post('/api/organisation', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      fetchOrganisationServiceStatus()
+      Toast({
+        position: 'top',
+        status: 'success',
+        title: 'Organisation Data updated'
       })
     }).catch(err => {
       Toast({
@@ -473,6 +515,7 @@ const Layout = (props) => {
     <>
       <Head><title>{`Pesa24 Admin | ${props.pageTitle || "No Title"}`}</title></Head>
       <HStack spacing={0} alignItems={'flex-start'}>
+
         {/* Sidebar */}
         <Show above='md'>
           <VStack
@@ -597,6 +640,20 @@ const Layout = (props) => {
                 <Switch
                   id={'rechargeStatus'} isChecked={rechargeStatus}
                   onChange={(e) => updateGlobal({ recharge_status: e.target.checked })} />
+              </HStack>
+              <HStack
+                p={2} bg={'#FFF'}
+                rounded={'full'}
+                boxShadow={'lg'}
+                spacing={2} minW={128}
+              >
+                <Box p={2} bg={'yellow.400'} rounded={'full'} display={'grid'} placeContent={'center'}>
+                  <BsWallet />
+                </Box>
+                <Box>
+                  <Text fontSize={'10'} color={'#888'}>Wallet</Text>
+                  <Text fontSize={14}>₹ {wallet}</Text>
+                </Box>
               </HStack>
             </HStack>
           </Stack>
