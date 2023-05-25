@@ -130,8 +130,13 @@ const menuOptions = [
     icon: <BsBriefcaseFill />,
     children: [
       {
-        title: "manage services",
+        title: "manage global services",
         link: "/dashboard/services/manage-services?pageid=services",
+        status: true,
+      },
+      {
+        title: "services status",
+        link: "/dashboard/services/services-status?pageid=services",
         status: true,
       },
       {
@@ -194,18 +199,6 @@ const menuOptions = [
     name: "commission package",
     icon: <FaPercentage />,
     link: "/dashboard/commission-package/?pageid=package",
-    // children: [
-    //   {
-    //     title: "Commission Package",
-    //     link: "/dashboard/commission-package/?pageid=package",
-    //     status: true
-    //   },
-    //   {
-    //     title: "Assign Package",
-    //     link: "/dashboard/commission-package/assign?pageid=package",
-    //     status: true
-    //   },
-    // ]
   },
   {
     type: "accordion",
@@ -218,11 +211,6 @@ const menuOptions = [
         status: false,
       },
       {
-        title: "add cms biller",
-        link: "/dashboard/controls/add-cms-biller?pageId=controls",
-        status: false,
-      },
-      {
         title: "manage banks",
         link: "/dashboard/controls/manage-banks?pageId=controls",
         status: true,
@@ -230,6 +218,11 @@ const menuOptions = [
       {
         title: "preferences",
         link: "/dashboard/controls/preferences?pageId=controls",
+        status: true,
+      },
+      {
+        title: "manage notifications",
+        link: "/dashboard/controls/notifications?pageId=controls",
         status: true,
       },
     ]
@@ -327,6 +320,11 @@ const menuOptions = [
       {
         title: "daily sales",
         link: "/dashboard/reports/transactions/daily?pageid=reports",
+        status: true,
+      },
+      {
+        title: "live sales",
+        link: "/dashboard/reports/transactions/live?pageid=reports",
         status: true,
       },
       {
