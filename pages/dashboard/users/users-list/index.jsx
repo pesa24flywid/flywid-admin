@@ -594,7 +594,7 @@ const Index = () => {
                                                                         <br /><br />
                                                                         {/* Aadhaar Front */}
                                                                         {
-                                                                            user.aadhaar_front &&
+                                                                            user.aadhar_front &&
                                                                             <Button size={'xs'}
                                                                                 onClick={() => BackendAxios.post(`/api/admin/file`, {
                                                                                     address: user.aadhaar_front
@@ -609,7 +609,7 @@ const Index = () => {
                                                                         <br /><br />
                                                                         {/* Aadhaar Back */}
                                                                         {
-                                                                            user.aadhaar_back &&
+                                                                            user.aadhar_back &&
                                                                             <Button size={'xs'}
                                                                                 onClick={() => BackendAxios.post(`/api/admin/file`, {
                                                                                     address: user.aadhaar_back
