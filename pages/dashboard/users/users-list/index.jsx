@@ -183,7 +183,6 @@ const Index = () => {
                 }
             }
         ).then((res) => {
-            setArePermissionsLoading(false)
             setUserObjId(res.data[0]._id)
             setBasicPermissions(res.data[0].allowed_pages.filter((page) => {
                 return page.includes("basic")
@@ -221,6 +220,7 @@ const Index = () => {
             setUserManagementPermissions(res.data[0].allowed_pages.filter((page) => {
                 return page.includes("userManagement")
             }))
+            setArePermissionsLoading(false)
         }).catch((err) => {
             setArePermissionsLoading(false)
             console.log("No permissions found")
