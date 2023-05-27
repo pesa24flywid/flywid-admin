@@ -546,8 +546,8 @@ const Index = () => {
                                                                     <Td>
                                                                         <Box>
                                                                             <Text><b>Status: </b>&nbsp;&nbsp; Verified </Text>
-                                                                            <Text><b>Aadhaar No.: </b>&nbsp;&nbsp; {user.aadhaar} </Text>
-                                                                            <Text><b>PAN: </b>&nbsp;&nbsp; {user.pan_number} </Text>
+                                                                            {/* <Text><b>Aadhaar No.: </b>&nbsp;&nbsp; {user.aadhaar} </Text>
+                                                                            <Text><b>PAN: </b>&nbsp;&nbsp; {user.pan_number} </Text> */}
                                                                             <Text><b>GST No.: </b>&nbsp;&nbsp; {user.gst_number} </Text>
                                                                             <Text><b>Gender & DOB: </b>{user.gender} &nbsp;&nbsp;{user.dob}</Text>
                                                                             <Text><b>Organisation Code.: </b>&nbsp;&nbsp; RPAY </Text><br /><br />
