@@ -170,9 +170,10 @@ const Index = () => {
         })
     }
 
+    const [arePermissionsLoading, setArePermissionsLoading] = useState(false)
     // Fetch User Permissions
     function fetchUserPermissions() {
-
+        setArePermissionsLoading(true)
         ClientAxios.post('/api/user/fetch', {
             user_id: `${selectedUser}`,
         },
@@ -182,7 +183,11 @@ const Index = () => {
                 }
             }
         ).then((res) => {
+            setArePermissionsLoading(false)
             setUserObjId(res.data[0]._id)
+            setBasicPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("basic")
+            }))
             setAepsPermissions(res.data[0].allowed_pages.filter((page) => {
                 return page.includes("aeps")
             }))
@@ -210,7 +215,14 @@ const Index = () => {
             setMatmPermissions(res.data[0].allowed_pages.filter((page) => {
                 return page.includes("matm")
             }))
+            setAxisPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("axis")
+            }))
+            setUserManagementPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("userManagement")
+            }))
         }).catch((err) => {
+            setArePermissionsLoading(false)
             console.log("No permissions found")
             console.log(err.message)
         })
@@ -738,118 +750,120 @@ const Index = () => {
                         <DrawerBody>
                             <form id='userPermission'>
                                 <input type="hidden" name='userId' value={selectedUser} />
-                                <VStack spacing={6} w={'full'} alignItems={'flex-start'}>
-                                    <CheckboxTree
-                                        nodes={basicList}
-                                        checked={basicPermissions}
-                                        onCheck={(checked) => setBasicPermissions(checked)}
-                                        expanded={basicExpansion}
-                                        onExpand={(expanded) => setBasicExpansion(expanded)}
-                                    />
+                                {arePermissionsLoading ? <Text>Please wait... Fetching Permissions</Text> :
+                                    <VStack spacing={6} w={'full'} alignItems={'flex-start'}>
+                                        <CheckboxTree
+                                            nodes={basicList}
+                                            checked={basicPermissions}
+                                            onCheck={(checked) => setBasicPermissions(checked)}
+                                            expanded={basicExpansion}
+                                            onExpand={(expanded) => setBasicExpansion(expanded)}
+                                        />
 
-                                    <CheckboxTree
-                                        nodes={aepsList}
-                                        checked={aepsPermissions}
-                                        onCheck={(checked) => setAepsPermissions(checked)}
-                                        expanded={aepsExpansion}
-                                        onExpand={(expanded) => setAepsExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={aepsList}
+                                            checked={aepsPermissions}
+                                            onCheck={(checked) => setAepsPermissions(checked)}
+                                            expanded={aepsExpansion}
+                                            onExpand={(expanded) => setAepsExpansion(expanded)}
+                                        />
 
-                                    <CheckboxTree
-                                        nodes={bbpsList}
-                                        checked={bbpsPermissions}
-                                        onCheck={(checked) => setBbpsPermissions(checked)}
-                                        expanded={bbpsExpansion}
-                                        onExpand={(expanded) => setBbpsExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={bbpsList}
+                                            checked={bbpsPermissions}
+                                            onCheck={(checked) => setBbpsPermissions(checked)}
+                                            expanded={bbpsExpansion}
+                                            onExpand={(expanded) => setBbpsExpansion(expanded)}
+                                        />
 
-                                    <CheckboxTree
-                                        nodes={dmtList}
-                                        checked={dmtPermissions}
-                                        onCheck={(checked) => setDmtPermissions(checked)}
-                                        expanded={dmtExpansion}
-                                        onExpand={(expanded) => setDmtExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={dmtList}
+                                            checked={dmtPermissions}
+                                            onCheck={(checked) => setDmtPermissions(checked)}
+                                            expanded={dmtExpansion}
+                                            onExpand={(expanded) => setDmtExpansion(expanded)}
+                                        />
 
-                                    <CheckboxTree
-                                        nodes={payoutList}
-                                        checked={payoutPermissions}
-                                        onCheck={(checked) => setPayoutPermissions(checked)}
-                                        expanded={payoutExpansion}
-                                        onExpand={(expanded) => setPayoutExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={payoutList}
+                                            checked={payoutPermissions}
+                                            onCheck={(checked) => setPayoutPermissions(checked)}
+                                            expanded={payoutExpansion}
+                                            onExpand={(expanded) => setPayoutExpansion(expanded)}
+                                        />
 
-                                    <CheckboxTree
-                                        nodes={rechargeList}
-                                        checked={rechargePermissions}
-                                        onCheck={(checked) => setRechargePermissions(checked)}
-                                        expanded={rechargeExpansion}
-                                        onExpand={(expanded) => setRechargeExpansion(expanded)}
-                                    />
-
-
-                                    <CheckboxTree
-                                        nodes={panList}
-                                        checked={panPermissions}
-                                        onCheck={(checked) => setPanPermissions(checked)}
-                                        expanded={panExpansion}
-                                        onExpand={(expanded) => setPanExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={rechargeList}
+                                            checked={rechargePermissions}
+                                            onCheck={(checked) => setRechargePermissions(checked)}
+                                            expanded={rechargeExpansion}
+                                            onExpand={(expanded) => setRechargeExpansion(expanded)}
+                                        />
 
 
-                                    <CheckboxTree
-                                        nodes={matmList}
-                                        checked={matmPermissions}
-                                        onCheck={(checked) => setMatmPermissions(checked)}
-                                        expanded={matmExpansion}
-                                        onExpand={(expanded) => setMatmExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={panList}
+                                            checked={panPermissions}
+                                            onCheck={(checked) => setPanPermissions(checked)}
+                                            expanded={panExpansion}
+                                            onExpand={(expanded) => setPanExpansion(expanded)}
+                                        />
 
 
-                                    <CheckboxTree
-                                        nodes={cmsList}
-                                        checked={cmsPermissions}
-                                        onCheck={(checked) => setCmsPermissions(checked)}
-                                        expanded={cmsExpansion}
-                                        onExpand={(expanded) => setCmsExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={matmList}
+                                            checked={matmPermissions}
+                                            onCheck={(checked) => setMatmPermissions(checked)}
+                                            expanded={matmExpansion}
+                                            onExpand={(expanded) => setMatmExpansion(expanded)}
+                                        />
 
 
-                                    <CheckboxTree
-                                        nodes={licList}
-                                        checked={licPermissions}
-                                        onCheck={(checked) => setLicPermissions(checked)}
-                                        expanded={licExpansion}
-                                        onExpand={(expanded) => setLicExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={cmsList}
+                                            checked={cmsPermissions}
+                                            onCheck={(checked) => setCmsPermissions(checked)}
+                                            expanded={cmsExpansion}
+                                            onExpand={(expanded) => setCmsExpansion(expanded)}
+                                        />
 
 
-                                    <CheckboxTree
-                                        nodes={axisList}
-                                        checked={axisPermissions}
-                                        onCheck={(checked) => setAxisPermissions(checked)}
-                                        expanded={axisExpansion}
-                                        onExpand={(expanded) => setAxisExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={licList}
+                                            checked={licPermissions}
+                                            onCheck={(checked) => setLicPermissions(checked)}
+                                            expanded={licExpansion}
+                                            onExpand={(expanded) => setLicExpansion(expanded)}
+                                        />
 
 
-                                    <CheckboxTree
-                                        nodes={fastagList}
-                                        checked={fastagPermissions}
-                                        onCheck={(checked) => setFastagPermissions(checked)}
-                                        expanded={fastagExpansion}
-                                        onExpand={(expanded) => setFastagExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={axisList}
+                                            checked={axisPermissions}
+                                            onCheck={(checked) => setAxisPermissions(checked)}
+                                            expanded={axisExpansion}
+                                            onExpand={(expanded) => setAxisExpansion(expanded)}
+                                        />
 
 
-                                    <CheckboxTree
-                                        nodes={userManagementList}
-                                        checked={userManagementPermissions}
-                                        onCheck={(checked) => setUserManagementPermissions(checked)}
-                                        expanded={userManagementExpansion}
-                                        onExpand={(expanded) => setUserManagementExpansion(expanded)}
-                                    />
-                                </VStack>
+                                        <CheckboxTree
+                                            nodes={fastagList}
+                                            checked={fastagPermissions}
+                                            onCheck={(checked) => setFastagPermissions(checked)}
+                                            expanded={fastagExpansion}
+                                            onExpand={(expanded) => setFastagExpansion(expanded)}
+                                        />
+
+
+                                        <CheckboxTree
+                                            nodes={userManagementList}
+                                            checked={userManagementPermissions}
+                                            onCheck={(checked) => setUserManagementPermissions(checked)}
+                                            expanded={userManagementExpansion}
+                                            onExpand={(expanded) => setUserManagementExpansion(expanded)}
+                                        />
+                                    </VStack>
+                                }
                             </form>
                         </DrawerBody>
 
