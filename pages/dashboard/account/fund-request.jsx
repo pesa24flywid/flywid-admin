@@ -118,7 +118,7 @@ const FundRequests = () => {
                     })
                 })
             }
-            if (updateTo == "reversed" && params.data.admin_remarks) {
+            if (updateTo == "reversed" || updateTo == "deleted" && params.data.admin_remarks) {
                 BackendAxios.post(`/api/admin/update-fund-requests`, {
                     beneficiaryId: params.data.user_id,
                     id: params.data.id,
@@ -139,7 +139,7 @@ const FundRequests = () => {
                     })
                 })
             }
-            if (updateTo == "reversed" && !params.data.admin_remarks) {
+            if (updateTo == "reversed" || updateTo == "deleted" && !params.data.admin_remarks) {
                 Toast({
                     description: 'Please add remarks also'
                 })
@@ -155,14 +155,18 @@ const FundRequests = () => {
                     {params.data.status != "pending" &&
                         <Button
                             size={'xs'}
-                            colorScheme={params.data.status == "approved" ? 'whatsapp' : 'red'}
+                            colorScheme={params.data.status == "approved" ? 'whatsapp' : params.data.status == "deleted" ? 'red' : 'orange'}
                             textTransform={'capitalize'}
                         >{params.data.status}
                         </Button>
                     }
                     {
                         params.data.status == "pending" &&
-                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='red' onClick={() => updateFundRequest("reversed")}>Reject</Button>
+                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='orange' onClick={() => updateFundRequest("reversed")}>Reject</Button>
+                    }
+                    {
+                        params.data.status == "pending" &&
+                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='red' onClick={() => updateFundRequest("deleted")}>Delete</Button>
                     }
                 </HStack>
             </>

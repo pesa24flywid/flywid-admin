@@ -11,7 +11,9 @@ export default async function GlobalDetails(req, res) {
 
     if (req.method == "POST") {
         const result = await Organisation.findOneAndUpdate({organisation_code: process.env.NEXT_PUBLIC_ORGANISATION}, req.body).exec()
-        if (!result) return res.status(500).json({ message: "Error while updating" })
+        if (!result) {
+            await Organisation.create({organisation_code: process.env.NEXT_PUBLIC_ORGANISATION, ...req.body})
+        }
         return res.status(200).json(result)
     }
 }

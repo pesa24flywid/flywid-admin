@@ -59,8 +59,18 @@ const Index = () => {
     ])
     const [columnDefs, setColumnDefs] = useState([
         {
+            headerName: "User ID",
+            field: "transaction_by",
+            cellRenderer: 'userCellRenderer'
+        },
+        {
             headerName: "Trnxn ID",
             field: 'transaction_id'
+        },
+        {
+            headerName: "Done By",
+            field: 'trigered_by',
+            cellRenderer: 'merchantCellRenderer'
         },
         {
             headerName: "Debit Amount",
@@ -83,6 +93,11 @@ const Index = () => {
         {
             headerName: "Transaction Type",
             field: 'service_type'
+        },
+        {
+            headerName: "Transaction Status",
+            field: 'status',
+            cellRenderer: 'statusCellRenderer'
         },
         {
             headerName: "Created Timestamp",
@@ -157,6 +172,12 @@ const Index = () => {
         )
     }
 
+    const merchantCellRenderer = (params) => {
+        return (
+            <Text>({params.data.trigered_by}) {params.data.name}</Text>
+        )
+    }
+
     const creditCellRenderer = (params) => {
         return (
             <Text px={1} flex={'unset'} w={'fit-content'} bgColor={params.value > 0 && "green.400"} color={params.value > 0 && "#FFF"}>
@@ -169,6 +190,14 @@ const Index = () => {
         return (
             <Text px={1} flex={'unset'} w={'fit-content'} bgColor={params.value > 0 && "red.400"} color={params.value > 0 && "#FFF"}>
                 {params.value}
+            </Text>
+        )
+    }
+
+    const userCellRenderer = (params) => {
+        return (
+            <Text>
+                ({params.data.trigered_by}) {params.data.trigered_by_name} - {params.data.trigered_by_phone}
             </Text>
         )
     }
@@ -230,6 +259,7 @@ const Index = () => {
                                 'receiptCellRenderer': receiptCellRenderer,
                                 'creditCellRenderer': creditCellRenderer,
                                 'debitCellRenderer': debitCellRenderer,
+                                'userCellRenderer': userCellRenderer
                             }}
                             onFilterChanged={
                                 (params) => {
@@ -314,7 +344,11 @@ const Index = () => {
                             <th>#</th>
                             {
                                 columnDefs.filter((column) => {
-                                    if (column.headerName != "Description") {
+                                    if (
+                                        column.field != "metadata" &&
+                                        column.field != "name" &&
+                                        column.field != "receipt"
+                                    ) {
                                         return (
                                             column
                                         )
@@ -334,14 +368,15 @@ const Index = () => {
                                     <tr key={key}>
                                         <td>{key + 1}</td>
                                         <td>{data.transaction_id}</td>
-                                        <td>{data.trigered_by}</td>
-                                        <td>{data.name}</td>
-                                        <td>{data.service_type}</td>
-                                        <td>{data.credit_amount}</td>
+                                        <td>({data.trigered_by}) {data.name}</td>
                                         <td>{data.debit_amount}</td>
+                                        <td>{data.credit_amount}</td>
                                         <td>{data.opening_balance}</td>
                                         <td>{data.closing_balance}</td>
+                                        <td>{data.service_type}</td>
+                                        <td>{JSON.parse(data.metadata).status ? "SUCCESS" : "FAILED"}</td>
                                         <td>{data.created_at}</td>
+                                        <td>{data.updated_at}</td>
                                     </tr>
                                 )
                             })
