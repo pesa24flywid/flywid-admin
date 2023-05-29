@@ -98,7 +98,7 @@ const Ledger = () => {
                 next_page_url: res.data.next_page_url,
                 prev_page_url: res.data.prev_page_url,
             })
-            setRowData(res.data)
+            setRowData(res.data.slice(0,20))
             setPrintableRow(res.data)
         }).catch(err => {
             console.log(err)
@@ -106,7 +106,9 @@ const Ledger = () => {
     }
 
     useEffect(() => {
-        fetchLedger()
+        setInterval(() => {
+            fetchLedger()
+        }, 1000);
     }, [])
 
     const userCellRenderer = (params) => {
@@ -122,41 +124,9 @@ const Ledger = () => {
         <>
             <Layout pageTitle={'Transactions Ledger'}>
                 <HStack my={4} justifyContent={'space-between'}>
-                    <Text fontSize={'lg'} fontWeight={'semibold'}>Transactions Ledger</Text>
+                    <Text fontSize={'lg'} fontWeight={'semibold'}>Live Transactions</Text>
                 </HStack>
 
-                <Box p={2} bg={'twitter.500'}>
-                    <Text color={'#FFF'}>Search Transactions</Text>
-                </Box>
-                <Stack
-                    p={4} spacing={8} w={'full'}
-                    direction={['column', 'row']}
-                >
-                    <FormControl w={['full', 'xs']}>
-                        <FormLabel>From Date</FormLabel>
-                        <Input
-                            name='from' onChange={Formik.handleChange}
-                            type='date' bg={'white'}
-                        />
-                    </FormControl>
-                    <FormControl w={['full', 'xs']}>
-                        <FormLabel>To Date</FormLabel>
-                        <Input
-                            name='to' onChange={Formik.handleChange}
-                            type='date' bg={'white'}
-                        />
-                    </FormControl>
-                </Stack>
-                <HStack mb={4} justifyContent={'flex-end'}>
-                    <Button
-                        onClick={() => fetchLedger()}
-                        colorScheme={'twitter'}
-                    >Search</Button>
-                </HStack>
-
-                <HStack mt={24} mb={4} justifyContent={'flex-end'}>
-                    <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>
-                </HStack>
                 <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
                     <Button
                         colorScheme={'twitter'}
@@ -252,48 +222,6 @@ const Ledger = () => {
                     ><BsChevronDoubleRight />
                     </Button>
                 </HStack>
-
-                <VisuallyHidden>
-                    <table id='printable-table'>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                {
-                                    columnDefs.filter((column) => {
-                                        if (column.headerName != "Description") {
-                                            return (
-                                                column
-                                            )
-                                        }
-                                    }).map((column, key) => {
-                                        return (
-                                            <th key={key}>{column.headerName}</th>
-                                        )
-                                    })
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                printableRow.map((data, key) => {
-                                    return (
-                                        <tr key={key}>
-                                            <td>{key + 1}</td>
-                                            <td>({data.trigered_by}) {data.trigered_by_name}</td>
-                                            <td>{data.transaction_id}</td>
-                                            <td>{data.credit_amount}</td>
-                                            <td>{data.debit_amount}</td>
-                                            <td>{data.service_type}</td>
-                                            <td>{data.opening_balance}</td>
-                                            <td>{data.closing_balance}</td>
-                                            <td>{data.created_at}</td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
-                </VisuallyHidden>
 
             </Layout>
         </>

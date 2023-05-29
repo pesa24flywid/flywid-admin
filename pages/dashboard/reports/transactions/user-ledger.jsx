@@ -4,14 +4,22 @@ import {
     Box,
     Text,
     Button,
+    Image,
     InputGroup,
     InputRightAddon,
     Input,
     FormControl,
     FormLabel,
     useToast,
+    VStack,
     VisuallyHidden,
     HStack,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter
 } from '@chakra-ui/react'
 import BackendAxios from '@/lib/utils/axios';
 import jsPDF from 'jspdf';
@@ -19,8 +27,18 @@ import 'jspdf-autotable'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { 
+    BsCheck2Circle, 
+    BsChevronDoubleLeft, 
+    BsChevronDoubleRight, 
+    BsChevronLeft, 
+    BsChevronRight, 
+    BsDownload, 
+    BsXCircle,
+    BsEye
+} from 'react-icons/bs';
 import { useRouter } from 'next/router';
+import Pdf from 'react-to-pdf'
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -41,11 +59,8 @@ const UserLedger = () => {
         },
         {
             headerName: "Done By",
-            field: 'trigered_by'
-        },
-        {
-            headerName: "Beneficiary",
-            field: "name"
+            field: 'trigered_by',
+            cellRenderer: 'userCellRenderer'
         },
         {
             headerName: "Description",
@@ -75,6 +90,16 @@ const UserLedger = () => {
             headerName: "Timestamp",
             field: "created_at"
         },
+        {
+            headerName: "Additional Info",
+            field: "metadata"
+        },
+        {
+            headerName: "Receipt",
+            field: "receipt",
+            pinned: 'right',
+            cellRenderer: 'receiptCellRenderer'
+        }
     ])
     const [printableRow, setPrintableRow] = useState(rowData)
     const [pagination, setPagination] = useState({
@@ -127,6 +152,69 @@ const UserLedger = () => {
             fetchLedger()
         }
     }, [Router.isReady])
+
+
+    const pdfRef = React.createRef()
+    const [receipt, setReceipt] = useState({
+        show: false,
+        status: "success",
+        data: {}
+    })
+    const receiptCellRenderer = (params) => {
+        function showReceipt() {
+            if (!params.data.metadata) {
+                Toast({
+                    description: 'No Receipt Available'
+                })
+                return
+            }
+            setReceipt({
+                status: JSON.parse(params.data.metadata).status,
+                show: true,
+                data: JSON.parse(params.data.metadata)
+            })
+        }
+        return (
+            <HStack height={'full'} w={'full'} gap={4}>
+                <Button rounded={'full'} colorScheme='twitter' size={'xs'} onClick={() => showReceipt()}><BsEye /></Button>
+            </HStack>
+        )
+    }
+
+    const creditCellRenderer = (params) => {
+        return (
+            <Text px={1} flex={'unset'} w={'fit-content'} bgColor={params.value > 0 && "green.400"} color={params.value > 0 && "#FFF"}>
+                {params.value}
+            </Text>
+        )
+    }
+
+    const debitCellRenderer = (params) => {
+        return (
+            <Text px={1} flex={'unset'} w={'fit-content'} bgColor={params.value > 0 && "red.400"} color={params.value > 0 && "#FFF"}>
+                {params.value}
+            </Text>
+        )
+    }
+
+    const userCellRenderer = (params) => {
+        return (
+            <Text>
+                ({params.data.trigered_by}) {params.data.transaction_by} - {params.data.transaction_by_phone}
+            </Text>
+        )
+    }
+
+    const statusCellRenderer = (params) => {
+        return (
+            <>
+                {
+                    JSON.parse(params.data.metadata).status ?
+                        <Text color={'green'} fontWeight={'bold'}>SUCCESS</Text> : <Text color={'red'} fontWeight={'bold'}>FAILED</Text>
+                }
+            </>
+        )
+    }
 
     return (
         <>
@@ -194,6 +282,13 @@ const UserLedger = () => {
                                 filter: true,
                                 floatingFilter: true,
                                 resizable: true,
+                            }}
+                            components={{
+                                'debitCellRenderer': debitCellRenderer,
+                                'creditCellRenderer': creditCellRenderer,
+                                'userCellRenderer': userCellRenderer,
+                                'statusCellRenderer': statusCellRenderer,
+                                'receiptCellRenderer': receiptCellRenderer,
                             }}
                             onFilterChanged={
                                 (params) => {
@@ -290,6 +385,96 @@ const UserLedger = () => {
                 </Box>
 
             </Layout>
+
+
+            {/* Receipt */}
+
+            <Modal
+                isOpen={receipt.show}
+                onClose={() => setReceipt({ ...receipt, show: false })}
+            >
+                <ModalOverlay />
+                <ModalContent width={'xs'}>
+                    <Box ref={pdfRef} style={{ border: '1px solid #999' }}>
+                        <ModalHeader p={0}>
+                            <VStack w={'full'} p={8} bg={receipt.status ? "green.500" : "red.500"}>
+                                {
+                                    receipt.status ?
+                                        <BsCheck2Circle color='#FFF' fontSize={72} /> :
+                                        <BsXCircle color='#FFF' fontSize={72} />
+                                }
+                                <Text color={'#FFF'} textTransform={'capitalize'}>₹ {receipt.data.amount || 0}</Text>
+                                <Text color={'#FFF'} fontSize={'sm'} textTransform={'uppercase'}>TRANSACTION {receipt.status ? "success" : "failed"}</Text>
+                            </VStack>
+                        </ModalHeader>
+                        <ModalBody p={0} bg={'azure'}>
+                            <VStack w={'full'} p={4} bg={'#FFF'}>
+                                {
+                                    receipt.data ?
+                                        Object.entries(receipt.data).map((item, key) => {
+
+                                            if (
+                                                item[0].toLowerCase() != "status" &&
+                                                item[0].toLowerCase() != "user" &&
+                                                item[0].toLowerCase() != "user_id" &&
+                                                item[0].toLowerCase() != "user_phone" &&
+                                                item[0].toLowerCase() != "amount"
+                                            )
+                                                return (
+                                                    <HStack
+                                                        justifyContent={'space-between'}
+                                                        gap={8} pb={1} w={'full'} key={key}
+                                                    >
+                                                        <Text
+                                                            fontSize={'xs'}
+                                                            fontWeight={'medium'}
+                                                            textTransform={'capitalize'}
+                                                        >{item[0].replace(/_/g, " ")}</Text>
+                                                        <Text fontSize={'xs'} maxW={'full'} >{`${item[1]}`}</Text>
+                                                    </HStack>
+                                                )
+
+                                        }
+                                        ) : null
+                                }
+                                <VStack pt={8} w={'full'}>
+                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant:</Text>
+                                        <Text fontSize={'xs'}>{receipt.data.user}</Text>
+                                    </HStack>
+                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant ID:</Text>
+                                        <Text fontSize={'xs'}>{receipt.data.user_id}</Text>
+                                    </HStack>
+                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant Mobile:</Text>
+                                        <Text fontSize={'xs'}>{receipt.data.user_phone}</Text>
+                                    </HStack>
+                                    <Image src='/logo_long.png' w={'20'} />
+                                    <Text fontSize={'xs'}>{process.env.NEXT_PUBLIC_ORGANISATION_NAME}</Text>
+                                </VStack>
+                            </VStack>
+                        </ModalBody>
+                    </Box>
+                    <ModalFooter>
+                        <HStack justifyContent={'center'} gap={8}>
+
+                            <Pdf targetRef={pdfRef} filename="Receipt.pdf">
+                                {
+                                    ({ toPdf }) => <Button
+                                        rounded={'full'}
+                                        size={'sm'}
+                                        colorScheme={'twitter'}
+                                        leftIcon={<BsDownload />}
+                                        onClick={toPdf}
+                                    >Download
+                                    </Button>
+                                }
+                            </Pdf>
+                        </HStack>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </>
     )
 }
