@@ -12,7 +12,8 @@ import {
     ModalHeader,
     ModalFooter,
     VStack,
-    VisuallyHidden
+    VisuallyHidden,
+    Image
 } from '@chakra-ui/react'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
@@ -32,6 +33,38 @@ import BackendAxios from '@/lib/utils/axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'
 import Layout from '../../layout';
+
+function StatementTable({ ministatement }) {
+    if (typeof (ministatement) == Array && ministatement.length === 0) {
+        return <p style={{ fontSize: '8px', color: 'darkslategray' }}>No ministatement to show.</p>;
+    }
+    if (typeof (ministatement) != Array) {
+        return <p style={{ fontSize: '8px', color: 'darkslategray' }}>No ministatement to show.</p>;
+    }
+
+    const tableHeaders = Object.keys(ministatement[0]);
+
+    return (
+        <table style={{ fontSize: '8px', borderCollapse: 'collapse', width: '100%' }}>
+            <thead>
+                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                    {tableHeaders.map(header => (
+                        <th key={header} style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>{header}</th>
+                    ))}
+                </tr>
+            </thead>
+            <tbody>
+                {ministatement.map((item, index) => (
+                    <tr key={index} style={{ borderBottom: '1px solid #ddd' }}>
+                        {tableHeaders.map(header => (
+                            <td key={header} style={{ padding: '8px' }}>{item[header]}</td>
+                        ))}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
+}
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -88,6 +121,11 @@ const Index = () => {
         {
             headerName: "Transaction Type",
             field: 'service_type'
+        },
+        {
+            headerName: "Transaction Status",
+            field: 'status',
+            cellRenderer: 'statusCellRenderer'
         },
         {
             headerName: "Created Timestamp",
@@ -181,8 +219,19 @@ const Index = () => {
     const userCellRenderer = (params) => {
         return (
             <Text>
-                ({params.data.trigered_by}) {params.data.trigered_by_name} - {params.data.trigered_by_phone}
+                ({params.data.trigered_by}) {params.data.done_by} - {params.data.done_by_phone}
             </Text>
+        )
+    }
+
+    const statusCellRenderer = (params) => {
+        return (
+            <>
+                {
+                    JSON.parse(params.data.metadata).status ?
+                        <Text color={'green'} fontWeight={'bold'}>SUCCESS</Text> : <Text color={'red'} fontWeight={'bold'}>FAILED</Text>
+                }
+            </>
         )
     }
 
@@ -243,7 +292,8 @@ const Index = () => {
                                 'receiptCellRenderer': receiptCellRenderer,
                                 'creditCellRenderer': creditCellRenderer,
                                 'debitCellRenderer': debitCellRenderer,
-                                'userCellRenderer': userCellRenderer
+                                'userCellRenderer': userCellRenderer,
+                                'statusCellRenderer': statusCellRenderer
                             }}
                             onFilterChanged={
                                 (params) => {
@@ -262,7 +312,6 @@ const Index = () => {
             </Layout>
 
             {/* Receipt */}
-
             <Modal
                 isOpen={receipt.show}
                 onClose={() => setReceipt({ ...receipt, show: false })}
@@ -277,26 +326,59 @@ const Index = () => {
                                         <BsCheck2Circle color='#FFF' fontSize={72} /> :
                                         <BsXCircle color='#FFF' fontSize={72} />
                                 }
-                                <Text color={'#FFF'} textTransform={'capitalize'}>Transaction {receipt.status ? "success" : "failed"}</Text>
+                                <Text color={'#FFF'} fontSize={'xs'} textTransform={'uppercase'}>Transaction {receipt.status ? "success" : "failed"}</Text>
                             </VStack>
                         </ModalHeader>
                         <ModalBody p={0} bg={'azure'}>
                             <VStack w={'full'} p={4} bg={'#FFF'}>
                                 {
                                     receipt.data ?
-                                        Object.entries(receipt.data).map((item, key) => (
-                                            <HStack
-                                                justifyContent={'space-between'}
-                                                gap={8} pb={4} w={'full'} key={key}
-                                            >
-                                                <Text fontSize={14}
-                                                    fontWeight={'medium'}
-                                                    textTransform={'capitalize'}
-                                                >{item[0]}</Text>
-                                                <Text fontSize={14} >{`${item[1]}`}</Text>
-                                            </HStack>
-                                        )) : null
+                                        Object.entries(receipt.data).map((item, key) => {
+                                            //if (aepsProvider == 'eko')
+                                            if (
+                                                item[0].toLowerCase() != "status" &&
+                                                item[0].toLowerCase() != "customer_balance" &&
+                                                item[0].toLowerCase() != "user_name" &&
+                                                item[0].toLowerCase() != "user_id" &&
+                                                item[0].toLowerCase() != "amount" &&
+                                                item[0].toLowerCase() != "ministatement" &&
+                                                item[0].toLowerCase() != "user_phone"
+                                            ) {
+                                                return (
+                                                    <HStack
+                                                        justifyContent={'space-between'}
+                                                        gap={8} pb={1} w={'full'} key={key}
+                                                    >
+                                                        <Text fontSize={'xs'}
+                                                            fontWeight={'medium'}
+                                                            textTransform={'capitalize'}
+                                                        >{item[0].replace(/_/g, " ")}</Text>
+                                                        <Text fontSize={'xs'} >{`${item[1]}`}</Text>
+                                                    </HStack>
+                                                )
+                                            }
+                                        }) : null
                                 }
+                                {
+                                    receipt.status ?
+                                        <StatementTable ministatement={receipt.data?.ministatement || [{}]} /> : null
+                                }
+                                <VStack pt={8} w={'full'}>
+                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant:</Text>
+                                        <Text fontSize={'xs'}>{receipt.data.user_name}</Text>
+                                    </HStack>
+                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant ID:</Text>
+                                        <Text fontSize={'xs'}>{receipt.data.user_id}</Text>
+                                    </HStack>
+                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant Mobile:</Text>
+                                        <Text fontSize={'xs'}>{receipt.data.user_phone}</Text>
+                                    </HStack>
+                                    <Image src='/logo_long.png' w={'20'} />
+                                    <Text fontSize={'xs'}>{process.env.NEXT_PUBLIC_ORGANISATION_NAME}</Text>
+                                </VStack>
                             </VStack>
                         </ModalBody>
                     </Box>
