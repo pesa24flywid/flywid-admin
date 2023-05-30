@@ -108,11 +108,11 @@ const CommissionSetup = () => {
                 })
             }
             BackendAxios.post('/api/admin/create-package', values).then(() => {
-                fetchAllPackages()
                 Toast({
                     status: 'success',
                     description: 'Package Created'
                 })
+                fetchAllPackages()
             }).catch(err => {
                 Toast({
                     status: 'error',
@@ -192,7 +192,7 @@ const CommissionSetup = () => {
             selectedService != "aeps-mini-statement" &&
             selectedService != "bbps"
         ) {
-            if (params.data.from && params.data.to) {
+            if (params.data.from && params.data.to && params.data.fixed_charge) {
                 BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
                     ...params.data,
                     package_id: selectedPackage,
