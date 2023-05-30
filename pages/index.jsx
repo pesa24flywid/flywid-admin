@@ -35,7 +35,6 @@ const Index = () => {
   const [isOtpSent, setIsOtpSent] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [hasGps, setHasGps] = useState(true)
-
   const [authMethod, setAuthMethod] = useState("email")
 
   const Toast = useToast({
@@ -46,7 +45,6 @@ const Index = () => {
 
   const formik = useFormik({
     initialValues: {
-      authMethod: authMethod,
       user_id: "",
       password: "",
       otp: "",
@@ -57,9 +55,9 @@ const Index = () => {
     setOtpBeingSent(true)
     if (formik.values.user_id && formik.values.password) {
       axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/send-otp`, {
-        authMethod: formik.values.authMethod,
+        authMethod: authMethod,
         ...(authMethod === "email" && { "email": formik.values.user_id }),
-        ...(authMethod === "phone" && { "phone": formik.values.user_id }),
+        ...(authMethod === "phone" && { "phone_number": formik.values.user_id }),
         password: formik.values.password,
       }, {
         withCredentials: true,
@@ -84,7 +82,7 @@ const Index = () => {
         Toast({
           status: "error",
           title: "Error Occured",
-          description: err.response.data.message || err.response.data || err.message,
+          description: err.response?.data?.message || err.response?.data || err.message,
           position: "top-right"
         })
         setOtpBeingSent(false)
@@ -100,6 +98,36 @@ const Index = () => {
   }
 
 
+  useEffect(() => {
+    getLocation()
+  }, [])
+
+  // Getting user location
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        Cookies.set("latlong", position.coords.latitude + "," + position.coords.longitude)
+      })
+      setHasGps(true)
+    } else {
+      Toast({
+        status: "error",
+        title: "Location Error",
+        description: "No GPS detected. Try logging in with another device."
+      })
+      setHasGps(false)
+    }
+  }
+
+  useEffect(() => {
+    if (isNaN(formik.values.user_id)) {
+      setAuthMethod("email")
+    }
+    else {
+      setAuthMethod("phone")
+    }
+  }, [formik.values.user_id])
+
   // Handle login after OTP submission
   async function handleLogin() {
     setIsLoading(true)
@@ -107,7 +135,7 @@ const Index = () => {
       await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/login`, JSON.stringify({
         "authMethod": authMethod,
         ...(authMethod === "email" && { "email": formik.values.user_id }),
-        ...(authMethod === "phone" && { "phone": formik.values.user_id }),
+        ...(authMethod === "phone" && { "phone_number": formik.values.user_id }),
         "otp": formik.values.otp,
         "password": formik.values.password,
         "remember": 1,
@@ -130,6 +158,8 @@ const Index = () => {
         Cookies.set("userName", res.data.name)
         localStorage.setItem("userType", res.data.role[0].name)
 
+        localStorage.setItem("profilePic", `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${res.data.profile_pic}`)
+
         Cookies.set('access-token', res.data.token.original.access_token)
         if (res.data.profile_complete == 0) localStorage.setItem("isProfileComplete", false)
         if (res.data.profile_complete == 1) localStorage.setItem("isProfileComplete", true)
@@ -149,43 +179,11 @@ const Index = () => {
     }
   }
 
-
-  useEffect(() => {
-    // axios.get("/sanctum/csrf-cookie").then(() => {
-    //   console.log("Connection established")
-    // }).catch((err) => {
-    //   Toast({
-    //     status: 'error',
-    //     title: 'Server Error',
-    //     description: 'We are facing some issues, please try again later.'
-    //   })
-    // })
-    getLocation()
-  }, [])
-
-  // Getting user location
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        Cookies.set("latlong", position.coords.latitude + "," + position.coords.longitude)
-      })
-      setHasGps(true)
-    } else {
-      Toast({
-        status: "error",
-        title: "Location Error",
-        description: "No GPS detected. Try logging in with another device."
-      })
-      setHasGps(false)
-    }
-  }
-
-
   return (
     <>
-      <Head><title>Flywid - Admin Panel</title></Head>
+      <Head><title>Pesa24 - Admin Panel</title></Head>
       <VStack p={4}>
-        <Text fontSize={'2xl'} fontWeight={'semibold'} mb={6}>Flywid Admin Login</Text>
+        <Text fontSize={'2xl'} fontWeight={'semibold'} mb={6}>Pesa24 Admin Login</Text>
         <VStack
           p={4} bg={'blue.50'}
           border={'1px'}
@@ -195,7 +193,11 @@ const Index = () => {
         >
           <FormControl>
             <FormLabel>User ID</FormLabel>
-            <Input placeholder="Enter User ID" bg={'white'} name={"user_id"} onChange={formik.handleChange} />
+            <Input
+              placeholder="Enter User ID"
+              bg={'white'} name={"user_id"}
+              onChange={formik.handleChange}
+            />
           </FormControl>
           <FormControl>
             <FormLabel>Password</FormLabel>

@@ -9,11 +9,13 @@ import {
   Text,
   HStack,
   VisuallyHidden,
+  useToast
 } from '@chakra-ui/react'
 import BackendAxios from '@/lib/utils/axios';
+import Pdf from 'react-to-pdf'
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'
-import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsEye } from 'react-icons/bs';
 
 
 const ExportPDF = () => {
@@ -24,8 +26,9 @@ const ExportPDF = () => {
 }
 
 const Index = () => {
+  const Toast = useToast({position: 'top-right'})
   const [rowData, setRowData] = useState([])
-  const [colDefs, setColDefs] = useState([
+  const [columnDefs, setColumnDefs] = useState([
     {
       headerName: "Status",
       field: "status",
@@ -75,17 +78,7 @@ const Index = () => {
     prev_page_url: "",
   })
 
-  function onColumnMoved(params) {
-    var columnState = JSON.stringify(params.columnApi.getColumnState());
-    localStorage.setItem('payout_reportsColumns', columnState);
-  }
-
-  function onGridReady(params) {
-    var columnState = JSON.parse(localStorage.getItem('payout_reportsColumns'));
-    if (columnState) {
-      params.columnApi.applyColumnState({ state: columnState, applyOrder: true });
-    }
-  }
+  
 
   function fetchPayouts(pageLink) {
     BackendAxios.post(pageLink || '/api/admin/razorpay/fetch-payout?page=1').then((res) => {
@@ -101,6 +94,10 @@ const Index = () => {
       setPrintableRow(res.data.data)
     }).catch((err) => {
       console.log(err)
+      Toast({
+        status: 'error',
+        description: err.response.data.message || err.response.data || err.message
+      })
     })
   }
 
@@ -108,6 +105,41 @@ const Index = () => {
     fetchPayouts()
   }, [])
 
+
+  const pdfRef = React.createRef()
+  const [receipt, setReceipt] = useState({
+    show: false,
+    status: "success",
+    data: {}
+  })
+  const receiptCellRenderer = (params) => {
+    function showReceipt() {
+      if (!params.data.metadata) {
+        Toast({
+          description: 'No Receipt Available'
+        })
+        return
+      }
+      setReceipt({
+        status: JSON.parse(params.data.metadata).status,
+        show: true,
+        data: JSON.parse(params.data.metadata)
+      })
+    }
+    return (
+      <HStack height={'full'} w={'full'} gap={4}>
+        <Button rounded={'full'} colorScheme='twitter' size={'xs'} onClick={() => showReceipt()}><BsEye /></Button>
+      </HStack>
+    )
+  }
+
+  const userCellRenderer = (params) => {
+    return (
+        <Text>
+            ({params.data.trigered_by}) {params.data.trigered_by_name} - {params.data.trigered_by_phone}
+        </Text>
+    )
+}
   return (
     <>
       <Layout pageTitle={'Payout Reports'}>
@@ -156,7 +188,7 @@ const Index = () => {
         <Box className={'ag-theme-alpine'} h={'sm'}>
           <AgGridReact
             rowData={rowData}
-            columnDefs={colDefs}
+            columnDefs={columnDefs}
             defaultColDef={{
               filter: true,
               floatingFilter: true,
@@ -210,39 +242,54 @@ const Index = () => {
           </Button>
         </HStack>
 
+
         <VisuallyHidden>
-          <table id={'printable-table'}>
-            <thead>
-              <tr>
-                <td>#</td>
-                {
-                  colDefs.map((def, key) => {
-                    return <th key={key}>{def.headerName}</th>
-                  })
-                }
-              </tr>
-            </thead>
-            <tbody>
-              {
-                printableRow.map((data, key) => {
-                  return (
-                    <tr key={key}>
-                      <td>{key + 1}</td>
-                      <td>{data.payout_id}</td>
-                      <td>{data.amount}</td>
-                      <td>{data.beneficiary_name}</td>
-                      <td>{data.account_number}</td>
-                      <td>{data.reference_id}</td>
-                      <td>{data.status}</td>
-                      <td>{data.user_id}</td>
-                      <td>{data.timestamp}</td>
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </table>
-        </VisuallyHidden>
+                <table id='printable-table'>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            {
+                                columnDefs.filter((column) => {
+                                    if (
+                                        column.field != "metadata" &&
+                                        column.field != "name" &&
+                                        column.field != "receipt"
+                                    ) {
+                                        return (
+                                            column
+                                        )
+                                    }
+                                }).map((column, key) => {
+                                    return (
+                                        <th key={key}>{column.headerName}</th>
+                                    )
+                                })
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            printableRow.map((data, key) => {
+                                return (
+                                    <tr key={key}>
+                                        <td>{key + 1}</td>
+                                        <td>{data.transaction_id}</td>
+                                        <td>({data.trigered_by}) {data.name}</td>
+                                        <td>{data.debit_amount}</td>
+                                        <td>{data.credit_amount}</td>
+                                        <td>{data.opening_balance}</td>
+                                        <td>{data.closing_balance}</td>
+                                        <td>{data.service_type}</td>
+                                        <td>{JSON.parse(data.metadata).status ? "SUCCESS" : "FAILED"}</td>
+                                        <td>{data.created_at}</td>
+                                        <td>{data.updated_at}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+            </VisuallyHidden>
 
       </Layout>
     </>

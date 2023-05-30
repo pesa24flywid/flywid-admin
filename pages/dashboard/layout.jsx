@@ -28,7 +28,8 @@ import {
   BsPower,
   BsSpeedometer,
   BsBriefcaseFill,
-  BsCoin
+  BsCoin,
+  BsWallet
 } from 'react-icons/bs'
 import {
   FaUser,
@@ -108,6 +109,11 @@ const menuOptions = [
         status: true,
       },
       {
+        title: "manage role & parent",
+        link: "/dashboard/users/manage-user/edit-role-parent?pageId=users",
+        status: true,
+      },
+      {
         title: "manage admin",
         link: "/dashboard/users/create-admin?pageid=users",
         status: true,
@@ -125,8 +131,13 @@ const menuOptions = [
     icon: <BsBriefcaseFill />,
     children: [
       {
-        title: "manage services",
+        title: "manage global services",
         link: "/dashboard/services/manage-services?pageid=services",
+        status: true,
+      },
+      {
+        title: "services status",
+        link: "/dashboard/services/services-status?pageid=services",
         status: true,
       },
       {
@@ -137,6 +148,11 @@ const menuOptions = [
       {
         title: "manage operators",
         link: "/dashboard/services/manage-operators?pageId=controls",
+        status: true,
+      },
+      {
+        title: "manage CMS billers",
+        link: "/dashboard/services/manage-cms-billers?pageId=controls",
         status: true,
       },
     ]
@@ -174,27 +190,16 @@ const menuOptions = [
       {
         title: "add bank",
         link: "/dashboard/account/add-bank?pageid=account",
-        status: true,
+        status: false,
       },
     ]
   },
   {
-    type: "accordion",
+    type: "link",
     id: "package",
     name: "commission package",
     icon: <FaPercentage />,
-    children: [
-      {
-        title: "Commission Package",
-        link: "/dashboard/commission-package/?pageid=package",
-        status: true
-      },
-      {
-        title: "Assign Package",
-        link: "/dashboard/commission-package/assign?pageid=package",
-        status: true
-      },
-    ]
+    link: "/dashboard/commission-package/?pageid=package",
   },
   {
     type: "accordion",
@@ -207,11 +212,6 @@ const menuOptions = [
         status: false,
       },
       {
-        title: "add cms biller",
-        link: "/dashboard/controls/add-cms-biller?pageId=controls",
-        status: false,
-      },
-      {
         title: "manage banks",
         link: "/dashboard/controls/manage-banks?pageId=controls",
         status: true,
@@ -220,6 +220,11 @@ const menuOptions = [
         title: "preferences",
         link: "/dashboard/controls/preferences?pageId=controls",
         status: true,
+      },
+      {
+        title: "manage notifications",
+        link: "/dashboard/controls/notifications?pageId=controls",
+        status: false,
       },
     ]
   },
@@ -260,8 +265,8 @@ const menuOptions = [
       },
       {
         title: "cms",
-        link: "/dashboard",
-        status: false,
+        link: "/dashboard/reports/cms?pageid=reports",
+        status: true,
       },
       {
         title: "pg",
@@ -319,13 +324,18 @@ const menuOptions = [
         status: true,
       },
       {
+        title: "live sales",
+        link: "/dashboard/reports/transactions/live?pageid=reports",
+        status: true,
+      },
+      {
         title: "user ledger",
         link: "/dashboard/reports/transactions/user-ledger?pageid=reports",
         status: true,
       },
       {
         title: "login report",
-        link: "/dashboard",
+        link: "/dashboard/reports/logins?pageid=reports",
         status: true,
       },
     ]
@@ -335,50 +345,7 @@ const menuOptions = [
     name: "support tickets",
     link: "/dashboard/support-tickets?pageid=support",
     icon: <IoMdHelpBuoy />,
-  },
-  {
-    type: "accordion",
-    name: "website setup",
-    link: "/dashboard/commission?pageid=commission",
-    icon: <FaWrench />,
-    children: [
-      {
-        title: "basic details",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "header",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "footer",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "email",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "sms",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "banner setup",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "notifications",
-        link: "/dashboard",
-        status: false,
-      },
-    ]
-  },
+  }
 ]
 
 
@@ -388,6 +355,7 @@ const Layout = (props) => {
   const Toast = useToast({ position: 'top-right' })
   const { pageid } = Router.query
   const { isOpen, onClose, onOpen } = useDisclosure()
+  const [wallet, setWallet] = useState("0")
   const [aepsStatus, setAepsStatus] = useState(true)
   const [bbpsStatus, setBbpsStatus] = useState(true)
   const [dmtStatus, setDmtStatus] = useState(true)
@@ -395,7 +363,20 @@ const Layout = (props) => {
   const [userName, setUserName] = useState("NA")
   const [userType, setUserType] = useState("NA")
 
-  function fetchServiceStatus(){
+  const [profilePic, setProfilePic] = useState("")
+
+  function fetchServiceStatus() {
+    ClientAxios.get("/api/global").then(res => {
+      setAepsStatus(res.data.aeps_status)
+      setBbpsStatus(res.data.bbps_status)
+      setDmtStatus(res.data.dmt_status)
+      setRechargeStatus(res.data.recharge_status)
+    }).catch(err => {
+      console.log(err.message)
+    })
+  }
+
+  function fetchOrganisationServiceStatus() {
     ClientAxios.get("/api/global").then(res => {
       setAepsStatus(res.data.aeps_status)
       setBbpsStatus(res.data.bbps_status)
@@ -418,6 +399,7 @@ const Layout = (props) => {
   useEffect(() => {
     setUserName(localStorage.getItem("userName"))
     setUserType(localStorage.getItem("userType"))
+    setProfilePic(localStorage.getItem("profilePic"))
     fetchServiceStatus()
   }, [])
 
@@ -431,6 +413,15 @@ const Layout = (props) => {
       setTimeout(() => Router.push("/"), 2000)
     }
   }, [])
+
+  useEffect(() => {
+    // Check wallet balance
+    BackendAxios.post('/api/user/wallet').then((res) => {
+        setWallet(res.data[0].wallet)
+    }).catch((err) => {
+        setWallet('0')
+    })
+}, [])
 
 
   async function logout() {
@@ -450,7 +441,27 @@ const Layout = (props) => {
       Toast({
         position: 'top',
         status: 'success',
-        title: 'Data updated'
+        title: 'Data updated globally'
+      })
+    }).catch(err => {
+      Toast({
+        status: 'error',
+        title: 'Error while updating'
+      })
+    })
+  }
+
+  function updateOrganisation(data) {
+    ClientAxios.post('/api/organisation', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      fetchOrganisationServiceStatus()
+      Toast({
+        position: 'top',
+        status: 'success',
+        title: 'Organisation Data updated'
       })
     }).catch(err => {
       Toast({
@@ -462,8 +473,9 @@ const Layout = (props) => {
 
   return (
     <>
-      <Head><title>{`Flywid Admin | ${props.pageTitle || "No Title"}`}</title></Head>
+      <Head><title>{`Pesa24 Admin | ${props.pageTitle || "No Title"}`}</title></Head>
       <HStack spacing={0} alignItems={'flex-start'}>
+
         {/* Sidebar */}
         <Show above='md'>
           <VStack
@@ -473,9 +485,9 @@ const Layout = (props) => {
             overflowY={'scroll'}
           >
             <VStack py={8}>
-              <Image src='https://xsgames.co/randomusers/assets/avatars/male/8.jpg' boxSize={24} rounded={'full'} />
+              <Image src={profilePic || 'https://xsgames.co/randomusers/assets/avatars/male/8.jpg'} boxSize={24} rounded={'full'} />
               <Text fontSize={'xl'} color={'#444'} textTransform={'capitalize'}>{userName}</Text>
-              <Text fontSize={'sm'} color={'#666'} textTransform={'capitalize'}>Flywid - {userType}</Text>
+              <Text fontSize={'sm'} color={'#666'} textTransform={'capitalize'}>Pesa24 - {userType}</Text>
             </VStack>
             <VStack spacing={2} w={'full'}>
               {
@@ -562,7 +574,7 @@ const Layout = (props) => {
                 </Button>
               </Show>
               {/* <Image src='/logo_long.png' w={16} /> */}
-              <Text fontSize={'lg'} fontWeight={'bold'}>Flywid</Text>
+              <Text fontSize={'lg'} fontWeight={'bold'}>Pesa24</Text>
             </HStack>
             <HStack spacing={6}>
               <HStack spacing={2}>
@@ -588,6 +600,20 @@ const Layout = (props) => {
                 <Switch
                   id={'rechargeStatus'} isChecked={rechargeStatus}
                   onChange={(e) => updateGlobal({ recharge_status: e.target.checked })} />
+              </HStack>
+              <HStack
+                p={2} bg={'#FFF'}
+                rounded={'full'}
+                boxShadow={'lg'}
+                spacing={2} minW={128}
+              >
+                <Box p={2} bg={'yellow.400'} rounded={'full'} display={'grid'} placeContent={'center'}>
+                  <BsWallet />
+                </Box>
+                <Box>
+                  <Text fontSize={'10'} color={'#888'}>Wallet</Text>
+                  <Text fontSize={14}>₹ {wallet}</Text>
+                </Box>
               </HStack>
             </HStack>
           </Stack>
@@ -615,7 +641,7 @@ const Layout = (props) => {
               <Image src='https://xsgames.co/randomusers/assets/avatars/male/8.jpg' boxSize={12} rounded={'full'} />
               <Box>
                 <Text fontSize={'lg'}>{Cookies.get("userName")}</Text>
-                <Text fontSize={'xs'}>Flywid</Text>
+                <Text fontSize={'xs'}>Pesa24</Text>
               </Box>
             </HStack>
           </DrawerHeader>

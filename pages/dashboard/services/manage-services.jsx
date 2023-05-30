@@ -30,7 +30,6 @@ const ManageServices = () => {
         image_url: "",
         id: "",
         is_active: false,
-        can_subscribe: false,
         api_call: false,
         down_message: "",
         price: "",
@@ -64,7 +63,7 @@ const ManageServices = () => {
     }
 
     function createService() {
-        BackendAxios.post("/api/admin/services", {...selectedService}).then(res => {
+        BackendAxios.post("/api/admin/services", { ...selectedService }).then(res => {
             Toast({
                 status: 'success',
                 description: 'Service created'
@@ -94,7 +93,7 @@ const ManageServices = () => {
                             <Box
                                 key={key} pos={'relative'}
                                 p={4} w={'56'}
-                                height={'72'}
+                                height={'xs'}
                                 rounded={8} cursor={'pointer'}
                                 boxShadow={'lg'}
                                 display={'flex'}
@@ -107,7 +106,7 @@ const ManageServices = () => {
                                     service_name: service.service_name,
                                     image_url: service.image_url,
                                     is_active: service.is_active,
-                                    can_subscribe: service.can_subscribe,
+                                    api_call: service.api_call,
                                     down_message: service.down_message,
                                     intent: "update"
                                 })}
@@ -116,9 +115,9 @@ const ManageServices = () => {
                                 {
                                     service.is_active == 0 && <Text fontSize={10} pos={'absolute'} top={4} right={4} p={1} bg={'orange.500'} color={'white'}>INACTIVE</Text>
                                 }
-                                {
-                                    service.can_subscribe == 0 && <Text fontSize={10} pos={'absolute'} top={4} right={4} p={1} bg={'red.500'} color={'white'}>DISABLED</Text>
-                                }
+                                {/* {
+                                    service.api_call == 0 && <Text fontSize={10} pos={'absolute'} top={4} right={4} p={1} bg={'red.500'} color={'white'}>DISABLED</Text>
+                                } */}
                                 <Image src={service.image_url} w={'80%'} mb={4} />
                                 <Box>
                                     <Text textTransform={'capitalize'}>{service.service_name}</Text>
@@ -127,8 +126,8 @@ const ManageServices = () => {
                                         <Text fontSize={14} textAlign={'left'}>{service.is_active === 1 ? "Yes" : "No"}</Text>
                                     </HStack>
                                     <HStack justifyContent={'flex-start'} gap={2}>
-                                        <Text fontSize={14} textAlign={'left'} fontWeight={'bold'}>Can Subscribe</Text>
-                                        <Text fontSize={14} textAlign={'left'}>{service.can_subscribe === 1 ? "Yes" : "No"}</Text>
+                                        <Text fontSize={14} textAlign={'left'} fontWeight={'bold'}>Has API Call</Text>
+                                        <Text fontSize={14} textAlign={'left'}>{service.api_call === 1 ? "Yes" : "No"}</Text>
                                     </HStack>
                                 </Box>
                             </Box>
@@ -152,9 +151,10 @@ const ManageServices = () => {
                                 <Select name={'type'} onChange={e => setSelectedService({ ...selectedService, type: e.target.value })}>
                                     <option value="aeps">AePS</option>
                                     <option value="bbps">BBPS</option>
-                                    <option value="bbps">DMT</option>
-                                    <option value="bbps">Payout</option>
-                                    <option value="bbps">Recharge</option>
+                                    <option value="dmt">DMT</option>
+                                    <option value="payout">Payout</option>
+                                    <option value="recharge">Recharge</option>
+                                    <option value="other">Other</option>
                                 </Select>
                             </>
                         }
@@ -172,11 +172,6 @@ const ManageServices = () => {
                                 <Input value={selectedService.eko_id} onChange={e => setSelectedService({ ...selectedService, eko_id: e.target.value })} />
                                 <Text mt={4}>Paysprint ID</Text>
                                 <Input value={selectedService.paysprint_id} onChange={e => setSelectedService({ ...selectedService, paysprint_id: e.target.value })} />
-
-                                <HStack gap={4} mt={4}>
-                                    <Text>Has API Call</Text>
-                                    <Switch defaultChecked={selectedService.api_call} onChange={e => setSelectedService({ ...selectedService, api_call: e.target.checked })}></Switch>
-                                </HStack>
                             </>
                         }
                         <br />
@@ -185,11 +180,10 @@ const ManageServices = () => {
                             <Switch defaultChecked={selectedService.is_active} onChange={e => setSelectedService({ ...selectedService, is_active: e.target.checked })}></Switch>
                         </HStack>
                         <br />
-                        <HStack gap={4}>
-                            <Text>Can User Subscribe</Text>
-                            <Switch defaultChecked={selectedService.can_subscribe} onChange={e => setSelectedService({ ...selectedService, can_subscribe: e.target.checked })}></Switch>
+                        <HStack gap={4} mb={4}>
+                            <Text>Has API Call</Text>
+                            <Switch defaultChecked={selectedService.api_call} onChange={e => setSelectedService({ ...selectedService, api_call: e.target.checked })}></Switch>
                         </HStack>
-                        <br />
                         <Text>Down Message</Text>
                         <Input value={selectedService.down_message} onChange={e => setSelectedService({ ...selectedService, down_message: e.target.value })} />
                     </ModalBody>
@@ -197,8 +191,8 @@ const ManageServices = () => {
                         <HStack justifyContent={'flex-end'}>
                             {
                                 selectedService.intent == "update" ?
-                                    <Button colorScheme='twitter' onClick={()=>updateServiceStatus()}>Save</Button> :
-                                    <Button colorScheme='twitter' onClick={()=>createService()}>Create</Button>
+                                    <Button colorScheme='twitter' onClick={() => updateServiceStatus()}>Save</Button> :
+                                    <Button colorScheme='twitter' onClick={() => createService()}>Create</Button>
                             }
                         </HStack>
                     </ModalFooter>

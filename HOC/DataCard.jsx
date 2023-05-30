@@ -33,7 +33,7 @@ const DataCard = ({ title, data, icon, color }) => {
   )
 }
 
-export const TransactionCard = ({ title, color, amount, quantity }) => {
+export const TransactionCard = ({ title, color, amount, quantity, showRupee }) => {
   return (
     <>
       <Box
@@ -47,7 +47,7 @@ export const TransactionCard = ({ title, color, amount, quantity }) => {
         <HStack pt={4} justifyContent={'space-between'}>
           <VStack w={'full'} alignItems={'flex-start'} pr={2} borderRight={'1px'} borderRightColor={'#999'}>
             <Text fontSize={'xs'} color={'#666'}>Amount</Text>
-            <Text fontSize={'xl'} color={'#333'}>₹ {amount}</Text>
+            <Text fontSize={'xl'} color={'#333'}>{showRupee ? '₹' : null} {amount}</Text>
           </VStack>
           <VStack w={'full'} alignItems={'flex-start'} pl={2}>
             <Text fontSize={'xs'} color={'#666'}>Transactions</Text>

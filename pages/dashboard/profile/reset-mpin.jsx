@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     HStack,
     Box,
@@ -7,6 +7,7 @@ import {
     Text,
     FormControl,
     FormLabel,
+    Input,
     PinInput,
     PinInputField,
     Button,
@@ -20,21 +21,39 @@ const ResetMpin = () => {
     const Toast = useToast({
         position: 'top-right'
     })
-
+    const [lastRemarks, setLastRemarks] = useState("")
     const MpinFormik = useFormik({
         initialValues: {
             old_mpin: "",
             new_mpin: "",
             new_mpin_confirmation: "",
+            credential_remarks: ""
         }
     })
+
+    function getRemarks() {
+        BackendAxios.get('/api/admin/credential-remarks').then(res => {
+            setLastRemarks(res.data)
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                title: 'Error Occured',
+                description: err.message
+            })
+        })
+    }
+    useEffect(() => {
+        getRemarks()
+    }, [])
 
     function handleMpinReset() {
         BackendAxios.post('/api/user/new-mpin', JSON.stringify({
             old_mpin: MpinFormik.values.old_mpin,
             new_mpin: MpinFormik.values.new_mpin,
             new_mpin_confirmation: MpinFormik.values.new_mpin_confirmation,
+            credential_remarks: MpinFormik.values.credential_remarks
         })).then((res) => {
+            getRemarks()
             Toast({
                 status: 'success',
                 title: 'Success',
@@ -52,7 +71,7 @@ const ResetMpin = () => {
     return (
         <>
             <Layout pageTitle={'Reset MPIN'}>
-                <HStack w={'full'} justifyContent={'center'}>
+                <VStack w={'full'} justifyContent={'center'}>
                     <Box
                         bg={'white'}
                         boxShadow={'md'}
@@ -98,10 +117,27 @@ const ResetMpin = () => {
                                     </PinInput>
                                 </HStack>
                             </FormControl>
+                            <FormControl >
+                                <FormLabel textAlign={'center'} fontSize={12}>Remarks</FormLabel>
+                                <HStack spacing={6} justifyContent={'center'}>
+                                    <Input
+                                        name='credential_remarks'
+                                        onChange={MpinFormik.handleChange}
+                                        bg={'aqua'}
+                                    />
+                                </HStack>
+                            </FormControl>
                             <Button colorScheme={'twitter'} onClick={handleMpinReset}>Done</Button>
                         </VStack>
                     </Box>
-                </HStack>
+                    <Box p={4} bg={'orange.400'} mt={16} w={['full', 'sm']}>
+                        <Text
+                            fontWeight={'semibold'}
+                            color={'#FFF'}
+                        >Last Remarks</Text>
+                        <Text color={'#FFF'}>{lastRemarks}</Text>
+                    </Box>
+                </VStack>
             </Layout>
         </>
     )

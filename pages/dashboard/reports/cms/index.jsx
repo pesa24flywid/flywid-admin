@@ -42,7 +42,7 @@ const ExportPDF = () => {
 }
 
 const Index = () => {
-    const transactionKeyword = "dmt"
+    const transactionKeyword = "cms"
     const [printableRow, setPrintableRow] = useState([])
     const Toast = useToast({
         position: 'top-right'
@@ -205,7 +205,7 @@ const Index = () => {
 
     return (
         <>
-            <Layout pageTitle={'DMT Reports'}>
+            <Layout pageTitle={'CMS Reports'}>
                 <HStack my={4} justifyContent={'space-between'}>
                     <Text fontSize={'lg'} fontWeight={'semibold'}>BBPS Transactions</Text>
                     <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>

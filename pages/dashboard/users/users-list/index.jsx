@@ -22,10 +22,6 @@ import {
     Th,
     Td,
     TableContainer,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverBody,
     Drawer,
     DrawerBody,
     DrawerFooter,
@@ -57,7 +53,7 @@ import Script from 'next/script'
 import Link from 'next/link'
 import { BiPen, BiRupee } from 'react-icons/bi'
 import fileDownload from 'js-file-download'
-import { aepsList, bbpsList, cmsList, dmtList, licList, matmList, panList, payoutList, rechargeList } from '@/lib/utils/permissions/structure'
+import { aepsList, axisList, basicList, bbpsList, cmsList, dmtList, fastagList, licList, matmList, panList, payoutList, rechargeList, userManagementList } from '@/lib/utils/permissions/structure'
 
 const ExportPDF = (currentRowData) => {
     const doc = new jsPDF('landscape')
@@ -82,6 +78,9 @@ const Index = () => {
     })
     const [userObjId, setUserObjId] = useState("")
     const [permissionsDrawer, setPermissionsDrawer] = useState(false)
+
+    const [basicPermissions, setBasicPermissions] = useState([])
+    const [basicExpansion, setBasicExpansion] = useState([])
 
     const [aepsPermissions, setAepsPermissions] = useState([])
     const [aepsExpansion, setAepsExpansion] = useState([])
@@ -109,6 +108,15 @@ const Index = () => {
 
     const [licPermissions, setLicPermissions] = useState([])
     const [licExpansion, setLicExpansion] = useState([])
+
+    const [axisPermissions, setAxisPermissions] = useState([])
+    const [axisExpansion, setAxisExpansion] = useState([])
+
+    const [fastagPermissions, setFastagPermissions] = useState([])
+    const [fastagExpansion, setFastagExpansion] = useState([])
+
+    const [userManagementPermissions, setUserManagementPermissions] = useState([])
+    const [userManagementExpansion, setUserManagementExpansion] = useState([])
 
     const availableTabs = ['retailers', 'distributor']
     const [selectedTab, setSelectedTab] = useState("retailer")
@@ -162,9 +170,10 @@ const Index = () => {
         })
     }
 
+    const [arePermissionsLoading, setArePermissionsLoading] = useState(false)
     // Fetch User Permissions
     function fetchUserPermissions() {
-
+        setArePermissionsLoading(true)
         ClientAxios.post('/api/user/fetch', {
             user_id: `${selectedUser}`,
         },
@@ -175,6 +184,9 @@ const Index = () => {
             }
         ).then((res) => {
             setUserObjId(res.data[0]._id)
+            setBasicPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("basic")
+            }))
             setAepsPermissions(res.data[0].allowed_pages.filter((page) => {
                 return page.includes("aeps")
             }))
@@ -202,7 +214,15 @@ const Index = () => {
             setMatmPermissions(res.data[0].allowed_pages.filter((page) => {
                 return page.includes("matm")
             }))
+            setAxisPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("axis")
+            }))
+            setUserManagementPermissions(res.data[0].allowed_pages.filter((page) => {
+                return page.includes("userManagement")
+            }))
+            setArePermissionsLoading(false)
         }).catch((err) => {
+            setArePermissionsLoading(false)
             console.log("No permissions found")
             console.log(err.message)
         })
@@ -220,23 +240,73 @@ const Index = () => {
 
     function saveUserPermissions() {
         ClientAxios.post('/api/user/update-permissions', {
-            allowed_pages: aepsPermissions.concat(aepsPermissions, bbpsPermissions, dmtPermissions, payoutPermissions, cmsPermissions, rechargePermissions, matmPermissions, panPermissions, licPermissions),
+            allowed_pages: aepsPermissions.concat(
+                basicPermissions,
+                aepsPermissions,
+                bbpsPermissions,
+                dmtPermissions,
+                payoutPermissions,
+                cmsPermissions,
+                rechargePermissions,
+                matmPermissions,
+                panPermissions,
+                licPermissions,
+                axisPermissions,
+                fastagPermissions,
+                userManagementPermissions
+            ),
             user_id: selectedUser
         }, {
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then((res) => {
+            fetchUserPermissions()
             Toast({
                 status: 'success',
                 description: 'User permissions were updated!'
             })
-            fetchUserPermissions()
         }).catch((err) => {
             Toast({
                 status: 'error',
                 title: 'Error Occured',
-                description: err.response.data.message || err.message
+                description: err.response.data.message || err.response.data || err.message
+            })
+        })
+    }
+
+    function saveRemarks(userId, remarks) {
+        BackendAxios.post(`/api/admin/user/remarks`, {
+            userId: userId,
+            remarks: remarks
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Remarks Updated'
+            })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                title: 'Error while adding remarks',
+                description: err.response.data.message || err.response.data || err.message
+            })
+        })
+    }
+
+    function sendCredentials(userEmail, name) {
+        BackendAxios.post(`/admin-send-creds`, {
+            email: userEmail,
+            name: name
+        }).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Credentials Sent!'
+            })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                title: 'Error while sending credentials',
+                description: err.response.data.message || err.response.data || err.message
             })
         })
     }
@@ -269,6 +339,14 @@ const Index = () => {
                             width={'xs'} flex={'unset'}
                         >
                             Distributor
+                        </Tab>
+                        <Tab
+                            fontSize={['xs', 'lg']}
+                            _selected={{ bg: 'twitter.500', color: 'white' }}
+                            onClick={() => setSelectedTab("super_distributor")}
+                            width={'xs'} flex={'unset'}
+                        >
+                            Super Distributor
                         </Tab>
                     </TabList>
                     <TabPanels pt={8}>
@@ -400,6 +478,7 @@ const Index = () => {
                                                                                 </Box>
                                                                             </HStack>
                                                                             <Text>{user.email}</Text>
+                                                                            <a href={`tel:${user.alternate_phone}`}><Text>{user.alternate_phone}</Text></a>
                                                                             <HStack spacing={0} my={2}>
                                                                                 <Link href={`/dashboard/users/manage-user?pageId=users&user_id=${user.id}`}>
                                                                                     <Button
@@ -444,16 +523,31 @@ const Index = () => {
                                                                                     ></Switch>
                                                                                 </HStack>
                                                                             </HStack>
-                                                                            <Text>
-                                                                                <a href={`tel:${user.alternate_phone}`}>{user.alternate_phone}</a>
-                                                                            </Text>
+
+                                                                            <HStack spacing={4}>
+                                                                                <Button
+                                                                                    size={'xs'}
+                                                                                    bgColor={'white'}
+                                                                                    onClick={() => sendCredentials(user.email, user.first_name)}
+                                                                                >Send Credentials
+                                                                                </Button>
+
+                                                                                <Link href={`/dashboard/users/manage-user/edit-role-parent?pageId=users&user_id=${user.id}`}>
+                                                                                    <Button
+                                                                                        size={'xs'}
+                                                                                        bgColor={'white'}
+                                                                                    >Edit Role & Parent
+                                                                                    </Button>
+                                                                                </Link>
+
+                                                                            </HStack>
                                                                         </Box>
                                                                     </Td>
                                                                     <Td>
                                                                         <Box>
                                                                             <Text><b>Status: </b>&nbsp;&nbsp; Verified </Text>
-                                                                            <Text><b>Aadhaar No.: </b>&nbsp;&nbsp; {user.aadhaar} </Text>
-                                                                            <Text><b>PAN: </b>&nbsp;&nbsp; {user.pan_number} </Text>
+                                                                            {/* <Text><b>Aadhaar No.: </b>&nbsp;&nbsp; {user.aadhaar} </Text>
+                                                                            <Text><b>PAN: </b>&nbsp;&nbsp; {user.pan_number} </Text> */}
                                                                             <Text><b>GST No.: </b>&nbsp;&nbsp; {user.gst_number} </Text>
                                                                             <Text><b>Gender & DOB: </b>{user.gender} &nbsp;&nbsp;{user.dob}</Text>
                                                                             <Text><b>Organisation Code.: </b>&nbsp;&nbsp; RPAY </Text><br /><br />
@@ -474,6 +568,14 @@ const Index = () => {
                                                                             <Text>{user.city}, {user.state},</Text>
                                                                             <Text>Pincode - {user.pincode}</Text>
                                                                         </Box>
+                                                                        <Box pt={16}>
+                                                                            <Text fontSize={'xs'}>Remarks</Text>
+                                                                            <Input
+                                                                                onBlur={(e) => saveRemarks(user.id, e.target.value)}
+                                                                                placeholder={user.delete_remarks} bg={'aqua'}
+                                                                            />
+                                                                            <Text color={'red'} onClick={() => saveRemarks(user.id, " ")}>Remove remarks</Text>
+                                                                        </Box>
                                                                     </Td>
                                                                     <Td>{/* PAN Card */}
 
@@ -492,7 +594,7 @@ const Index = () => {
                                                                         <br /><br />
                                                                         {/* Aadhaar Front */}
                                                                         {
-                                                                            user.aadhaar_front &&
+                                                                            user.aadhar_front &&
                                                                             <Button size={'xs'}
                                                                                 onClick={() => BackendAxios.post(`/api/admin/file`, {
                                                                                     address: user.aadhaar_front
@@ -507,7 +609,7 @@ const Index = () => {
                                                                         <br /><br />
                                                                         {/* Aadhaar Back */}
                                                                         {
-                                                                            user.aadhaar_back &&
+                                                                            user.aadhar_back &&
                                                                             <Button size={'xs'}
                                                                                 onClick={() => BackendAxios.post(`/api/admin/file`, {
                                                                                     address: user.aadhaar_back
@@ -648,83 +750,120 @@ const Index = () => {
                         <DrawerBody>
                             <form id='userPermission'>
                                 <input type="hidden" name='userId' value={selectedUser} />
-                                <VStack spacing={6} w={'full'} alignItems={'flex-start'}>
-                                    <CheckboxTree
-                                        nodes={aepsList}
-                                        checked={aepsPermissions}
-                                        onCheck={(checked) => setAepsPermissions(checked)}
-                                        expanded={aepsExpansion}
-                                        onExpand={(expanded) => setAepsExpansion(expanded)}
-                                    />
+                                {arePermissionsLoading ? <Text>Please wait... Fetching Permissions</Text> :
+                                    <VStack spacing={6} w={'full'} alignItems={'flex-start'}>
+                                        <CheckboxTree
+                                            nodes={basicList}
+                                            checked={basicPermissions}
+                                            onCheck={(checked) => setBasicPermissions(checked)}
+                                            expanded={basicExpansion}
+                                            onExpand={(expanded) => setBasicExpansion(expanded)}
+                                        />
 
-                                    <CheckboxTree
-                                        nodes={bbpsList}
-                                        checked={bbpsPermissions}
-                                        onCheck={(checked) => setBbpsPermissions(checked)}
-                                        expanded={bbpsExpansion}
-                                        onExpand={(expanded) => setBbpsExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={aepsList}
+                                            checked={aepsPermissions}
+                                            onCheck={(checked) => setAepsPermissions(checked)}
+                                            expanded={aepsExpansion}
+                                            onExpand={(expanded) => setAepsExpansion(expanded)}
+                                        />
 
-                                    <CheckboxTree
-                                        nodes={dmtList}
-                                        checked={dmtPermissions}
-                                        onCheck={(checked) => setDmtPermissions(checked)}
-                                        expanded={dmtExpansion}
-                                        onExpand={(expanded) => setDmtExpansion(expanded)}
-                                    />
-                                    
-                                    <CheckboxTree
-                                        nodes={payoutList}
-                                        checked={payoutPermissions}
-                                        onCheck={(checked) => setPayoutPermissions(checked)}
-                                        expanded={payoutExpansion}
-                                        onExpand={(expanded) => setPayoutExpansion(expanded)}
-                                    />
-                                    
-                                    <CheckboxTree
-                                        nodes={rechargeList}
-                                        checked={rechargePermissions}
-                                        onCheck={(checked) => setRechargePermissions(checked)}
-                                        expanded={rechargeExpansion}
-                                        onExpand={(expanded) => setRechargeExpansion(expanded)}
-                                    />
-                                    
+                                        <CheckboxTree
+                                            nodes={bbpsList}
+                                            checked={bbpsPermissions}
+                                            onCheck={(checked) => setBbpsPermissions(checked)}
+                                            expanded={bbpsExpansion}
+                                            onExpand={(expanded) => setBbpsExpansion(expanded)}
+                                        />
 
-                                    <CheckboxTree
-                                        nodes={panList}
-                                        checked={panPermissions}
-                                        onCheck={(checked) => setPanPermissions(checked)}
-                                        expanded={panExpansion}
-                                        onExpand={(expanded) => setPanExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={dmtList}
+                                            checked={dmtPermissions}
+                                            onCheck={(checked) => setDmtPermissions(checked)}
+                                            expanded={dmtExpansion}
+                                            onExpand={(expanded) => setDmtExpansion(expanded)}
+                                        />
 
-                                    
-                                    <CheckboxTree
-                                        nodes={matmList}
-                                        checked={matmPermissions}
-                                        onCheck={(checked) => setMatmPermissions(checked)}
-                                        expanded={matmExpansion}
-                                        onExpand={(expanded) => setMatmExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={payoutList}
+                                            checked={payoutPermissions}
+                                            onCheck={(checked) => setPayoutPermissions(checked)}
+                                            expanded={payoutExpansion}
+                                            onExpand={(expanded) => setPayoutExpansion(expanded)}
+                                        />
 
-                                    
-                                    <CheckboxTree
-                                        nodes={cmsList}
-                                        checked={cmsPermissions}
-                                        onCheck={(checked) => setCmsPermissions(checked)}
-                                        expanded={cmsExpansion}
-                                        onExpand={(expanded) => setCmsExpansion(expanded)}
-                                    />
+                                        <CheckboxTree
+                                            nodes={rechargeList}
+                                            checked={rechargePermissions}
+                                            onCheck={(checked) => setRechargePermissions(checked)}
+                                            expanded={rechargeExpansion}
+                                            onExpand={(expanded) => setRechargeExpansion(expanded)}
+                                        />
 
-                                    
-                                    <CheckboxTree
-                                        nodes={licList}
-                                        checked={licPermissions}
-                                        onCheck={(checked) => setLicPermissions(checked)}
-                                        expanded={licExpansion}
-                                        onExpand={(expanded) => setLicExpansion(expanded)}
-                                    />
-                                </VStack>
+
+                                        <CheckboxTree
+                                            nodes={panList}
+                                            checked={panPermissions}
+                                            onCheck={(checked) => setPanPermissions(checked)}
+                                            expanded={panExpansion}
+                                            onExpand={(expanded) => setPanExpansion(expanded)}
+                                        />
+
+
+                                        <CheckboxTree
+                                            nodes={matmList}
+                                            checked={matmPermissions}
+                                            onCheck={(checked) => setMatmPermissions(checked)}
+                                            expanded={matmExpansion}
+                                            onExpand={(expanded) => setMatmExpansion(expanded)}
+                                        />
+
+
+                                        <CheckboxTree
+                                            nodes={cmsList}
+                                            checked={cmsPermissions}
+                                            onCheck={(checked) => setCmsPermissions(checked)}
+                                            expanded={cmsExpansion}
+                                            onExpand={(expanded) => setCmsExpansion(expanded)}
+                                        />
+
+
+                                        <CheckboxTree
+                                            nodes={licList}
+                                            checked={licPermissions}
+                                            onCheck={(checked) => setLicPermissions(checked)}
+                                            expanded={licExpansion}
+                                            onExpand={(expanded) => setLicExpansion(expanded)}
+                                        />
+
+
+                                        <CheckboxTree
+                                            nodes={axisList}
+                                            checked={axisPermissions}
+                                            onCheck={(checked) => setAxisPermissions(checked)}
+                                            expanded={axisExpansion}
+                                            onExpand={(expanded) => setAxisExpansion(expanded)}
+                                        />
+
+
+                                        <CheckboxTree
+                                            nodes={fastagList}
+                                            checked={fastagPermissions}
+                                            onCheck={(checked) => setFastagPermissions(checked)}
+                                            expanded={fastagExpansion}
+                                            onExpand={(expanded) => setFastagExpansion(expanded)}
+                                        />
+
+
+                                        <CheckboxTree
+                                            nodes={userManagementList}
+                                            checked={userManagementPermissions}
+                                            onCheck={(checked) => setUserManagementPermissions(checked)}
+                                            expanded={userManagementExpansion}
+                                            onExpand={(expanded) => setUserManagementExpansion(expanded)}
+                                        />
+                                    </VStack>
+                                }
                             </form>
                         </DrawerBody>
 

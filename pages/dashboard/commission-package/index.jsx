@@ -56,6 +56,7 @@ const CommissionSetup = () => {
     const [selectedService, setSelectedService] = useState("")
     const [focussedPackageTitle, setFocussedPackageTitle] = useState("")
     const [focussedPackageId, setFocussedPackageId] = useState("")
+    const [selectedBbpsOperatorId, setSelectedBbpsOperatorId] = useState("")
     const [pagination, setPagination] = useState({
         current_page: "1",
         total_pages: "1",
@@ -72,6 +73,28 @@ const CommissionSetup = () => {
         phone: "",
     })
 
+    const [isAssignModalOpen, setIsAssignModalOpen] = useState({
+        status: false,
+        selectedPackageId: "",
+        name: ""
+    })
+
+    const [rowData, setRowData] = useState([
+    ])
+
+    const [columnDefs, setColumnDefs] = useState([
+    ])
+
+    const defaultColDef = useMemo(() => {
+        return {
+            resizable: true,
+            editable: true,
+            singleClickEdit: true,
+            filter: true,
+            floatingFilter: true,
+        };
+    }, []);
+
     const Formik = useFormik({
         initialValues: {
             package_name: "",
@@ -85,11 +108,11 @@ const CommissionSetup = () => {
                 })
             }
             BackendAxios.post('/api/admin/create-package', values).then(() => {
-                fetchAllPackages()
                 Toast({
                     status: 'success',
                     description: 'Package Created'
                 })
+                fetchAllPackages()
             }).catch(err => {
                 Toast({
                     status: 'error',
@@ -127,32 +150,6 @@ const CommissionSetup = () => {
         }
     })
 
-    const verifyBeneficiary = (queriedUserId) => {
-        // Logic to verifiy beneficiary details
-        BackendAxios.post(`/api/admin/user/info/${VerificationFormik.values.beneficiaryId}`).then((res) => {
-            Formik.setFieldValue("beneficiaryId", res.data.data.id)
-            setFetchedUser({
-                ...fetchedUser,
-                id: res.data.data.id,
-                user_name: res.data.data.first_name + " " + res.data.data.last_name,
-                firm_name: res.data.data.firm_name,
-                phone: res.data.data.phone_number,
-                wallet: res.data.data.wallet,
-
-            })
-        }).catch((err) => {
-            Toast({
-                status: 'error',
-                description: err.response.data.message || err.response.data || 'User not found!'
-            })
-            setFetchedUser({
-                user_name: "",
-                firm_name: "",
-                wallet: "",
-                phone: "",
-            })
-        })
-    }
 
     function fetchAllPackages(pageLink) {
         BackendAxios.get(pageLink || '/api/admin/packages?page=1').then(res => {
@@ -191,12 +188,11 @@ const CommissionSetup = () => {
     }
 
     function onCellValueChange(params) {
-        if (selectedService == "payout" ||
-            selectedService == "aeps-cash-withdrawal" ||
-            selectedService == "dmt" ||
-            selectedService == "aeps-aadhaar-pay"
+        if (
+            selectedService != "aeps-mini-statement" &&
+            selectedService != "bbps"
         ) {
-            if (params.data.from && params.data.to) {
+            if (params.data.from && params.data.to && params.data.fixed_charge) {
                 BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
                     ...params.data,
                     package_id: selectedPackage,
@@ -249,31 +245,79 @@ const CommissionSetup = () => {
                 })
             }
         }
+        if (selectedService == "cms") {
+            if (params.data.biller_id && params.data.fixed_charge) {
+                BackendAxios.post(`/api/admin/commissions/${selectedService}`, {
+                    ...params.data,
+                    package_id: selectedPackage
+                }).then(() => {
+                    Toast({
+                        status: 'success',
+                        description: `Commission Updated`
+                    })
+                }).catch(err => {
+                    Toast({
+                        status: 'error',
+                        description: `Error while updating commission`
+                    })
+                })
+            }
+        }
     }
 
-    const operatorNamesCellEditor = (params) => {
-        const [operators, setOperators] = useState([])
-        useEffect(() => {
-            BackendAxios.get("/api/admin/operators").then(res => {
-                setOperators(res.data)
-            }).catch(err => {
-                Toast({
-                    status: "error",
-                    title: "Error while fetching operators",
-                    description: err.response.data.message || err.response.data || err.message
-                })
+    async function deleteCommission(keyword, id) {
+        await BackendAxios.post(`/api/admin/commissions/delete/${keyword}/${id}`).then(res => {
+            Toast({
+                status: 'success',
+                description: 'Commission Deleted Successfully!'
             })
-        }, [])
-        return (
-            <Select name='operatorId' >
-                {
-                    operators.map((operator, key) => (
-                        <option value={operator.id} key={key}>{operator.name}</option>
-                    ))
-                }
-            </Select>
-        )
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                title: 'Error while deleting commission',
+                description: err.response?.data?.message || err.response?.data || err.message
+            })
+        })
     }
+
+    useEffect(() => {
+        if (selectedService == "bbps") {
+            BackendAxios.get("/api/admin/operators").then(res => {
+                const operatorNames = res.data.map((operator) => (operator.name))
+                setColumnDefs(columnDefs.map((columnDef) => {
+                    if (columnDef.field === 'operator_name') {
+                        return {
+                            ...columnDef,
+                            cellEditorParams: {
+                                values: operatorNames,
+                            },
+                        };
+                    }
+                    return columnDef;
+                }))
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+        if (selectedService == "cms") {
+            BackendAxios.get('/api/cms-billers').then(res => {
+                const billerIds = res.data.map((biller)=>(biller.biller_id))
+                setColumnDefs(columnDefs.map((columnDef) => {
+                    if (columnDef.field === 'biller_id') {
+                        return {
+                            ...columnDef,
+                            cellEditorParams: {
+                                values: billerIds,
+                            },
+                        };
+                    }
+                    return columnDef;
+                }))
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    }, [selectedService])
 
     const SwitchCellRender = (params) => {
         return (
@@ -302,7 +346,11 @@ const CommissionSetup = () => {
                     rounded={'full'}
                     size={'xs'}
                     colorScheme={'red'}
-                    onClick={() => params.api.applyTransaction({ remove: params.api.getSelectedRows() })}
+                    onClick={() => {
+                        deleteCommission(selectedService, params.data.id).then(() => {
+                            params.api.applyTransaction({ remove: params.api.getSelectedRows() })
+                        })
+                    }}
                 >
                     <BsTrash />
                 </Button>
@@ -314,15 +362,6 @@ const CommissionSetup = () => {
     function searchPackage() {
 
     }
-
-
-    const [rowData, setRowData] = useState([
-    ])
-
-    const [columnDefs, setColumnDefs] = useState([
-    ])
-
-
 
     function handleModal(packageId, keyword) {
         setSelectedPackage(packageId)
@@ -340,26 +379,37 @@ const CommissionSetup = () => {
         }
     }
 
-    const [isAssignModalOpen, setIsAssignModalOpen] = useState({
-        status: false,
-        selectedPackageId: "",
-        name: ""
-    })
-
-
-    const defaultColDef = useMemo(() => {
-        return {
-            resizable: true,
-            editable: true,
-            singleClickEdit: true,
-            filter: true,
-            floatingFilter: true,
-        };
-    }, []);
 
     useEffect(() => {
         fetchAllPackages('/api/admin/packages?page=1')
     }, [])
+
+    const verifyBeneficiary = (queriedUserId) => {
+        // Logic to verifiy beneficiary details
+        BackendAxios.post(`/api/admin/user/info/${VerificationFormik.values.beneficiaryId}`).then((res) => {
+            Formik.setFieldValue("beneficiaryId", res.data.data.id)
+            setFetchedUser({
+                ...fetchedUser,
+                id: res.data.data.id,
+                user_name: res.data.data.first_name + " " + res.data.data.last_name,
+                firm_name: res.data.data.firm_name,
+                phone: res.data.data.phone_number,
+                wallet: res.data.data.wallet,
+
+            })
+        }).catch((err) => {
+            Toast({
+                status: 'error',
+                description: err.response.data.message || err.response.data || 'User not found!'
+            })
+            setFetchedUser({
+                user_name: "",
+                firm_name: "",
+                wallet: "",
+                phone: "",
+            })
+        })
+    }
 
     function updatePackageDetails(dataToUpdate, selectedPackageId) {
         BackendAxios.post(`/api/admin/update-package-defaults`, {
@@ -396,7 +446,7 @@ const CommissionSetup = () => {
     }
 
     function assignPackage() {
-        if(!VerificationFormik.values.beneficiaryId){
+        if (!VerificationFormik.values.beneficiaryId) {
             Toast({
                 description: "Please enter User ID"
             })
@@ -416,7 +466,7 @@ const CommissionSetup = () => {
                     description: "Package could not be assigned"
                 })
             }
-            setIsAssignModalOpen({status: false})
+            setIsAssignModalOpen({ status: false })
         }).catch(err => {
             Toast({
                 status: 'error',
@@ -529,6 +579,9 @@ const CommissionSetup = () => {
                                     <Th>Payout</Th>
                                     <Th>DMT</Th>
                                     <Th>Recharge</Th>
+                                    <Th>LIC</Th>
+                                    <Th>CMS</Th>
+                                    <Th>Fastag</Th>
                                     <Th>Delete Package</Th>
                                 </Tr>
                             </Thead>
@@ -646,6 +699,36 @@ const CommissionSetup = () => {
                                                     </Button>
                                                 </Td>
                                                 <Td>
+                                                    {/* LIC */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "lic")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* CMS */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "cms")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
+                                                    {/* Fastag */}
+                                                    <Button
+                                                        size={'sm'}
+                                                        colorScheme={'blue'}
+                                                        onClick={() => handleModal(item.id, "fastag")}
+                                                    >
+                                                        Set Commission
+                                                    </Button>
+                                                </Td>
+                                                <Td>
                                                     {/* Delete */}
                                                     <Button
                                                         size={'sm'}
@@ -718,8 +801,7 @@ const CommissionSetup = () => {
                                 defaultColDef={defaultColDef}
                                 components={{
                                     'switchCellRender': SwitchCellRender,
-                                    'actionsCellRender': ActionsCellRender,
-                                    'operatorNamesCellEditor': operatorNamesCellEditor
+                                    'actionsCellRender': ActionsCellRender
                                 }}
                                 rowSelection={'single'}
                                 onCellValueChanged={onCellValueChange}
@@ -734,9 +816,6 @@ const CommissionSetup = () => {
                                 variant={'ghost'}
                                 onClick={() => setModalStatus(false)}>
                                 Cancel
-                            </Button>
-                            <Button colorScheme={'twitter'}>
-                                Save
                             </Button>
                         </HStack>
                     </ModalFooter>
