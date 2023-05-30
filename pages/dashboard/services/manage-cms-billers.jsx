@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box,
     Text,
@@ -25,16 +25,65 @@ import {
 } from '@chakra-ui/react'
 import Layout from '../layout'
 import { useFormik } from 'formik'
+import BackendAxios from '@/lib/utils/axios'
 
 const ManageCmsBillers = () => {
     const Toast = useToast({ position: 'top-right' })
     const Formik = useFormik({
         initialValues: {
             billerId: "",
-            billerName: "",
-            status: "1",
+            name: ""
+        },
+        onSubmit: values =>{
+            BackendAxios.post('/api/admin/add-cms-billers', values).then(res =>{
+                fetchBillers()
+                Toast({
+                    status: 'success',
+                    description: 'Biller added successfully'
+                })
+            }).catch(err =>{
+                Toast({
+                    status: 'error',
+                    title: 'Error while adding Biller',
+                    description: err.response?.data?.message || err.response?.data || err.message
+                })
+            })
         }
     })
+    const [billers, setBillers] = useState([])
+
+    function fetchBillers(){
+        BackendAxios.get('/api/cms-billers').then(res=>{
+            setBillers(res.data)
+        }).catch(err=>{
+            Toast({
+                status: 'error',
+                title: 'Error while fetching Billers',
+                description: err.response?.data?.message || err.response?.data || err.message
+            })
+        })
+    }
+
+    useEffect(()=>{
+        fetchBillers()
+    },[])
+
+    function deleteBiller(id){
+        BackendAxios.delete(`/api/admin/cms-biller/${id}`).then(res=>{
+            Toast({
+                status: 'success',
+                description: 'Biller deleted successfully'
+            })
+            fetchBillers()
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                title: 'Error while deleting Biller',
+                description: err.response?.data?.message || err.response?.data || err.message
+            })
+        })
+    }
+
     return (
         <>
             <Layout pageTitle={'CMS Billers'}>
@@ -61,19 +110,19 @@ const ManageCmsBillers = () => {
                     <FormControl>
                         <FormLabel>Biller Name</FormLabel>
                         <Input
-                            name='billerName' bg={'#FFF'}
+                            name='name' bg={'#FFF'}
                             w={['full', 'xs']}
                             onChange={Formik.handleChange}
                             placeholder='Biller Name'
                         />
                     </FormControl>
-                    <FormControl>
+                    {/* <FormControl>
                         <FormLabel>Status</FormLabel>
                         <Select name='status' onChange={Formik.handleChange}>
                             <option value="1">Yes</option>
                             <option value="0">No</option>
                         </Select>
-                    </FormControl>
+                    </FormControl> */}
                 </Stack>
                 <HStack p={4} justifyContent={'flex-end'}>
                     <Button colorScheme='twitter' onClick={Formik.handleSubmit}>Save</Button>
@@ -90,17 +139,25 @@ const ManageCmsBillers = () => {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            <Tr>
-                                <Td></Td>
-                                <Td></Td>
-                                <Td></Td>
-                                <Td>
-                                    <HStack spacing={4}>
-                                        <Button size={'xs'} colorScheme='green'>Edit</Button>
-                                        <Button size={'xs'} colorScheme='red'>Delete</Button>
-                                    </HStack>
-                                </Td>
-                            </Tr>
+                            {
+                                billers.map((biller, key)=> (
+                                    <Tr key={key}>
+                                        <Td>{key+1}</Td>
+                                        <Td>{biller.biller_id}</Td>
+                                        <Td>{biller.name}</Td>
+                                        <Td>
+                                            <HStack spacing={4}>
+                                                {/* <Button size={'xs'} colorScheme='green'>Edit</Button> */}
+                                                <Button 
+                                                size={'xs'} 
+                                                colorScheme='red'
+                                                onClick={()=>deleteBiller(biller.id)}
+                                                >Delete</Button>
+                                            </HStack>
+                                        </Td>
+                                    </Tr>
+                                ))
+                            }
                         </Tbody>
                     </Table>
                 </TableContainer>

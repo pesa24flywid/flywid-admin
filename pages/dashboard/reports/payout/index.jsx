@@ -28,7 +28,7 @@ const ExportPDF = () => {
 const Index = () => {
   const Toast = useToast({position: 'top-right'})
   const [rowData, setRowData] = useState([])
-  const [colDefs, setColDefs] = useState([
+  const [columnDefs, setColumnDefs] = useState([
     {
       headerName: "Status",
       field: "status",
@@ -133,6 +133,13 @@ const Index = () => {
     )
   }
 
+  const userCellRenderer = (params) => {
+    return (
+        <Text>
+            ({params.data.trigered_by}) {params.data.trigered_by_name} - {params.data.trigered_by_phone}
+        </Text>
+    )
+}
   return (
     <>
       <Layout pageTitle={'Payout Reports'}>
@@ -181,7 +188,7 @@ const Index = () => {
         <Box className={'ag-theme-alpine'} h={'sm'}>
           <AgGridReact
             rowData={rowData}
-            columnDefs={colDefs}
+            columnDefs={columnDefs}
             defaultColDef={{
               filter: true,
               floatingFilter: true,
@@ -235,39 +242,54 @@ const Index = () => {
           </Button>
         </HStack>
 
+
         <VisuallyHidden>
-          <table id={'printable-table'}>
-            <thead>
-              <tr>
-                <td>#</td>
-                {
-                  colDefs.map((def, key) => {
-                    return <th key={key}>{def.headerName}</th>
-                  })
-                }
-              </tr>
-            </thead>
-            <tbody>
-              {
-                printableRow.map((data, key) => {
-                  return (
-                    <tr key={key}>
-                      <td>{key + 1}</td>
-                      <td>{data.payout_id}</td>
-                      <td>{data.amount}</td>
-                      <td>{data.beneficiary_name}</td>
-                      <td>{data.account_number}</td>
-                      <td>{data.reference_id}</td>
-                      <td>{data.status}</td>
-                      <td>{data.user_id}</td>
-                      <td>{data.timestamp}</td>
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </table>
-        </VisuallyHidden>
+                <table id='printable-table'>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            {
+                                columnDefs.filter((column) => {
+                                    if (
+                                        column.field != "metadata" &&
+                                        column.field != "name" &&
+                                        column.field != "receipt"
+                                    ) {
+                                        return (
+                                            column
+                                        )
+                                    }
+                                }).map((column, key) => {
+                                    return (
+                                        <th key={key}>{column.headerName}</th>
+                                    )
+                                })
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            printableRow.map((data, key) => {
+                                return (
+                                    <tr key={key}>
+                                        <td>{key + 1}</td>
+                                        <td>{data.transaction_id}</td>
+                                        <td>({data.trigered_by}) {data.name}</td>
+                                        <td>{data.debit_amount}</td>
+                                        <td>{data.credit_amount}</td>
+                                        <td>{data.opening_balance}</td>
+                                        <td>{data.closing_balance}</td>
+                                        <td>{data.service_type}</td>
+                                        <td>{JSON.parse(data.metadata).status ? "SUCCESS" : "FAILED"}</td>
+                                        <td>{data.created_at}</td>
+                                        <td>{data.updated_at}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+            </VisuallyHidden>
 
       </Layout>
     </>

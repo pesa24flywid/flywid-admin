@@ -260,7 +260,11 @@ const Ledger = () => {
                                 <th>#</th>
                                 {
                                     columnDefs.filter((column) => {
-                                        if (column.headerName != "Description") {
+                                        if (
+                                            column.field != "metadata" &&
+                                        column.field != "name" &&
+                                        column.field != "receipt"
+                                        ) {
                                             return (
                                                 column
                                             )

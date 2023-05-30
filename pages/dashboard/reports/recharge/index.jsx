@@ -12,6 +12,7 @@ import {
     ModalHeader,
     ModalFooter,
     VStack,
+    Image,
     VisuallyHidden
 } from '@chakra-ui/react'
 import { AgGridReact } from 'ag-grid-react'
@@ -59,6 +60,11 @@ const Index = () => {
     ])
     const [columnDefs, setColumnDefs] = useState([
         {
+            headerName: "User ID",
+            field: "transaction_by",
+            cellRenderer: 'userCellRenderer'
+        },
+        {
             headerName: "Trnxn ID",
             field: 'transaction_id'
         },
@@ -83,6 +89,11 @@ const Index = () => {
         {
             headerName: "Transaction Type",
             field: 'service_type'
+        },
+        {
+            headerName: "Transaction Status",
+            field: 'status',
+            cellRenderer: 'statusCellRenderer'
         },
         {
             headerName: "Created Timestamp",
@@ -173,11 +184,30 @@ const Index = () => {
         )
     }
 
+    const userCellRenderer = (params) => {
+        return (
+            <Text>
+                ({params.data.trigered_by}) {params.data.done_by} - {params.data.done_by_phone}
+            </Text>
+        )
+    }
+
+    const statusCellRenderer = (params) => {
+        return (
+            <>
+                {
+                    JSON.parse(params.data.metadata).status ?
+                        <Text color={'green'} fontWeight={'bold'}>SUCCESS</Text> : <Text color={'red'} fontWeight={'bold'}>FAILED</Text>
+                }
+            </>
+        )
+    }
+
     return (
         <>
             <Layout pageTitle={'Recharge Reports'}>
                 <HStack my={4} justifyContent={'space-between'}>
-                    <Text fontSize={'lg'} fontWeight={'semibold'}>Recharge Transactions</Text>
+                    <Text fontSize={'lg'} fontWeight={'semibold'}>BBPS Transactions</Text>
                     <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>
                 </HStack>
                 <HStack spacing={2} py={4} mt={24} bg={'white'} justifyContent={'center'}>
@@ -230,6 +260,8 @@ const Index = () => {
                                 'receiptCellRenderer': receiptCellRenderer,
                                 'creditCellRenderer': creditCellRenderer,
                                 'debitCellRenderer': debitCellRenderer,
+                                'userCellRenderer': userCellRenderer,
+                                'statusCellRenderer': statusCellRenderer
                             }}
                             onFilterChanged={
                                 (params) => {
@@ -263,26 +295,56 @@ const Index = () => {
                                         <BsCheck2Circle color='#FFF' fontSize={72} /> :
                                         <BsXCircle color='#FFF' fontSize={72} />
                                 }
-                                <Text color={'#FFF'} textTransform={'capitalize'}>Transaction {receipt.status ? "success" : "failed"}</Text>
+                                <Text color={'#FFF'} textTransform={'capitalize'}>₹ {receipt.data.amount || 0}</Text>
+                                <Text color={'#FFF'} fontSize={'sm'} textTransform={'uppercase'}>TRANSACTION {receipt.status ? "success" : "failed"}</Text>
                             </VStack>
                         </ModalHeader>
                         <ModalBody p={0} bg={'azure'}>
                             <VStack w={'full'} p={4} bg={'#FFF'}>
                                 {
                                     receipt.data ?
-                                        Object.entries(receipt.data).map((item, key) => (
-                                            <HStack
-                                                justifyContent={'space-between'}
-                                                gap={8} pb={4} w={'full'} key={key}
-                                            >
-                                                <Text fontSize={14}
-                                                    fontWeight={'medium'}
-                                                    textTransform={'capitalize'}
-                                                >{item[0]}</Text>
-                                                <Text fontSize={14} >{`${item[1]}`}</Text>
-                                            </HStack>
-                                        )) : null
+                                        Object.entries(receipt.data).map((item, key) => {
+
+                                            if (
+                                                item[0].toLowerCase() != "status" &&
+                                                item[0].toLowerCase() != "user" &&
+                                                item[0].toLowerCase() != "user_id" &&
+                                                item[0].toLowerCase() != "user_phone" &&
+                                                item[0].toLowerCase() != "amount"
+                                            )
+                                                return (
+                                                    <HStack
+                                                        justifyContent={'space-between'}
+                                                        gap={8} pb={1} w={'full'} key={key}
+                                                    >
+                                                        <Text
+                                                            fontSize={'xs'}
+                                                            fontWeight={'medium'}
+                                                            textTransform={'capitalize'}
+                                                        >{item[0].replace(/_/g, " ")}</Text>
+                                                        <Text fontSize={'xs'} maxW={'full'} >{`${item[1]}`}</Text>
+                                                    </HStack>
+                                                )
+
+                                        }
+                                        ) : null
                                 }
+                                <VStack pt={8} w={'full'}>
+                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant:</Text>
+                                        <Text fontSize={'xs'}>{receipt.data.user}</Text>
+                                    </HStack>
+                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant ID:</Text>
+                                        <Text fontSize={'xs'}>{receipt.data.user_id}</Text>
+                                    </HStack>
+                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant Mobile:</Text>
+                                        <Text fontSize={'xs'}>{receipt.data.user_phone}</Text>
+                                    </HStack>
+                                    <Image src='/logo_long.png' w={'20'} />
+                                    <Text fontSize={'xs'}>{process.env.NEXT_PUBLIC_ORGANISATION_NAME}</Text>
+                                </VStack>
                             </VStack>
                         </ModalBody>
                     </Box>
@@ -314,7 +376,11 @@ const Index = () => {
                             <th>#</th>
                             {
                                 columnDefs.filter((column) => {
-                                    if (column.headerName != "Description") {
+                                    if (
+                                        column.field != "metadata" &&
+                                        column.field != "name" &&
+                                        column.field != "receipt"
+                                    ) {
                                         return (
                                             column
                                         )
@@ -334,14 +400,15 @@ const Index = () => {
                                     <tr key={key}>
                                         <td>{key + 1}</td>
                                         <td>{data.transaction_id}</td>
-                                        <td>{data.trigered_by}</td>
-                                        <td>{data.name}</td>
-                                        <td>{data.service_type}</td>
-                                        <td>{data.credit_amount}</td>
+                                        <td>({data.trigered_by}) {data.name}</td>
                                         <td>{data.debit_amount}</td>
+                                        <td>{data.credit_amount}</td>
                                         <td>{data.opening_balance}</td>
                                         <td>{data.closing_balance}</td>
+                                        <td>{data.service_type}</td>
+                                        <td>{JSON.parse(data.metadata).status ? "SUCCESS" : "FAILED"}</td>
                                         <td>{data.created_at}</td>
+                                        <td>{data.updated_at}</td>
                                     </tr>
                                 )
                             })

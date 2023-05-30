@@ -335,7 +335,7 @@ const menuOptions = [
       },
       {
         title: "login report",
-        link: "/dashboard",
+        link: "/dashboard/reports/logins?pageid=reports",
         status: true,
       },
     ]
@@ -345,50 +345,7 @@ const menuOptions = [
     name: "support tickets",
     link: "/dashboard/support-tickets?pageid=support",
     icon: <IoMdHelpBuoy />,
-  },
-  // {
-  //   type: "accordion",
-  //   name: "website setup",
-  //   link: "/dashboard/commission?pageid=commission",
-  //   icon: <FaWrench />,
-  //   children: [
-  //     {
-  //       title: "basic details",
-  //       link: "/dashboard",
-  //       status: false,
-  //     },
-  //     {
-  //       title: "header",
-  //       link: "/dashboard",
-  //       status: false,
-  //     },
-  //     {
-  //       title: "footer",
-  //       link: "/dashboard",
-  //       status: false,
-  //     },
-  //     {
-  //       title: "email",
-  //       link: "/dashboard",
-  //       status: false,
-  //     },
-  //     {
-  //       title: "sms",
-  //       link: "/dashboard",
-  //       status: false,
-  //     },
-  //     {
-  //       title: "banner setup",
-  //       link: "/dashboard",
-  //       status: false,
-  //     },
-  //     {
-  //       title: "notifications",
-  //       link: "/dashboard",
-  //       status: false,
-  //     },
-  //   ]
-  // },
+  }
 ]
 
 
@@ -405,6 +362,8 @@ const Layout = (props) => {
   const [rechargeStatus, setRechargeStatus] = useState(true)
   const [userName, setUserName] = useState("NA")
   const [userType, setUserType] = useState("NA")
+
+  const [profilePic, setProfilePic] = useState("")
 
   function fetchServiceStatus() {
     ClientAxios.get("/api/global").then(res => {
@@ -440,6 +399,7 @@ const Layout = (props) => {
   useEffect(() => {
     setUserName(localStorage.getItem("userName"))
     setUserType(localStorage.getItem("userType"))
+    setProfilePic(localStorage.getItem("profilePic"))
     fetchServiceStatus()
   }, [])
 
@@ -525,7 +485,7 @@ const Layout = (props) => {
             overflowY={'scroll'}
           >
             <VStack py={8}>
-              <Image src='https://xsgames.co/randomusers/assets/avatars/male/8.jpg' boxSize={24} rounded={'full'} />
+              <Image src={profilePic || 'https://xsgames.co/randomusers/assets/avatars/male/8.jpg'} boxSize={24} rounded={'full'} />
               <Text fontSize={'xl'} color={'#444'} textTransform={'capitalize'}>{userName}</Text>
               <Text fontSize={'sm'} color={'#666'} textTransform={'capitalize'}>Pesa24 - {userType}</Text>
             </VStack>

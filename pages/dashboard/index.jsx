@@ -12,28 +12,25 @@ import {
   SiRazorpay
 } from 'react-icons/si'
 import {
+  FaUserAlt,
   FaUserPlus,
 } from 'react-icons/fa'
 import {
-  BiLogIn,
+  BiLogIn, BiRupee,
 } from 'react-icons/bi'
 import {
   IoMdHelpBuoy,
 } from 'react-icons/io'
 
 import { AgGridReact } from 'ag-grid-react'
-
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import BackendAxios from '@/lib/utils/axios'
 
 const Index = () => {
-
-
   const [rowData, setRowData] = useState([
 
   ])
-
   const [columnDefs, setColumnDefs] = useState([
     {
       field: "user_id",
@@ -57,6 +54,13 @@ const Index = () => {
     },
   ])
 
+  const [aepsData, setAepsData] = useState({})
+  const [bbpsData, setBbpsData] = useState({})
+  const [dmtData, setDmtData] = useState({})
+  const [panData, setPanData] = useState({})
+  const [payoutData, setPayoutData] = useState({})
+  const [licData, setLicData] = useState({})
+  const [fastagData, setFastagData] = useState({})
 
   useEffect(() => {
     BackendAxios.get('/api/admin/logins').then(res => {
@@ -64,7 +68,22 @@ const Index = () => {
     }).catch(err => {
       console.log(err)
     })
+    getOverview()
   }, [])
+
+  function getOverview(tenure){
+    BackendAxios.get(`/api/admin/overview?tenure=${tenure || "today"}`).then(res => {
+      setAepsData(res.data[0].aeps)
+      setBbpsData(res.data[1].bbps)
+      setDmtData(res.data[2].dmt)
+      setPanData(res.data[3].pan)
+      setPayoutData(res.data[4].payout)
+      setLicData(res.data[5].lic)
+      setFastagData(res.data[6].fastag)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
   return (
     <>
@@ -92,18 +111,58 @@ const Index = () => {
               data={0}
               icon={<IoMdHelpBuoy color='white' size={'32'} />}
               color={'#FFB100'}
+            /> 
+          </Stack>
+          <Stack direction={['row']}
+            w={'full'} py={2} spacing={[0, 4]}
+            justifyContent={'space-between'}
+            flexWrap={'wrap'} alignItems={['flex-start']}
+          >
+            <DataCard
+              title={'Retailers'}
+              data={0}
+              icon={<FaUserAlt color='white' size={'32'} />}
+              color={'#FF7B54'}
             />
             <DataCard
-              title={'Payout Requests'}
+              title={'Distributors'}
               data={0}
-              icon={<SiRazorpay color='white' size={'32'} />}
-              color={'#88A47C'}
+              icon={<FaUserAlt color='white' size={'28'} />}
+              color={'#6C00FF'}
             />
+            <DataCard
+              title={'Super Distributors'}
+              data={0}
+              icon={<FaUserAlt color='white' size={'32'} />}
+              color={'#FFB100'}
+            /> 
+          </Stack>
+          <Stack direction={['row']}
+            w={'full'} py={2} spacing={[0, 4]}
+            justifyContent={'space-between'}
+            flexWrap={'wrap'} alignItems={['flex-start']}
+          >
+            <DataCard
+              title={'Market Balance'}
+              data={0}
+              icon={<BiRupee color='white' size={'28'} />}
+              color={'#6C00FF'}
+            />
+            <DataCard
+              title={'Reserved Balance'}
+              data={0}
+              icon={<BiRupee color='white' size={'32'} />}
+              color={'#FFB100'}
+            /> 
           </Stack>
 
           <HStack justifyContent={'space-between'} pt={8} pb={4}>
             <Text>Transaction Statistics</Text>
-            <Select name='earningStatsDuration' w={'xs'} bg={'white'}>
+            <Select 
+            name='earningStatsDuration' 
+            w={'xs'} bg={'white'}
+            onChange={e => getOverview(e.target.value)}
+            >
               <option value="today">Today</option>
               <option value="month">1 Month</option>
               <option value="year">1 Year</option>
@@ -117,22 +176,22 @@ const Index = () => {
             <TransactionCard
               color={'#6C00FF'}
               title={"AePS"}
-              quantity={"0"}
-              amount={"0"}
+              quantity={aepsData?.count}
+              amount={aepsData?.credit - aepsData?.debit}
             />
 
             <TransactionCard
               color={'#3C79F5'}
               title={"BBPS"}
-              quantity={"0"}
-              amount={"0"}
+              quantity={bbpsData?.count}
+              amount={bbpsData?.debit - bbpsData?.credit}
             />
 
             <TransactionCard
               color={'#2DCDDF'}
               title={"DMT"}
-              quantity={"0"}
-              amount={"0"}
+              quantity={dmtData?.count}
+              amount={dmtData?.debit - dmtData?.credit}
             />
           </Stack>
 
@@ -143,15 +202,15 @@ const Index = () => {
             <TransactionCard
               color={'#F2DEBA'}
               title={"PAN"}
-              quantity={"0"}
-              amount={"0"}
+              quantity={panData?.count}
+              amount={panData?.debit - panData?.credit}
             />
 
             <TransactionCard
               color={'#FF8B13'}
               title={"LIC"}
-              quantity={"0"}
-              amount={"0"}
+              quantity={licData?.count}
+              amount={licData?.debit - licData?.credit}
             />
 
             <TransactionCard
@@ -172,6 +231,13 @@ const Index = () => {
               title={"Recharges"}
               quantity={"0"}
               amount={"0"}
+            />
+
+            <TransactionCard
+              color={'#13005A'}
+              title={"Fastag"}
+              quantity={fastagData?.count}
+              amount={fastagData?.debit - fastagData?.credit}
             />
 
             <TransactionCard

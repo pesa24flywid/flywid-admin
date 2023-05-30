@@ -25,6 +25,7 @@ const CreateAdmin = () => {
   const Toast = useToast({
     position: 'top-right'
   })
+  const [allAdmins, setAllAdmins] = useState([])
   const [permissions, setPermissions] = useState(null)
   const [fetchedUser, setFetchedUser] = useState({
     user_id: "",
@@ -107,9 +108,9 @@ const CreateAdmin = () => {
   ])
 
 
-  const verifyBeneficiary = () => {
+  const verifyBeneficiary = (userId) => {
     // Logic to verifiy beneficiary details
-    BackendAxios.post(`/api/admin/user/info/${fetchedUser.user_id}`).then((res) => {
+    BackendAxios.post(`/api/admin/user/info/${userId || fetchedUser.user_id}`).then((res) => {
       setFetchedUser({
         ...fetchedUser,
         user_name: "",
@@ -180,11 +181,12 @@ const CreateAdmin = () => {
     })
   }
 
-  function changeRole(role) {
+  function changeRole(role, userId) {
     BackendAxios.post('/api/admin/new-admin', {
-      userId: fetchedUser.user_id,
+      userId: userId || fetchedUser.user_id,
       role: role,
     }).then(res => {
+      getAllAdmins()
       Toast({
         status: 'success',
         description: `User is now ${role}!`
@@ -196,6 +198,19 @@ const CreateAdmin = () => {
     })
   }
 
+  function getAllAdmins() {
+    BackendAxios.get(`/api/admin/users-list/admin?page=1`).then(res => {
+      setAllAdmins(res.data.data)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  useEffect(() => {
+    getAllAdmins()
+  }, [])
+
+
 
   return (
     <>
@@ -204,7 +219,9 @@ const CreateAdmin = () => {
           direction={['column', 'row']}
           gap={8} justifyContent={'space-between'}
         >
-          <Box p={4}>
+          <Box p={4} 
+            flex={['unset', 2]}
+            >
             <Text fontSize={'lg'} fontWeight={'semibold'} my={4}>Manage Admin Members</Text>
             <Stack
               direction={['column', 'row']}
@@ -230,11 +247,11 @@ const CreateAdmin = () => {
               fetchedUser.user_name ?
                 (<Stack
                   p={4} bg={'blue.50'}
-                  border={'1px'}
+                  border={'1px'} w={'max-content'}
                   borderColor={'blue.200'}
                   rounded={16} my={4}
                   direction={['column', 'row']}
-                  spacing={6} justifyContent={'space-between'}
+                  spacing={16} justifyContent={'space-between'}
                   textTransform={'capitalize'}
                 >
                   <Box>
@@ -292,6 +309,7 @@ const CreateAdmin = () => {
           <VStack
             w={['full', 'xs']}
             padding={4}
+            flex={['unset', 1]}
             alignItems={'flex-start'}
             justifyContent={'flex-start'}
             boxShadow={'lg'}
@@ -302,25 +320,42 @@ const CreateAdmin = () => {
 
             <VStack
               gap={8} pt={8}
-              w={'full'} alignItems={'flex-start'}
+              alignItems={'flex-start'}
               justifyContent={'flex-start'}
             >
-              <Box
-                w={'full'}
-                p={4} rounded={8}
-                boxShadow={'md'}
-              >
-                <Text fontSize={'md'} fontWeight={'semibold'}>Full Name (User ID)</Text>
-                <Text fontSize={'md'}>Phone Number</Text>
-                <Text fontSize={'xs'}>Email ID</Text>
-                <HStack
-                  w={'full'} pt={4}
-                  justifyContent={'space-between'}
+              {allAdmins.map((admin, key) => (
+                <Box
+                  p={4} rounded={8}
+                  boxShadow={'md'}
+                  key={key}
                 >
-                  <Button size={'sm'}>Permissions</Button>
-                  <Button colorScheme='red' size={'sm'}>Make Retailer</Button>
-                </HStack>
-              </Box>
+                  <Text fontSize={'md'} fontWeight={'semibold'}>{admin.name} ({admin.id})</Text>
+                  <Text fontSize={'md'}>{admin.phone_number}</Text>
+                  <Text fontSize={'xs'}>{admin.email}</Text>
+                  <HStack
+                    w={'full'} pt={4}
+                    justifyContent={'space-between'}
+                  >
+                    <Button
+                      size={'sm'}
+                      onClick={() => {
+                        setFetchedUser({ user_id: admin.id })
+                        verifyBeneficiary(admin.id)
+                      }}
+                    >Permissions</Button>
+                    <Button
+                      colorScheme='red'
+                      size={'sm'}
+                      onClick={() => {
+                        setFetchedUser({ user_id: admin.id })
+                        changeRole('retailer', admin.id)
+                      }}
+                    >Make Retailer</Button>
+                  </HStack>
+                </Box>
+              ))
+              }
+
             </VStack>
           </VStack>
         </Stack>

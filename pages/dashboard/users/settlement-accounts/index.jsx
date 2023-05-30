@@ -147,13 +147,13 @@ const ActionsCellRenderer = (params) => {
                 onClick={addAccount}
                 fontSize={18}
             ><BsPlus/></Button>
-            <Button
+            {/* <Button
                 size={'xs'}
                 rounded={'full'}
                 colorScheme={'telegram'}
                 onClick={uploadDocuments}
                 fontSize={18}
-            ><BsUpload /></Button>
+            ><BsUpload /></Button> */}
             <Button
                 size={'xs'}
                 rounded={'full'}

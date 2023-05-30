@@ -35,7 +35,6 @@ const Index = () => {
   const [isOtpSent, setIsOtpSent] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [hasGps, setHasGps] = useState(true)
-
   const [authMethod, setAuthMethod] = useState("email")
 
   const Toast = useToast({
@@ -159,6 +158,8 @@ const Index = () => {
         Cookies.set("userName", res.data.name)
         localStorage.setItem("userType", res.data.role[0].name)
 
+        localStorage.setItem("profilePic", `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${res.data.profile_pic}`)
+
         Cookies.set('access-token', res.data.token.original.access_token)
         if (res.data.profile_complete == 0) localStorage.setItem("isProfileComplete", false)
         if (res.data.profile_complete == 1) localStorage.setItem("isProfileComplete", true)
@@ -177,8 +178,6 @@ const Index = () => {
       setIsLoading(false)
     }
   }
-
-
 
   return (
     <>
