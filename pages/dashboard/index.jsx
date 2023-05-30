@@ -12,10 +12,11 @@ import {
   SiRazorpay
 } from 'react-icons/si'
 import {
+  FaUserAlt,
   FaUserPlus,
 } from 'react-icons/fa'
 import {
-  BiLogIn,
+  BiLogIn, BiRupee,
 } from 'react-icons/bi'
 import {
   IoMdHelpBuoy,
@@ -110,13 +111,49 @@ const Index = () => {
               data={0}
               icon={<IoMdHelpBuoy color='white' size={'32'} />}
               color={'#FFB100'}
+            /> 
+          </Stack>
+          <Stack direction={['row']}
+            w={'full'} py={2} spacing={[0, 4]}
+            justifyContent={'space-between'}
+            flexWrap={'wrap'} alignItems={['flex-start']}
+          >
+            <DataCard
+              title={'Retailers'}
+              data={0}
+              icon={<FaUserAlt color='white' size={'32'} />}
+              color={'#FF7B54'}
             />
             <DataCard
-              title={'Payout Requests'}
+              title={'Distributors'}
               data={0}
-              icon={<SiRazorpay color='white' size={'32'} />}
-              color={'#88A47C'}
+              icon={<FaUserAlt color='white' size={'28'} />}
+              color={'#6C00FF'}
             />
+            <DataCard
+              title={'Super Distributors'}
+              data={0}
+              icon={<FaUserAlt color='white' size={'32'} />}
+              color={'#FFB100'}
+            /> 
+          </Stack>
+          <Stack direction={['row']}
+            w={'full'} py={2} spacing={[0, 4]}
+            justifyContent={'space-between'}
+            flexWrap={'wrap'} alignItems={['flex-start']}
+          >
+            <DataCard
+              title={'Market Balance'}
+              data={0}
+              icon={<BiRupee color='white' size={'28'} />}
+              color={'#6C00FF'}
+            />
+            <DataCard
+              title={'Reserved Balance'}
+              data={0}
+              icon={<BiRupee color='white' size={'32'} />}
+              color={'#FFB100'}
+            /> 
           </Stack>
 
           <HStack justifyContent={'space-between'} pt={8} pb={4}>
