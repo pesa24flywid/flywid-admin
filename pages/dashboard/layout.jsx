@@ -224,7 +224,7 @@ const menuOptions = [
       {
         title: "manage notifications",
         link: "/dashboard/controls/notifications?pageId=controls",
-        status: true,
+        status: false,
       },
     ]
   },
@@ -413,7 +413,7 @@ const Layout = (props) => {
       setTimeout(() => Router.push("/"), 2000)
     }
   }, [])
-  
+
   useEffect(() => {
     // Check wallet balance
     BackendAxios.post('/api/user/wallet').then((res) => {
