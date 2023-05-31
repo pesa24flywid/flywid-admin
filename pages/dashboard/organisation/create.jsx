@@ -39,6 +39,12 @@ const Create = () => {
             signatoryAadhaar: "",
             signatoryAadhaarAttachment: null,
             signatoryPhoto: null,
+        },
+        onSubmit: () => {
+            Toast({
+                status: 'success',
+                description: 'Whitelable added'
+            })
         }
     })
 
