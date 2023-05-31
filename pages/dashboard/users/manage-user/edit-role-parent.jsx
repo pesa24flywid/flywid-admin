@@ -89,7 +89,7 @@ const Index = () => {
                 role: res.data.data.roles[0].name,
                 permissions: res.data.data.permissions.map(permission => { return permission.name })
             })
-            searchrole(fetchedUser.user_id)
+            searchrole(res.data.data?.id)
         }).catch((err) => {
             Toast({
                 status: 'error',
