@@ -7,7 +7,7 @@ import {
     Input,
     Select,
     Button,
-
+    Text
 } from '@chakra-ui/react'
 
 const Index = () => {
@@ -17,6 +17,7 @@ const Index = () => {
                 <Box my={6} p={2} bg={'twitter.400'} color={'#FFF'}>
                     <Text>Your Whitelabel Organisations</Text>
                 </Box>
+                <Text>No Organisations To Show</Text>
             </Layout>
         </>
     )

@@ -29,7 +29,7 @@ import {
   BsSpeedometer,
   BsBriefcaseFill,
   BsCoin,
-  BsWallet
+  BsWallet,
 } from 'react-icons/bs'
 import {
   FaUser,
@@ -226,6 +226,23 @@ const menuOptions = [
         link: "/dashboard/controls/notifications?pageId=controls",
         status: false,
       },
+    ]
+  },
+  {
+    type: "accordion",
+    name: "whitelabel",
+    icon: <IoIosFlash />,
+    children: [
+      {
+        title: "all organisations",
+        link: "/dashboard/organisation?pageId=whitelabel",
+        status: true,
+      },
+      {
+        title: "create whitelabel",
+        link: "/dashboard/organisation/create?pageId=whitelabel",
+        status: true,
+      }
     ]
   },
   {
