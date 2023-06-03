@@ -264,7 +264,10 @@ const FundTransfer = () => {
 
                 <Box py={6}>
                     <Text fontWeight={'medium'} pb={4}>Recent Transfers</Text>
-                    <Box className='ag-theme-alpine' w={'full'} h={['sm', 'xs']}>
+                    <Box
+                        rounded={16} overflow={'hidden'}
+                        className='ag-theme-alpine ag-theme-pesa24-blue'
+                        w={'full'} h={['sm', 'xs']}>
                         <AgGridReact
                             columnDefs={columnDefs}
                             rowData={rowData}

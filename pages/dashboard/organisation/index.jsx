@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../layout'
 import {
     Box,
@@ -14,10 +14,12 @@ const Index = () => {
     return (
         <>
             <Layout pageTitle={'All Whitelabel Organisations'}>
-                <Box my={6} p={2} bg={'twitter.400'} color={'#FFF'}>
+                <Box my={6} p={3} bg={'twitter.500'} color={'#FFF'} roundedTop={16}>
                     <Text>Your Whitelabel Organisations</Text>
                 </Box>
-                <Text>No Organisations To Show</Text>
+                <Box p={4}>
+                    <Text>No Organisations To Show</Text>
+                </Box>
             </Layout>
         </>
     )
