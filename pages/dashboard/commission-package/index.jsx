@@ -364,7 +364,7 @@ const CommissionSetup = () => {
     }
 
     function searchPackage() {
-
+        // allPackages.filter((package)=>(packageSearchQuery))
     }
 
     function handleModal(packageId, keyword) {
@@ -386,6 +386,11 @@ const CommissionSetup = () => {
 
     useEffect(() => {
         fetchAllPackages('/api/admin/packages?page=1')
+        BackendAxios.get('/api/admin/package-count').then(res => {
+
+        }).catch(err => {
+            console.log(err)
+        })
     }, [])
 
     const verifyBeneficiary = (queriedUserId) => {
@@ -483,7 +488,7 @@ const CommissionSetup = () => {
     return (
         <>
             <Layout pageTitle={'Define Commission Rate'}>
-                <Box p={3} bg={'twitter.500'} color={'white'}>
+                <Box p={3} bg={'twitter.500'} color={'white'} roundedTop={16}>
                     <Text>Create New Commission Package</Text>
                 </Box>
                 <Stack
@@ -573,7 +578,7 @@ const CommissionSetup = () => {
                                     <Th>Assign To User</Th>
                                     <Th>Creator Name</Th>
                                     <Th>Package Name</Th>
-                                    {/* <Th>Total Users</Th> */}
+                                    <Th>Total Users</Th>
                                     <Th>Default</Th>
                                     <Th>Status</Th>
                                     <Th>AePS Cash Wihtdrawal</Th>
@@ -619,7 +624,7 @@ const CommissionSetup = () => {
                                                         onBlur={() => updatePackageDetails({ name: focussedPackageTitle }, item.id)}
                                                     />
                                                 </Td>
-                                                {/* <Td>0</Td> */}
+                                                <Td>{item.assigned_users_count || 0}</Td>
                                                 <Td>
                                                     <Switch
                                                         defaultChecked={item.is_default === 1}

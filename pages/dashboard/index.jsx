@@ -141,14 +141,14 @@ const Index = () => {
             <DataCard
               title={'Registrations'}
               data={usersData?.registration}
-              icon={<FaUserPlus color='#6C00FF' size={'28'} />}
-              color={'#6C00FF'}
+              icon={<FaUserPlus color='#FF7B54' size={'28'} />}
+              color={'#FF7B54'}
             />
             <DataCard
               title={'Support Tickets'}
               data={usersData?.tickets}
-              icon={<IoMdHelpBuoy color='#FFB100' size={'32'} />}
-              color={'#FFB100'}
+              icon={<IoMdHelpBuoy color='#FF7B54' size={'32'} />}
+              color={'#FF7B54'}
             />
           </Stack>
           <Stack direction={['row']}
@@ -159,8 +159,8 @@ const Index = () => {
             <DataCard
               title={'Retailers'}
               data={retailers}
-              icon={<FaUserAlt color='#FF7B54' size={'32'} />}
-              color={'#FF7B54'}
+              icon={<FaUserAlt color='#6C00FF' size={'32'} />}
+              color={'#6C00FF'}
             />
             <DataCard
               title={'Distributors'}
@@ -171,8 +171,8 @@ const Index = () => {
             <DataCard
               title={'Super Distributors'}
               data={superDistributors}
-              icon={<FaUserAlt color='#FFB100' size={'32'} />}
-              color={'#FFB100'}
+              icon={<FaUserAlt color='#6C00FF' size={'32'} />}
+              color={'#6C00FF'}
             />
           </Stack>
           <Stack direction={['row']}
@@ -183,8 +183,8 @@ const Index = () => {
             <DataCard
               title={'Market Balance'}
               data={0}
-              icon={<BiRupee color='#FF7B54' size={'28'} />}
-              color={'#FF7B54'}
+              icon={<BiRupee color='#FFB100' size={'28'} />}
+              color={'#FFB100'}
             />
             <DataCard
               title={'Reserved Balance'}
