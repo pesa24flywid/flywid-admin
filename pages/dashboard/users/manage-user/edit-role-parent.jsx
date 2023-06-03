@@ -82,6 +82,7 @@ const Index = () => {
 
             setFetchedUser({
                 ...fetchedUser,
+                user_id: res.data?.data?.id,
                 user_name: res.data.data.first_name + " " + res.data.data.last_name,
                 firm_name: res.data.data.firm_name,
                 phone: res.data.data.phone_number,
@@ -89,11 +90,13 @@ const Index = () => {
                 role: res.data.data.roles[0].name,
                 permissions: res.data.data.permissions.map(permission => { return permission.name })
             })
-            searchrole(res.data.data?.id)
+            Formik.setFieldValue("userId", res.data?.data?.id)
+            searchrole(res.data?.data?.id)
         }).catch((err) => {
+            console.log(err.response.data)
             Toast({
                 status: 'error',
-                description: err.message
+                description: err.response?.data?.message || err.response?.data || err.message
             })
             setFetchedUser({
                 ...fetchedUser,
@@ -117,7 +120,7 @@ const Index = () => {
         }).catch((err) => {
             Toast({
                 status: 'error',
-                description: err.response.data.message || err.response.data || err.message
+                description: err.response?.data?.message || err.response?.data || err.message
             })
             console.log(err)
         })
@@ -156,7 +159,7 @@ const Index = () => {
 
     function removeParent() {
         BackendAxios.post(`/api/admin/remove-parent`, {
-            userId: fetchedUser.user_id
+            userId: Formik.values.userId
         }).then(res => {
             Toast({
                 status: 'success',
@@ -170,6 +173,7 @@ const Index = () => {
             })
         })
     }
+
 
     return (
         <>

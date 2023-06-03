@@ -347,6 +347,10 @@ const CommissionSetup = () => {
                     size={'xs'}
                     colorScheme={'red'}
                     onClick={() => {
+                        if(!params.data.id){
+                            params.api.applyTransaction({ remove: params.api.getSelectedRows() })
+                            return
+                        }
                         deleteCommission(selectedService, params.data.id).then(() => {
                             params.api.applyTransaction({ remove: params.api.getSelectedRows() })
                         })

@@ -123,6 +123,7 @@ const CreateAdmin = () => {
 
       setFetchedUser({
         ...fetchedUser,
+        user_id: res.data?.data?.id,
         user_name: res.data.data.first_name + " " + res.data.data.last_name,
         firm_name: res.data.data.firm_name,
         phone: res.data.data.phone_number,
@@ -191,6 +192,7 @@ const CreateAdmin = () => {
         status: 'success',
         description: `User is now ${role}!`
       })
+      verifyBeneficiary(fetchedUser.user_id)
     }).catch(err => {
       Toast({
         description: err.response.data.message || err.response.data || err.message

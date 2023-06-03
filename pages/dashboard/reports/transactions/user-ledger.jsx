@@ -231,7 +231,7 @@ const UserLedger = () => {
                             <InputRightAddon
                                 children={'Fetch'}
                                 cursor={'pointer'}
-                                onClick={() => fetchLedger()}
+                                onClick={() => fetchLedger(`/api/admin/transactions-user/${userId}?page=1`)}
                             />
                         </InputGroup>
                     </FormControl>
@@ -274,7 +274,7 @@ const UserLedger = () => {
                         ><BsChevronDoubleRight />
                         </Button>
                     </HStack>
-                    <Box className={'ag-theme-alpine'} h={'sm'}>
+                    <Box className={'ag-theme-alpine'} h={'xl'}>
                         <AgGridReact
                             columnDefs={columnDefs}
                             rowData={rowData}
