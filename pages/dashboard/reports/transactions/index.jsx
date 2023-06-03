@@ -142,7 +142,10 @@ const Ledger = () => {
                     ><BsChevronDoubleRight />
                     </Button>
                 </HStack>
-                <Box className={'ag-theme-alpine'} h={'sm'}>
+                <Box
+                    rounded={16} overflow={'hidden'}
+                    className='ag-theme-alpine ag-theme-pesa24-blue'
+                    h={'sm'}>
                     <AgGridReact
                         columnDefs={columnDefs}
                         rowData={rowData}

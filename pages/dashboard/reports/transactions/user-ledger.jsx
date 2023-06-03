@@ -27,13 +27,13 @@ import 'jspdf-autotable'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { 
-    BsCheck2Circle, 
-    BsChevronDoubleLeft, 
-    BsChevronDoubleRight, 
-    BsChevronLeft, 
-    BsChevronRight, 
-    BsDownload, 
+import {
+    BsCheck2Circle,
+    BsChevronDoubleLeft,
+    BsChevronDoubleRight,
+    BsChevronLeft,
+    BsChevronRight,
+    BsDownload,
     BsXCircle,
     BsEye
 } from 'react-icons/bs';
@@ -274,7 +274,10 @@ const UserLedger = () => {
                         ><BsChevronDoubleRight />
                         </Button>
                     </HStack>
-                    <Box className={'ag-theme-alpine'} h={'xl'}>
+                    <Box
+                        rounded={16} overflow={'hidden'}
+                        className='ag-theme-alpine ag-theme-pesa24-blue'
+                        h={'xl'}>
                         <AgGridReact
                             columnDefs={columnDefs}
                             rowData={rowData}

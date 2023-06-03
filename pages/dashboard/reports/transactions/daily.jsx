@@ -192,7 +192,10 @@ const Ledger = () => {
                     ><BsChevronDoubleRight />
                     </Button>
                 </HStack>
-                <Box className={'ag-theme-alpine'} h={'2xl'}>
+                <Box
+                    rounded={16} overflow={'hidden'}
+                    className='ag-theme-alpine ag-theme-pesa24-blue'
+                    h={'2xl'}>
                     <AgGridReact
                         columnDefs={columnDefs}
                         rowData={rowData}
@@ -262,8 +265,8 @@ const Ledger = () => {
                                     columnDefs.filter((column) => {
                                         if (
                                             column.field != "metadata" &&
-                                        column.field != "name" &&
-                                        column.field != "receipt"
+                                            column.field != "name" &&
+                                            column.field != "receipt"
                                         ) {
                                             return (
                                                 column

@@ -8,3 +8,13 @@
 td{
     vertical-align: top;
 }
+
+.ag-theme-pesa24-blue .ag-root-wrapper{
+    border: none !important;
+}
+.ag-theme-pesa24-blue .ag-header-row{
+    background-color: #30A2FF !important;
+}
+.ag-theme-pesa24-blue .ag-header-cell{
+    color: #FFF
+}

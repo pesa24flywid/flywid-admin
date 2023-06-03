@@ -73,7 +73,7 @@ const ManageCategories = () => {
         <>
             <Layout pageTitle={'Manage Categories'}>
                 <Text fontSize={'lg'} fontWeight={'bold'}>Manage Categories For BBPS Commission</Text>
-                <Box p={2} my={6} bg={'twitter.500'}>
+                <Box p={3} my={6} bg={'twitter.500'} roundedTop={16}>
                     <Text color={'#FFF'}>
                         Register New Category
                     </Text>
@@ -91,8 +91,8 @@ const ManageCategories = () => {
                     <Button colorScheme='twitter' onClick={CategoryFormik.handleSubmit}>Save</Button>
                 </HStack>
 
-                <TableContainer mt={16} w={'xl'}>
-                    <Table>
+                <TableContainer mt={16} w={'full'}>
+                    <Table variant={'striped'}>
                         <Thead>
                             <Tr>
                                 <Th>#</Th>

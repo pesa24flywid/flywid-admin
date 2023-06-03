@@ -135,19 +135,19 @@ const Index = () => {
             <DataCard
               title={'Logins'}
               data={usersData?.login}
-              icon={<BiLogIn color='white' size={'32'} />}
+              icon={<BiLogIn color='#FF7B54' size={'32'} />}
               color={'#FF7B54'}
             />
             <DataCard
               title={'Registrations'}
               data={usersData?.registration}
-              icon={<FaUserPlus color='white' size={'28'} />}
+              icon={<FaUserPlus color='#6C00FF' size={'28'} />}
               color={'#6C00FF'}
             />
             <DataCard
               title={'Support Tickets'}
               data={usersData?.tickets}
-              icon={<IoMdHelpBuoy color='white' size={'32'} />}
+              icon={<IoMdHelpBuoy color='#FFB100' size={'32'} />}
               color={'#FFB100'}
             />
           </Stack>
@@ -159,19 +159,19 @@ const Index = () => {
             <DataCard
               title={'Retailers'}
               data={retailers}
-              icon={<FaUserAlt color='white' size={'32'} />}
+              icon={<FaUserAlt color='#FF7B54' size={'32'} />}
               color={'#FF7B54'}
             />
             <DataCard
               title={'Distributors'}
               data={distributors}
-              icon={<FaUserAlt color='white' size={'28'} />}
+              icon={<FaUserAlt color='#6C00FF' size={'28'} />}
               color={'#6C00FF'}
             />
             <DataCard
               title={'Super Distributors'}
               data={superDistributors}
-              icon={<FaUserAlt color='white' size={'32'} />}
+              icon={<FaUserAlt color='#FFB100' size={'32'} />}
               color={'#FFB100'}
             />
           </Stack>
@@ -183,13 +183,13 @@ const Index = () => {
             <DataCard
               title={'Market Balance'}
               data={0}
-              icon={<BiRupee color='white' size={'28'} />}
-              color={'#6C00FF'}
+              icon={<BiRupee color='#FF7B54' size={'28'} />}
+              color={'#FF7B54'}
             />
             <DataCard
               title={'Reserved Balance'}
               data={0}
-              icon={<BiRupee color='white' size={'32'} />}
+              icon={<BiRupee color='#FFB100' size={'32'} />}
               color={'#FFB100'}
             />
           </Stack>
@@ -273,7 +273,7 @@ const Index = () => {
               boxShadow={'md'}
               bg={'white'}
             >
-              <Text w={'fit-content'} px={2} bg={'#678983'} color={'white'}>Fund Requests</Text>
+              <Text w={'fit-content'} px={2} bg={'#678983'} color={'white'} rounded={'full'}>Fund Requests</Text>
               <HStack pt={4} justifyContent={'space-between'}>
                 <VStack w={'full'} alignItems={'flex-start'} pr={2} borderRight={'1px'} borderRightColor={'#999'}>
                   <Text fontSize={'xs'} color={'#666'}>Approved</Text>
@@ -292,8 +292,10 @@ const Index = () => {
             <Box>
               <Text pb={2} fontWeight={'semibold'}>Recent Login Activity</Text>
               <Box
-                className='ag-theme-alpine'
-                w={['full', 'lg']} h={'xs'}>
+                className='ag-theme-alpine ag-theme-pesa24-blue'
+                w={['full', 'lg']} h={'xs'}
+                rounded={16} overflow={'hidden'}
+                >
                 <AgGridReact
                   rowData={rowData}
                   columnDefs={columnDefs}

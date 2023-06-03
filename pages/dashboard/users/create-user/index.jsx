@@ -202,8 +202,8 @@ const Index = () => {
                         <Box py={4} w={['full', '3xl']} flex={['unset', 7]}>
 
                             <Box
-                                p={2} mt={8} mb={4}
-                                bg={'teal.500'} color={'white'}>
+                                p={2} mt={8} mb={4} roundedTop={8}
+                                bg={'twitter.500'} color={'white'}>
                                 <Text>Basic Details</Text>
                             </Box>
                             <Stack
@@ -313,8 +313,8 @@ const Index = () => {
 
 
                             <Box
-                                p={2} mt={8} mb={4}
-                                bg={'teal.500'} color={'white'}>
+                                p={2} mt={8} mb={4} roundedTop={8}
+                                bg={'twitter.500'} color={'white'}>
                                 <Text>KYC Details</Text>
                             </Box>
                             <Stack
@@ -376,8 +376,8 @@ const Index = () => {
                             </Stack>
 
                             <Box
-                                p={2} mt={8} mb={4}
-                                bg={'teal.500'} color={'white'}>
+                                p={2} mt={8} mb={4} roundedTop={8}
+                                bg={'twitter.500'} color={'white'}>
                                 <Text>Additional Details</Text>
 
                             </Box>
@@ -404,13 +404,13 @@ const Index = () => {
                         >
 
                             <Box
-                                rounded={8}
                                 overflow={'hidden'}
                                 boxShadow={'lg'}
                             >
                                 <Box
                                     p={2} color={'white'}
-                                    bg={'teal.500'}
+                                    bg={'twitter.500'}
+                                    roundedTop={8}
                                 >
                                     <Text>Balance Details</Text>
                                 </Box>
@@ -462,7 +462,7 @@ const Index = () => {
                             >
                                 <Box
                                     p={2} color={'white'}
-                                    bg={'teal.500'}
+                                    bg={'twitter.500'}
                                 >
                                     <Text>Address Details</Text>
                                 </Box>

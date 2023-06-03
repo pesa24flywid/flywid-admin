@@ -52,7 +52,8 @@ const Index = () => {
                 <Box my={16}>
                     <Text pb={2} fontWeight={'semibold'}>Recent Login Activity</Text>
                     <Box
-                        className='ag-theme-alpine'
+                        rounded={16} overflow={'hidden'}
+                        className='ag-theme-alpine ag-theme-pesa24-blue'
                         w={['full']} h={'2xl'}>
                         <AgGridReact
                             rowData={rowData}

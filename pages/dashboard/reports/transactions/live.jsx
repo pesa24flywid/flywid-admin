@@ -98,7 +98,7 @@ const Ledger = () => {
                 next_page_url: res.data.next_page_url,
                 prev_page_url: res.data.prev_page_url,
             })
-            setRowData(res.data.slice(0,20))
+            setRowData(res.data.slice(0, 20))
             setPrintableRow(res.data)
         }).catch(err => {
             console.log(err)
@@ -162,7 +162,10 @@ const Ledger = () => {
                     ><BsChevronDoubleRight />
                     </Button>
                 </HStack>
-                <Box className={'ag-theme-alpine'} h={'2xl'}>
+                <Box
+                    rounded={16} overflow={'hidden'}
+                    className='ag-theme-alpine ag-theme-pesa24-blue'
+                    h={'2xl'}>
                     <AgGridReact
                         columnDefs={columnDefs}
                         rowData={rowData}

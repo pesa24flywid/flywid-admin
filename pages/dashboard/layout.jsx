@@ -58,6 +58,7 @@ const menuOptions = [
   {
     type: "accordion",
     name: "profile",
+    id: "profile",
     icon: <FaUser />,
     children: [
       {
@@ -85,12 +86,21 @@ const menuOptions = [
   {
     type: "link",
     name: "dashboard",
+    id: "dashboard",
     link: "/dashboard?pageid=dashboard",
     icon: <BsSpeedometer />
   },
   {
+    type: "link",
+    id: "package",
+    name: "commission package",
+    icon: <FaPercentage />,
+    link: "/dashboard/commission-package/?pageid=package",
+  },
+  {
     type: "accordion",
     name: "users",
+    id: "users",
     icon: <HiUserGroup />,
     children: [
       {
@@ -110,7 +120,7 @@ const menuOptions = [
       },
       {
         title: "manage role & parent",
-        link: "/dashboard/users/manage-user/edit-role-parent?pageId=users",
+        link: "/dashboard/users/manage-user/edit-role-parent?pageid=users",
         status: true,
       },
       {
@@ -128,6 +138,7 @@ const menuOptions = [
   {
     type: "accordion",
     name: "manage services",
+    id: "services",
     icon: <BsBriefcaseFill />,
     children: [
       {
@@ -138,21 +149,21 @@ const menuOptions = [
       {
         title: "services status",
         link: "/dashboard/services/services-status?pageid=services",
-        status: true,
+        status: false,
       },
       {
         title: "manage operator categories",
-        link: "/dashboard/services/manage-categories?pageId=controls",
+        link: "/dashboard/services/manage-categories?pageid=services",
         status: true,
       },
       {
         title: "manage operators",
-        link: "/dashboard/services/manage-operators?pageId=controls",
+        link: "/dashboard/services/manage-operators?pageid=services",
         status: true,
       },
       {
         title: "manage CMS billers",
-        link: "/dashboard/services/manage-cms-billers?pageId=controls",
+        link: "/dashboard/services/manage-cms-billers?pageid=services",
         status: true,
       },
     ]
@@ -160,6 +171,7 @@ const menuOptions = [
   {
     type: "accordion",
     name: "account",
+    id: "account",
     icon: <BsCoin />,
     children: [
       {
@@ -195,35 +207,29 @@ const menuOptions = [
     ]
   },
   {
-    type: "link",
-    id: "package",
-    name: "commission package",
-    icon: <FaPercentage />,
-    link: "/dashboard/commission-package/?pageid=package",
-  },
-  {
     type: "accordion",
     name: "controls",
+    id: "controls",
     icon: <AiFillApi />,
     children: [
       {
         title: "add new operator",
-        link: "/dashboard/controls/add-operator?pageId=controls",
+        link: "/dashboard/controls/add-operator?pageid=controls",
         status: false,
       },
       {
         title: "manage banks",
-        link: "/dashboard/controls/manage-banks?pageId=controls",
+        link: "/dashboard/controls/manage-banks?pageid=controls",
         status: true,
       },
       {
         title: "preferences",
-        link: "/dashboard/controls/preferences?pageId=controls",
+        link: "/dashboard/controls/preferences?pageid=controls",
         status: true,
       },
       {
         title: "manage notifications",
-        link: "/dashboard/controls/notifications?pageId=controls",
+        link: "/dashboard/controls/notifications?pageid=controls",
         status: false,
       },
     ]
@@ -231,16 +237,17 @@ const menuOptions = [
   {
     type: "accordion",
     name: "whitelabel",
+    id: "whitelabel",
     icon: <IoIosFlash />,
     children: [
       {
         title: "all organisations",
-        link: "/dashboard/organisation?pageId=whitelabel",
+        link: "/dashboard/organisation?pageid=whitelabel",
         status: true,
       },
       {
         title: "create whitelabel",
-        link: "/dashboard/organisation/create?pageId=whitelabel",
+        link: "/dashboard/organisation/create?pageid=whitelabel",
         status: true,
       }
     ]
@@ -248,6 +255,7 @@ const menuOptions = [
   {
     type: "accordion",
     name: "reports",
+    id: "reports",
     icon: <HiDocumentReport />,
     children: [
       {
@@ -360,6 +368,7 @@ const menuOptions = [
   {
     type: "link",
     name: "support tickets",
+    id: "support",
     link: "/dashboard/support-tickets?pageid=support",
     icon: <IoMdHelpBuoy />,
   }
@@ -371,6 +380,7 @@ const Layout = (props) => {
   const Router = useRouter()
   const Toast = useToast({ position: 'top-right' })
   const { pageid } = Router.query
+  const [activePage, setActivePage] = useState("dashboard")
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [wallet, setWallet] = useState("0")
   const [aepsStatus, setAepsStatus] = useState(true)
@@ -404,13 +414,14 @@ const Layout = (props) => {
     })
   }
 
-  useEffect(() => {
-    const activePage = typeof window !== 'undefined' ? document.getElementById(pageid) : document.getElementById("dashboard")
-    if (activePage) {
-      activePage.style.background = "#3C79F5"
-      activePage.style.color = "#FFF"
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (Router.isReady && pageid) {
+  //     if (document.getElementById(pageid)) {
+  //       document.getElementById(pageid).style.backgroundColor = "#3C79F5"
+  //       document.getElementById(pageid).style.color = "#FFF"
+  //     }
+  //   }
+  // }, [Router.isReady])
 
   // Feeding all user details to the sidepanel
   useEffect(() => {
@@ -434,11 +445,11 @@ const Layout = (props) => {
   useEffect(() => {
     // Check wallet balance
     BackendAxios.post('/api/user/wallet').then((res) => {
-        setWallet(res.data[0].wallet)
+      setWallet(res.data[0].wallet)
     }).catch((err) => {
-        setWallet('0')
+      setWallet('0')
     })
-}, [])
+  }, [])
 
 
   async function logout() {
@@ -488,6 +499,8 @@ const Layout = (props) => {
     })
   }
 
+  console.log(Router.asPath)
+
   return (
     <>
       <Head><title>{`Pesa24 Admin | ${props.pageTitle || "No Title"}`}</title></Head>
@@ -497,14 +510,21 @@ const Layout = (props) => {
         <Show above='md'>
           <VStack
             flex={2}
-            bg={'white'}
+            bgImage={'/sidebarbg.svg'}
+            bgSize={'cover'}
+            bgRepeat={'no-repeat'}
             h={'100vh'}
             overflowY={'scroll'}
+            paddingX={2}
+            color={'#FFF'}
           >
             <VStack py={8}>
-              <Image src={profilePic || 'https://xsgames.co/randomusers/assets/avatars/male/8.jpg'} boxSize={24} rounded={'full'} />
-              <Text fontSize={'xl'} color={'#444'} textTransform={'capitalize'}>{userName}</Text>
-              <Text fontSize={'sm'} color={'#666'} textTransform={'capitalize'}>Pesa24 - {userType}</Text>
+              <Image 
+              src={profilePic || 'https://xsgames.co/randomusers/assets/avatars/male/8.jpg'} 
+              boxSize={24} rounded={'full'} border={'2px'} 
+              />
+              <Text fontSize={'xl'} color={'#FFF'} textTransform={'capitalize'}>{userName}</Text>
+              <Text fontSize={'sm'} color={'#FAFAFA'} textTransform={'capitalize'}>Pesa24 - {userType}</Text>
             </VStack>
             <VStack spacing={2} w={'full'}>
               {
@@ -513,12 +533,17 @@ const Layout = (props) => {
                     return (
                       <Link
                         href={item.link} key={key}
-                        style={{ width: '100%' }}
-                        id={item.name}
+                        style={{ 
+                          width: '100%', 
+                          borderRadius: '12px',
+                        }}
+                        id={item.id}
                       >
                         <HStack
                           px={4} py={2} spacing={3}
-                          w={'full'} _hover={{ bg: 'aqua' }}
+                          w={'full'} _hover={{ bg: 'rgba(0,0,0,.6)' }}
+                          bg={Router.asPath.includes(`pageid=${item.id}`) ? 'twitter.600' : 'none'}
+                          rounded={8} overflow={'hidden'}
                         >
                           {item.icon}
                           <Text fontWeight={600} textTransform={'capitalize'}>{item.name}</Text>
@@ -530,8 +555,8 @@ const Layout = (props) => {
                     return (
                       <Accordion w={'full'} mb={2} allowToggle>
 
-                        <AccordionItem>
-                          <AccordionButton>
+                        <AccordionItem border={'none'}>
+                          <AccordionButton id={item.id} bg={Router.asPath.includes(`pageid=${item.id}`) ? 'twitter.600' : 'none'} rounded={8}>
                             <HStack spacing={3} textAlign='left' w={'full'} alignItems={'center'}>
                               {item.icon}
                               <Text textTransform={'capitalize'} fontSize={'md'} fontWeight={'semibold'}>{item.name}</Text>
@@ -624,8 +649,8 @@ const Layout = (props) => {
                 boxShadow={'lg'}
                 spacing={2} minW={128}
               >
-                <Box p={2} bg={'yellow.400'} rounded={'full'} display={'grid'} placeContent={'center'}>
-                  <BsWallet />
+                <Box p={2} bg={'blue.500'} rounded={'full'} display={'grid'} placeContent={'center'}>
+                  <BsWallet color='#FFF' />
                 </Box>
                 <Box>
                   <Text fontSize={'10'} color={'#888'}>Wallet</Text>

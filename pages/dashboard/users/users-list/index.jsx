@@ -480,7 +480,7 @@ const Index = () => {
                                                                             <Text>{user.email}</Text>
                                                                             <a href={`tel:${user.alternate_phone}`}><Text>{user.alternate_phone}</Text></a>
                                                                             <HStack spacing={0} my={2}>
-                                                                                <Link href={`/dashboard/users/manage-user?pageId=users&user_id=${user.id}`}>
+                                                                                <Link href={`/dashboard/users/manage-user?pageid=users&user_id=${user.id}`}>
                                                                                     <Button
                                                                                         size={'sm'} rounded={0}
                                                                                         colorScheme={'twitter'}
@@ -489,7 +489,7 @@ const Index = () => {
                                                                                         <BsPenFill />
                                                                                     </Button>
                                                                                 </Link>
-                                                                                <Link href={`/dashboard/account/fund-transfer?pageId=transfer&user_id=${user.id}`}>
+                                                                                <Link href={`/dashboard/account/fund-transfer?pageid=transfer&user_id=${user.id}`}>
                                                                                     <Button
                                                                                         size={'sm'} rounded={0}
                                                                                         colorScheme={'whatsapp'}
@@ -498,7 +498,7 @@ const Index = () => {
                                                                                         <BiRupee fontSize={18} />
                                                                                     </Button>
                                                                                 </Link>
-                                                                                <Link href={`/dashboard/reports/transactions/user-ledger?pageId=reports&user_id=${user.id}`}>
+                                                                                <Link href={`/dashboard/reports/transactions/user-ledger?pageid=reports&user_id=${user.id}`}>
                                                                                     <Button
                                                                                         size={'sm'} rounded={0}
                                                                                         colorScheme={'red'}
@@ -532,7 +532,7 @@ const Index = () => {
                                                                                 >Send Credentials
                                                                                 </Button>
 
-                                                                                <Link href={`/dashboard/users/manage-user/edit-role-parent?pageId=users&user_id=${user.id}`}>
+                                                                                <Link href={`/dashboard/users/manage-user/edit-role-parent?pageid=users&user_id=${user.id}`}>
                                                                                     <Button
                                                                                         size={'xs'}
                                                                                         bgColor={'white'}

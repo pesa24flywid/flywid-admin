@@ -6,6 +6,7 @@ import {
     FormLabel,
     Input,
     Select,
+    HStack,
     Stack,
     Button,
     Text,
@@ -13,6 +14,7 @@ import {
     useToast
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
+import { FormAxios } from '@/lib/utils/axios'
 
 const Create = () => {
     const Toast = useToast({ position: 'top-right' })
@@ -40,10 +42,18 @@ const Create = () => {
             signatoryAadhaarAttachment: null,
             signatoryPhoto: null,
         },
-        onSubmit: () => {
-            Toast({
-                status: 'success',
-                description: 'Whitelable added'
+        onSubmit: (values) => {
+            FormAxios.post(`/api/admin/create-organization`, values).then(res => {
+                Toast({
+                    status: 'success',
+                    description: 'Whitelable organisation added'
+                })
+            }).catch(err=>{
+                Toast({
+                    status: 'error',
+                    title: 'Error while creating organisation',
+                    description: err.response?.data?.message || err.response?.data || err.message
+                })
             })
         }
     })
@@ -51,11 +61,11 @@ const Create = () => {
     return (
         <>
             <Layout pageTitle={'Register Whitelabel Organisation'}>
-                <Box my={6} p={2} bg={'twitter.400'} color={'#FFF'}>
-                    <Text>Register New Whitelabel Organisation</Text>
+                <Box my={6} p={3} bg={'twitter.500'} color={'#FFF'} roundedTop={16}>
+                    <Text>Register New Whitelabel Organisations</Text>
                 </Box>
-                <Box w={'full'}>
-                    <form action="#" id='form'>
+                <Box w={'full'} p={[4, 8]}>
+                    {/* <form action="#" id='form'> */}
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Company Name</FormLabel>
@@ -86,7 +96,7 @@ const Create = () => {
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>COI</FormLabel>
-                                <Input name='coi' onChange={Formik.handleChange} />
+                                <Input name='coi' onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Upload COI</FormLabel>
@@ -97,7 +107,7 @@ const Create = () => {
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>GST</FormLabel>
-                                <Input name='gst' onChange={Formik.handleChange} />
+                                <Input name='gst' onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Upload GST</FormLabel>
@@ -108,7 +118,7 @@ const Create = () => {
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>MOU</FormLabel>
-                                <Input name='mou' onChange={Formik.handleChange} />
+                                <Input name='mou' onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Upload MOU</FormLabel>
@@ -119,7 +129,7 @@ const Create = () => {
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>AOA</FormLabel>
-                                <Input name='aoa' onChange={Formik.handleChange} />
+                                <Input name='aoa' onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Upload AOA</FormLabel>
@@ -130,7 +140,7 @@ const Create = () => {
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Firm PAN</FormLabel>
-                                <Input name='firmPan' onChange={Formik.handleChange} />
+                                <Input name='firmPan' onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Upload PAN</FormLabel>
@@ -141,7 +151,7 @@ const Create = () => {
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Signatory PAN</FormLabel>
-                                <Input name='signatoryPan' onChange={Formik.handleChange} />
+                                <Input name='signatoryPan' onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Upload Signatory PAN</FormLabel>
@@ -152,7 +162,7 @@ const Create = () => {
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Signatory Aadhaar</FormLabel>
-                                <Input name='signatoryAadhaar' onChange={Formik.handleChange} />
+                                <Input name='signatoryAadhaar' type='phone' onChange={Formik.handleChange} />
                             </FormControl>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Upload Signatory Aadhaar</FormLabel>
@@ -166,10 +176,10 @@ const Create = () => {
                                 <Input name='signatoryPhoto' type='file' onChange={e => Formik.setFieldValue("signatoryPhoto", e.currentTarget.files[0])} />
                             </FormControl>
                         </Stack>
-                        <Stack p={4} justifyContent={'flex-end'}>
-                            <Button colorScheme='twitter'>Save</Button>
-                        </Stack>
-                    </form>
+                        <HStack p={4} justifyContent={'flex-end'}>
+                            <Button colorScheme='twitter' w={'auto'} onClick={Formik.handleSubmit} >Save</Button>
+                        </HStack>
+                    {/* </form> */}
                 </Box>
             </Layout>
         </>

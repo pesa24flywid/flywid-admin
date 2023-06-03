@@ -167,6 +167,7 @@ const ManageBanks = () => {
                 <Box p={2}
                     bg={'twitter.500'}
                     color={'white'}
+                    roundedTop={12}
                 >
                     <Text>Your Bank Accounts</Text>
                 </Box>

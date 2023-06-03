@@ -95,13 +95,13 @@ const SupportTickets = () => {
             status: params.data.status,
             admin_remarks: params.data.admin_remarks
         }).then((res) => {
-            if(res.data===1){
+            if (res.data === 1) {
                 Toast({
                     status: 'success',
                     description: `Ticket Updated`
                 })
             }
-            else{
+            else {
                 Toast({
                     description: `Ticket Not Updated`
                 })
@@ -118,7 +118,11 @@ const SupportTickets = () => {
         <>
             <Layout pageTitle={'Support Tickets'}>
                 <Box w={'full'} h={12}></Box>
-                <Box h={'sm'} w={'full'} className='ag-theme-alpine'>
+                <Box
+                    h={'sm'} w={'full'}
+                    rounded={16} overflow={'hidden'}
+                    className='ag-theme-alpine ag-theme-pesa24-blue'
+                >
                     <AgGridReact
                         rowData={rowData}
                         columnDefs={columnDefs}

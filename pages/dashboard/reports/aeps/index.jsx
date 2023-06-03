@@ -278,7 +278,11 @@ const Index = () => {
                     </Button>
                 </HStack>
                 <Box py={6}>
-                    <Box className='ag-theme-alpine' w={'full'} h={['sm', 'md']}>
+                    <Box
+                        rounded={16} overflow={'hidden'}
+                        className='ag-theme-alpine ag-theme-pesa24-blue'
+                        w={'full'} h={['sm', 'md']}
+                    >
                         <AgGridReact
                             columnDefs={columnDefs}
                             rowData={rowData}

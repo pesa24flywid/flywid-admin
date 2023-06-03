@@ -287,7 +287,7 @@ const Index = () => {
 
                             <HStack
                                 spacing={4}
-                                p={4} bg={'aqua'}
+                                p={4}
                                 justifyContent={'flex-end'}
                             >
                                 <Button type={'submit'} colorScheme={'twitter'}>Update Details</Button>

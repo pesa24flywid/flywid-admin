@@ -9,13 +9,17 @@ const DataCard = ({ title, data, icon, color }) => {
       <HStack
         mb={[6, 0]}
         spacing={4}
-        rounded={12}
-        minW={['46%', '52']}
+        rounded={4}
+        minW={['46%', '64']}
         p={3} bg={'white'}
         boxShadow={'md'}
+        transition={'.3s ease'}
+        borderRightWidth={`8px`}
+        borderRightColor={`${color}`}
+        _hover={{bg: color, color: '#FFF'}}
       >
         <Show above='md'>
-          <Box bg={`${color}`}
+          <Box bg={`#FFF`}
             boxSize={[8, 14]}
             rounded={'inherit'}
             display={'grid'}
@@ -25,7 +29,7 @@ const DataCard = ({ title, data, icon, color }) => {
           </Box>
         </Show>
         <VStack alignItems={'flex-start'} justifyContent={'space-between'} spacing={0}>
-          <Text fontSize={'10'} color={'#888'}>{title}</Text>
+          <Text fontSize={'10'}>{title}</Text>
           <Text fontSize={'28'} fontWeight={'semibold'}>{data || 0}</Text>
         </VStack>
       </HStack>
@@ -43,7 +47,7 @@ export const TransactionCard = ({ title, color, amount, quantity, showRupee }) =
         boxShadow={'md'}
         bg={'white'}
       >
-        <Text w={'fit-content'} px={2} bg={color} color={'white'}>{title}</Text>
+        <Text w={'fit-content'} px={2} rounded={'full'} bg={color} color={'white'}>{title}</Text>
         <HStack pt={4} justifyContent={'space-between'}>
           <VStack w={'full'} alignItems={'flex-start'} pr={2} borderRight={'1px'} borderRightColor={'#999'}>
             <Text fontSize={'xs'} color={'#666'}>Amount</Text>

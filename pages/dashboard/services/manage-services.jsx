@@ -86,7 +86,10 @@ const ManageServices = () => {
                 <Box mt={12} mb={6}>
                     <HStack justifyContent={'space-between'}>
                         <Text pb={4} fontSize={'lg'}>Services Status</Text>
-                        <Button onClick={() => setSelectedService({ intent: "create", showModal: true })}>Add New Service</Button>
+                        <Button 
+                        colorScheme='twitter'
+                        onClick={() => setSelectedService({ intent: "create", showModal: true })}
+                        >Add New Service</Button>
                     </HStack>
                     <Flex alignItems={'center'} direction={'row'} justifyContent={'flex-start'} gap={6}>
                         {services.map((service, key) => (
