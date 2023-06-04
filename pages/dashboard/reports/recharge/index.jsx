@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
     useToast,
     Box,
@@ -33,6 +33,8 @@ import BackendAxios from '@/lib/utils/axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'
 import Layout from '../../layout';
+import { DownloadTableExcel } from 'react-export-table-to-excel';
+import { SiMicrosoftexcel } from 'react-icons/si';
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -203,11 +205,25 @@ const Index = () => {
         )
     }
 
+    const tableRef = useRef(null)
     return (
         <>
             <Layout pageTitle={'Recharge Reports'}>
-                <HStack my={4} justifyContent={'space-between'}>
-                    <Text fontSize={'lg'} fontWeight={'semibold'}>BBPS Transactions</Text>
+                <Text fontSize={'lg'} fontWeight={'semibold'}>Recharge Transactions</Text>
+                <HStack my={4}>
+                    <DownloadTableExcel
+                        filename="UsersList"
+                        sheet="users"
+                        currentTableRef={tableRef.current}
+                    >
+                        <Button
+                            size={['xs', 'sm']}
+                            colorScheme={'whatsapp'}
+                            leftIcon={<SiMicrosoftexcel />}
+                        >
+                            Export Excel
+                        </Button>
+                    </DownloadTableExcel>
                     <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>
                 </HStack>
                 <HStack spacing={2} py={4} mt={24} bg={'white'} justifyContent={'center'}>
@@ -373,7 +389,7 @@ const Index = () => {
 
 
             <VisuallyHidden>
-                <table id='printable-table'>
+                <table id='printable-table' ref={tableRef}>
                     <thead>
                         <tr>
                             <th>#</th>

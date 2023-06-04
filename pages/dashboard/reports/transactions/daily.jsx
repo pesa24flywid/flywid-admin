@@ -20,6 +20,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { useFormik } from 'formik';
+import { DownloadTableExcel } from 'react-export-table-to-excel';
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -82,6 +83,9 @@ const Ledger = () => {
         initialValues: {
             from: "",
             to: ""
+        },
+        onSubmit: values => {
+            fetchLedger(`/api/admin/transactions-period?from=${values.from}&to=${values.to}&page=1`)
         }
     })
 
@@ -117,12 +121,26 @@ const Ledger = () => {
         )
     }
 
-
+    const tableRef = useRef(null)
     return (
         <>
             <Layout pageTitle={'Transactions Ledger'}>
-                <HStack my={4} justifyContent={'space-between'}>
-                    <Text fontSize={'lg'} fontWeight={'semibold'}>Transactions Ledger</Text>
+                <Text fontSize={'lg'} fontWeight={'semibold'}>Daily Sales</Text>
+                <HStack my={4}>
+                    <DownloadTableExcel
+                        filename="UsersList"
+                        sheet="users"
+                        currentTableRef={tableRef.current}
+                    >
+                        <Button
+                            size={['xs', 'sm']}
+                            colorScheme={'whatsapp'}
+                            leftIcon={<SiMicrosoftexcel />}
+                        >
+                            Export Excel
+                        </Button>
+                    </DownloadTableExcel>
+                    <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>
                 </HStack>
 
                 <Box p={2} bg={'twitter.500'}>
@@ -257,7 +275,7 @@ const Ledger = () => {
                 </HStack>
 
                 <VisuallyHidden>
-                    <table id='printable-table'>
+                    <table id='printable-table' ref={tableRef}>
                         <thead>
                             <tr>
                                 <th>#</th>

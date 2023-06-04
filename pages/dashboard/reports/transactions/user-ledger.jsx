@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Layout from '../../layout'
 import {
     Box,
@@ -39,6 +39,8 @@ import {
 } from 'react-icons/bs';
 import { useRouter } from 'next/router';
 import Pdf from 'react-to-pdf'
+import { SiMicrosoftexcel } from 'react-icons/si';
+import { DownloadTableExcel } from 'react-export-table-to-excel';
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -215,7 +217,7 @@ const UserLedger = () => {
             </>
         )
     }
-
+    const tableRef = useRef(null)
     return (
         <>
             <Layout pageTitle={'User Ledger'}>
@@ -236,8 +238,21 @@ const UserLedger = () => {
                         </InputGroup>
                     </FormControl>
 
-                    <HStack mt={12} pb={4} justifyContent={'flex-end'}>
-                        <Button colorScheme={'red'} onClick={ExportPDF} size={'sm'}>Export PDF</Button>
+                    <HStack my={4}>
+                        <DownloadTableExcel
+                            filename="UsersList"
+                            sheet="users"
+                            currentTableRef={tableRef.current}
+                        >
+                            <Button
+                                size={['xs', 'sm']}
+                                colorScheme={'whatsapp'}
+                                leftIcon={<SiMicrosoftexcel />}
+                            >
+                                Export Excel
+                            </Button>
+                        </DownloadTableExcel>
+                        <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>
                     </HStack>
                     <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
                         <Button
@@ -343,7 +358,7 @@ const UserLedger = () => {
                     </HStack>
 
                     <VisuallyHidden>
-                        <table id='printable-table'>
+                        <table id='printable-table' ref={tableRef}>
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -391,7 +406,6 @@ const UserLedger = () => {
 
 
             {/* Receipt */}
-
             <Modal
                 isOpen={receipt.show}
                 onClose={() => setReceipt({ ...receipt, show: false })}

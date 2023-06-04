@@ -16,5 +16,8 @@ td{
     background-color: #30A2FF !important;
 }
 .ag-theme-pesa24-blue .ag-header-cell{
-    color: #FFF
+    color: #FFF;
+}
+.ag-theme-pesa24-blue .ag-floating-filter{
+    color: #333;
 }

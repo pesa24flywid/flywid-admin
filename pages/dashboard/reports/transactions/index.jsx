@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Layout from '../../layout'
 import {
     Box,
@@ -14,6 +14,8 @@ import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { DownloadTableExcel } from 'react-export-table-to-excel';
+import { SiMicrosoftexcel } from 'react-icons/si';
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -97,15 +99,27 @@ const Ledger = () => {
         fetchLedger()
     }, [])
 
-
+    const tableRef = useRef(null)
     return (
         <>
             <Layout pageTitle={'Transactions Ledger'}>
-                <HStack my={4} justifyContent={'space-between'}>
-                    <Text fontSize={'lg'} fontWeight={'semibold'}>Transactions Ledger</Text>
+                <Text fontSize={'lg'} fontWeight={'semibold'}>Transactions Ledger</Text>
+                <HStack my={4}>
+                    <DownloadTableExcel
+                        filename="TransactionsLedger"
+                        sheet="transactions"
+                        currentTableRef={tableRef.current}
+                    >
+                        <Button
+                            size={['xs', 'sm']}
+                            colorScheme={'whatsapp'}
+                            leftIcon={<SiMicrosoftexcel />}
+                        >
+                            Export Excel
+                        </Button>
+                    </DownloadTableExcel>
                     <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>
                 </HStack>
-
 
                 <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
                     <Button
@@ -204,7 +218,7 @@ const Ledger = () => {
                 </HStack>
 
                 <VisuallyHidden>
-                    <table id='printable-table'>
+                    <table id='printable-table' ref={tableRef}>
                         <thead>
                             <tr>
                                 <th>#</th>

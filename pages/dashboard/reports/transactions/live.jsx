@@ -99,7 +99,6 @@ const Ledger = () => {
                 prev_page_url: res.data.prev_page_url,
             })
             setRowData(res.data.slice(0, 20))
-            setPrintableRow(res.data)
         }).catch(err => {
             console.log(err)
         })
@@ -108,7 +107,7 @@ const Ledger = () => {
     useEffect(() => {
         setInterval(() => {
             fetchLedger()
-        }, 1000);
+        }, 3000);
     }, [])
 
     const userCellRenderer = (params) => {
