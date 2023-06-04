@@ -73,7 +73,7 @@ const Index = () => {
 
   useEffect(() => {
     BackendAxios.get('/api/admin/logins').then(res => {
-      setRowData(res.data.data)
+      setRowData(res.data)
     }).catch(err => {
       console.log(err)
     })
