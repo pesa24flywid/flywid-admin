@@ -53,6 +53,7 @@ import Script from 'next/script'
 import Link from 'next/link'
 import { BiPen, BiRupee } from 'react-icons/bi'
 import fileDownload from 'js-file-download'
+import { DownloadTableExcel } from "react-export-table-to-excel";
 import { aepsList, axisList, basicList, bbpsList, cmsList, dmtList, fastagList, licList, matmList, panList, payoutList, rechargeList, userManagementList } from '@/lib/utils/permissions/structure'
 
 const ExportPDF = (currentRowData) => {
@@ -76,6 +77,7 @@ const Index = () => {
     const Toast = useToast({
         position: 'top-right'
     })
+    const [isLoading, setIsLoading] = useState(false)
     const [userObjId, setUserObjId] = useState("")
     const [permissionsDrawer, setPermissionsDrawer] = useState(false)
 
@@ -134,6 +136,7 @@ const Index = () => {
     // Fetching users
     function fetchUsersList(pageLink) {
         setFetchedUsers([])
+        setIsLoading(true)
         BackendAxios.get(pageLink || `/api/admin/users-list/${selectedTab}?page=1`).then((res) => {
             setPagination({
                 current_page: res.data.current_page,
@@ -144,8 +147,10 @@ const Index = () => {
                 prev_page_url: res.data.prev_page_url,
             })
             setFetchedUsers(res.data.data)
+            setIsLoading(false)
         }).catch((err) => {
             console.log(err)
+            setIsLoading(false)
             Toast({
                 status: 'error',
                 description: err.response.data.message || err.response.data || err.message
@@ -310,7 +315,7 @@ const Index = () => {
             })
         })
     }
-
+    const tableRef = useRef(null)
     return (
         <>
             <Script
@@ -368,13 +373,20 @@ const Index = () => {
                                                 >
                                                     CSV
                                                 </Button>
-                                                <Button
-                                                    size={['xs', 'sm']}
-                                                    colorScheme={'whatsapp'}
-                                                    leftIcon={<SiMicrosoftexcel />}
+
+                                                <DownloadTableExcel
+                                                    filename="UsersList"
+                                                    sheet="users"
+                                                    currentTableRef={tableRef.current}
                                                 >
-                                                    Excel
-                                                </Button>
+                                                    <Button
+                                                        size={['xs', 'sm']}
+                                                        colorScheme={'whatsapp'}
+                                                        leftIcon={<SiMicrosoftexcel />}
+                                                    >
+                                                        Excel
+                                                    </Button>
+                                                </DownloadTableExcel>
                                                 <Button
                                                     size={['xs', 'sm']}
                                                     colorScheme={'red'}
@@ -436,199 +448,201 @@ const Index = () => {
                                         </HStack>
                                         {/* Table */}
                                         <TableContainer my={6}>
-                                            <Table variant='striped' colorScheme='teal'>
-                                                <Thead>
-                                                    <Tr>
-                                                        <Th>Basic Details</Th>
-                                                        <Th>KYC Details</Th>
-                                                        <Th>Balance Details</Th>
-                                                        <Th>Complete Address</Th>
-                                                        <Th>KYC Documents</Th>
-                                                        {/* <Th>Actions</Th> */}
-                                                    </Tr>
-                                                </Thead>
-                                                <Tbody fontSize={'xs'}>
-                                                    {
-                                                        fetchedUsers && fetchedUsers.map((user, key) => {
-                                                            return (
-                                                                <Tr key={key}>
-                                                                    <Td>
-                                                                        <Box mt={4}>
-                                                                            <HStack spacing={4} pb={4}>
-                                                                                <a href={
-                                                                                    user.profile_pic ?
-                                                                                        `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${user.profile_pic}`
-                                                                                        : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
-                                                                                } target={'_blank'}>
-                                                                                    <Image
-                                                                                        src={
-                                                                                            user.profile_pic ?
-                                                                                                `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${user.profile_pic}`
-                                                                                                : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
-                                                                                        }
-                                                                                        boxSize={'10'} objectFit={'contain'}
-                                                                                    />
-                                                                                </a>
-                                                                                <Box>
-                                                                                    <Text><b>ID: </b>{user.id}</Text>
-                                                                                    <Text>{user.first_name} {user.last_name} </Text>
-                                                                                    <Text>
-                                                                                        <a href={`tel:${user.phone_number}`}><b>MOB: </b>{user.phone_number}</a>
-                                                                                    </Text>
-                                                                                </Box>
-                                                                            </HStack>
-                                                                            <Text>{user.email}</Text>
-                                                                            <a href={`tel:${user.alternate_phone}`}><Text>{user.alternate_phone}</Text></a>
-                                                                            <HStack spacing={0} my={2}>
-                                                                                <Link href={`/dashboard/users/manage-user?pageid=users&user_id=${user.id}`}>
-                                                                                    <Button
-                                                                                        size={'sm'} rounded={0}
-                                                                                        colorScheme={'twitter'}
-                                                                                        title={'Edit'}
-                                                                                    >
-                                                                                        <BsPenFill />
-                                                                                    </Button>
-                                                                                </Link>
-                                                                                <Link href={`/dashboard/account/fund-transfer?pageid=transfer&user_id=${user.id}`}>
-                                                                                    <Button
-                                                                                        size={'sm'} rounded={0}
-                                                                                        colorScheme={'whatsapp'}
-                                                                                        title={'Transfer/Reversal'}
-                                                                                    >
-                                                                                        <BiRupee fontSize={18} />
-                                                                                    </Button>
-                                                                                </Link>
-                                                                                <Link href={`/dashboard/reports/transactions/user-ledger?pageid=reports&user_id=${user.id}`}>
-                                                                                    <Button
-                                                                                        size={'sm'} rounded={0}
-                                                                                        colorScheme={'red'}
-                                                                                        title={'Reports'}
-                                                                                    >
-                                                                                        <BsFileBarGraphFill />
-                                                                                    </Button>
-                                                                                </Link>
-                                                                                <Button
-                                                                                    size={'sm'} rounded={0}
-                                                                                    colorScheme={'teal'}
-                                                                                    title={'Reports'}
-                                                                                    onClick={() => openPermissionsDrawer(user.id)}
-                                                                                >
-                                                                                    <BsShield />
-                                                                                </Button>
-                                                                                <HStack p={2} bg={'white'}>
-                                                                                    <Switch
-                                                                                        size={'sm'}
-                                                                                        onChange={() => changeUserStatus(user.id, user.is_active == 1 ? 0 : 1)}
-                                                                                        defaultChecked={user.is_active === 1}
-                                                                                    ></Switch>
+                                            {isLoading ? <Text>Loading data please wait...</Text> :
+                                                <Table variant='striped' colorScheme='teal'>
+                                                    <Thead>
+                                                        <Tr>
+                                                            <Th>Basic Details</Th>
+                                                            <Th>KYC Details</Th>
+                                                            <Th>Balance Details</Th>
+                                                            <Th>Complete Address</Th>
+                                                            <Th>KYC Documents</Th>
+                                                            {/* <Th>Actions</Th> */}
+                                                        </Tr>
+                                                    </Thead>
+                                                    <Tbody fontSize={'xs'}>
+                                                        {
+                                                            fetchedUsers && fetchedUsers.map((user, key) => {
+                                                                return (
+                                                                    <Tr key={key}>
+                                                                        <Td>
+                                                                            <Box mt={4}>
+                                                                                <HStack spacing={4} pb={4}>
+                                                                                    <a href={
+                                                                                        user.profile_pic ?
+                                                                                            `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${user.profile_pic}`
+                                                                                            : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+                                                                                    } target={'_blank'}>
+                                                                                        <Image
+                                                                                            src={
+                                                                                                user.profile_pic ?
+                                                                                                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${user.profile_pic}`
+                                                                                                    : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+                                                                                            }
+                                                                                            boxSize={'10'} objectFit={'contain'}
+                                                                                        />
+                                                                                    </a>
+                                                                                    <Box>
+                                                                                        <Text><b>ID: </b>{user.id}</Text>
+                                                                                        <Text>{user.first_name} {user.last_name} </Text>
+                                                                                        <Text>
+                                                                                            <a href={`tel:${user.phone_number}`}><b>MOB: </b>{user.phone_number}</a>
+                                                                                        </Text>
+                                                                                    </Box>
                                                                                 </HStack>
-                                                                            </HStack>
+                                                                                <Text>{user.email}</Text>
+                                                                                <a href={`tel:${user.alternate_phone}`}><Text>{user.alternate_phone}</Text></a>
+                                                                                <HStack spacing={0} my={2}>
+                                                                                    <Link href={`/dashboard/users/manage-user?pageid=users&user_id=${user.id}`}>
+                                                                                        <Button
+                                                                                            size={'sm'} rounded={0}
+                                                                                            colorScheme={'twitter'}
+                                                                                            title={'Edit'}
+                                                                                        >
+                                                                                            <BsPenFill />
+                                                                                        </Button>
+                                                                                    </Link>
+                                                                                    <Link href={`/dashboard/account/fund-transfer?pageid=transfer&user_id=${user.id}`}>
+                                                                                        <Button
+                                                                                            size={'sm'} rounded={0}
+                                                                                            colorScheme={'whatsapp'}
+                                                                                            title={'Transfer/Reversal'}
+                                                                                        >
+                                                                                            <BiRupee fontSize={18} />
+                                                                                        </Button>
+                                                                                    </Link>
+                                                                                    <Link href={`/dashboard/reports/transactions/user-ledger?pageid=reports&user_id=${user.id}`}>
+                                                                                        <Button
+                                                                                            size={'sm'} rounded={0}
+                                                                                            colorScheme={'red'}
+                                                                                            title={'Reports'}
+                                                                                        >
+                                                                                            <BsFileBarGraphFill />
+                                                                                        </Button>
+                                                                                    </Link>
+                                                                                    <Button
+                                                                                        size={'sm'} rounded={0}
+                                                                                        colorScheme={'teal'}
+                                                                                        title={'Reports'}
+                                                                                        onClick={() => openPermissionsDrawer(user.id)}
+                                                                                    >
+                                                                                        <BsShield />
+                                                                                    </Button>
+                                                                                    <HStack p={2} bg={'white'}>
+                                                                                        <Switch
+                                                                                            size={'sm'}
+                                                                                            onChange={() => changeUserStatus(user.id, user.is_active == 1 ? 0 : 1)}
+                                                                                            defaultChecked={user.is_active === 1}
+                                                                                        ></Switch>
+                                                                                    </HStack>
+                                                                                </HStack>
 
-                                                                            <HStack spacing={4}>
-                                                                                <Button
-                                                                                    size={'xs'}
-                                                                                    bgColor={'white'}
-                                                                                    onClick={() => sendCredentials(user.email, user.first_name)}
-                                                                                >Send Credentials
-                                                                                </Button>
-
-                                                                                <Link href={`/dashboard/users/manage-user/edit-role-parent?pageid=users&user_id=${user.id}`}>
+                                                                                <HStack spacing={4}>
                                                                                     <Button
                                                                                         size={'xs'}
                                                                                         bgColor={'white'}
-                                                                                    >Edit Role & Parent
+                                                                                        onClick={() => sendCredentials(user.email, user.first_name)}
+                                                                                    >Send Credentials
                                                                                     </Button>
-                                                                                </Link>
 
-                                                                            </HStack>
-                                                                        </Box>
-                                                                    </Td>
-                                                                    <Td>
-                                                                        <Box>
-                                                                            <Text><b>Status: </b>&nbsp;&nbsp; Verified </Text>
-                                                                            {/* <Text><b>Aadhaar No.: </b>&nbsp;&nbsp; {user.aadhaar} </Text>
+                                                                                    <Link href={`/dashboard/users/manage-user/edit-role-parent?pageid=users&user_id=${user.id}`}>
+                                                                                        <Button
+                                                                                            size={'xs'}
+                                                                                            bgColor={'white'}
+                                                                                        >Edit Role & Parent
+                                                                                        </Button>
+                                                                                    </Link>
+
+                                                                                </HStack>
+                                                                            </Box>
+                                                                        </Td>
+                                                                        <Td>
+                                                                            <Box>
+                                                                                <Text><b>Status: </b>&nbsp;&nbsp; Verified </Text>
+                                                                                {/* <Text><b>Aadhaar No.: </b>&nbsp;&nbsp; {user.aadhaar} </Text>
                                                                             <Text><b>PAN: </b>&nbsp;&nbsp; {user.pan_number} </Text> */}
-                                                                            <Text><b>GST No.: </b>&nbsp;&nbsp; {user.gst_number} </Text>
-                                                                            <Text><b>Gender & DOB: </b>{user.gender} &nbsp;&nbsp;{user.dob}</Text>
-                                                                            <Text><b>Organisation Code.: </b>&nbsp;&nbsp; RPAY </Text><br /><br />
+                                                                                <Text><b>GST No.: </b>&nbsp;&nbsp; {user.gst_number} </Text>
+                                                                                <Text><b>Gender & DOB: </b>{user.gender} &nbsp;&nbsp;{user.dob}</Text>
+                                                                                <Text><b>Organisation Code.: </b>&nbsp;&nbsp; RPAY </Text><br /><br />
 
-                                                                        </Box>
-                                                                    </Td>
-                                                                    <Td pos={'relative'}>
-                                                                        <Box>
-                                                                            <Text><b>Current Balance: </b>&nbsp;&nbsp; ₹ {user.wallet} </Text>
-                                                                            <Text><b>Capping Balance: </b>&nbsp;&nbsp; ₹ {user.minimum_balance} </Text>
-                                                                            <Text textTransform={'capitalize'}>{user.packages.length != 0 ? user.packages[0].name : "No"} Plan</Text>
-                                                                            <Text>{user.company_name} {user.firm_type}</Text>
-                                                                        </Box>
-                                                                    </Td>
-                                                                    <Td>
-                                                                        <Box>
-                                                                            <Text>{user.line},</Text>
-                                                                            <Text>{user.city}, {user.state},</Text>
-                                                                            <Text>Pincode - {user.pincode}</Text>
-                                                                        </Box>
-                                                                        <Box pt={16}>
-                                                                            <Text fontSize={'xs'}>Remarks</Text>
-                                                                            <Input
-                                                                                onBlur={(e) => saveRemarks(user.id, e.target.value)}
-                                                                                placeholder={user.delete_remarks} bg={'aqua'}
-                                                                            />
-                                                                            <Text color={'red'} onClick={() => saveRemarks(user.id, " ")}>Remove remarks</Text>
-                                                                        </Box>
-                                                                    </Td>
-                                                                    <Td>{/* PAN Card */}
+                                                                            </Box>
+                                                                        </Td>
+                                                                        <Td pos={'relative'}>
+                                                                            <Box>
+                                                                                <Text><b>Current Balance: </b>&nbsp;&nbsp; ₹ {user.wallet} </Text>
+                                                                                <Text><b>Capping Balance: </b>&nbsp;&nbsp; ₹ {user.minimum_balance} </Text>
+                                                                                <Text textTransform={'capitalize'}>{user.packages.length != 0 ? user.packages[0].name : "No"} Plan</Text>
+                                                                                <Text>{user.company_name} {user.firm_type}</Text>
+                                                                            </Box>
+                                                                        </Td>
+                                                                        <Td>
+                                                                            <Box>
+                                                                                <Text>{user.line},</Text>
+                                                                                <Text>{user.city}, {user.state},</Text>
+                                                                                <Text>Pincode - {user.pincode}</Text>
+                                                                            </Box>
+                                                                            <Box pt={16}>
+                                                                                <Text fontSize={'xs'}>Remarks</Text>
+                                                                                <Input
+                                                                                    onBlur={(e) => saveRemarks(user.id, e.target.value)}
+                                                                                    placeholder={user.delete_remarks} bg={'aqua'}
+                                                                                />
+                                                                                <Text color={'red'} cursor={'pointer'} onClick={() => saveRemarks(user.id, " ")}>Remove remarks</Text>
+                                                                            </Box>
+                                                                        </Td>
+                                                                        <Td>{/* PAN Card */}
 
-                                                                        {
-                                                                            user.pan_photo &&
-                                                                            <Button size={'xs'}
-                                                                                onClick={() => BackendAxios.post(`/api/admin/file`, {
-                                                                                    address: user.pan_photo
-                                                                                }, {
-                                                                                    responseType: 'blob'
-                                                                                }).then(res => {
-                                                                                    fileDownload(res.data, `PAN.jpeg`)
-                                                                                })}
-                                                                            >View PAN Card</Button>
-                                                                        }
-                                                                        <br /><br />
-                                                                        {/* Aadhaar Front */}
-                                                                        {
-                                                                            user.aadhar_front &&
-                                                                            <Button size={'xs'}
-                                                                                onClick={() => BackendAxios.post(`/api/admin/file`, {
-                                                                                    address: user.aadhaar_front
-                                                                                }, {
-                                                                                    responseType: 'blob'
-                                                                                }).then(res => {
-                                                                                    fileDownload(res.data, `AadhaarFront.jpeg`)
-                                                                                })
-                                                                                }
-                                                                            >View Aadhaar Front</Button>
-                                                                        }
-                                                                        <br /><br />
-                                                                        {/* Aadhaar Back */}
-                                                                        {
-                                                                            user.aadhar_back &&
-                                                                            <Button size={'xs'}
-                                                                                onClick={() => BackendAxios.post(`/api/admin/file`, {
-                                                                                    address: user.aadhaar_back
-                                                                                }, {
-                                                                                    responseType: 'blob'
-                                                                                }).then(res => {
-                                                                                    fileDownload(res.data, `AadhaarBack.jpeg`)
-                                                                                })
-                                                                                }
-                                                                            >View Aadhaar Back</Button>
-                                                                        }
+                                                                            {
+                                                                                user.pan_photo &&
+                                                                                <Button size={'xs'}
+                                                                                    onClick={() => BackendAxios.post(`/api/admin/file`, {
+                                                                                        address: user.pan_photo
+                                                                                    }, {
+                                                                                        responseType: 'blob'
+                                                                                    }).then(res => {
+                                                                                        fileDownload(res.data, `PAN.jpeg`)
+                                                                                    })}
+                                                                                >View PAN Card</Button>
+                                                                            }
+                                                                            <br /><br />
+                                                                            {/* Aadhaar Front */}
+                                                                            {
+                                                                                user.aadhar_front &&
+                                                                                <Button size={'xs'}
+                                                                                    onClick={() => BackendAxios.post(`/api/admin/file`, {
+                                                                                        address: user.aadhaar_front
+                                                                                    }, {
+                                                                                        responseType: 'blob'
+                                                                                    }).then(res => {
+                                                                                        fileDownload(res.data, `AadhaarFront.jpeg`)
+                                                                                    })
+                                                                                    }
+                                                                                >View Aadhaar Front</Button>
+                                                                            }
+                                                                            <br /><br />
+                                                                            {/* Aadhaar Back */}
+                                                                            {
+                                                                                user.aadhar_back &&
+                                                                                <Button size={'xs'}
+                                                                                    onClick={() => BackendAxios.post(`/api/admin/file`, {
+                                                                                        address: user.aadhaar_back
+                                                                                    }, {
+                                                                                        responseType: 'blob'
+                                                                                    }).then(res => {
+                                                                                        fileDownload(res.data, `AadhaarBack.jpeg`)
+                                                                                    })
+                                                                                    }
+                                                                                >View Aadhaar Back</Button>
+                                                                            }
 
-                                                                    </Td>
-                                                                </Tr>
-                                                            )
-                                                        })
-                                                    }
-                                                </Tbody>
-                                            </Table>
+                                                                        </Td>
+                                                                    </Tr>
+                                                                )
+                                                            })
+                                                        }
+                                                    </Tbody>
+                                                </Table>
+                                            }
                                         </TableContainer>
                                         <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
                                             <Button
@@ -668,7 +682,7 @@ const Index = () => {
 
                                         {/* Printable Table */}
                                         <VisuallyHidden>
-                                            <Table variant='striped' colorScheme='teal' id='exportableTable'>
+                                            <Table variant='striped' colorScheme='teal' id='exportableTable' ref={tableRef}>
                                                 <Thead>
                                                     <Tr>
                                                         <Th>Basic Details</Th>
