@@ -91,7 +91,7 @@ const Profile = () => {
             address={profile.address}
           />
           {/*KYC Document cards*/}
-          <Stack>
+          {/* <Stack>
             <Box
               display={"flex"}
               px={[0, 4]}
@@ -116,7 +116,7 @@ const Profile = () => {
                 docUrl="https://i.pinimg.com/600x315/1f/a0/ae/1fa0ae7b636c487a91f39f61953a3c76.jpg"
               />
             </Box>
-          </Stack>
+          </Stack> */}
         </Stack>
       </Layout>
     </>
