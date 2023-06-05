@@ -129,7 +129,7 @@ const menuOptions = [
         status: true,
       },
       {
-        title: "settlement account",
+        title: "settlement accounts",
         link: "/dashboard/users/settlement-accounts?pageid=users",
         status: true,
       },
@@ -203,6 +203,11 @@ const menuOptions = [
         title: "add bank",
         link: "/dashboard/account/add-bank?pageid=account",
         status: false,
+      },
+      {
+        title: "settlement requests",
+        link: "/dashboard/account/settlements?pageid=account",
+        status: true,
       },
     ]
   },

@@ -70,7 +70,7 @@ const FundRequests = () => {
     })
 
     function fetchRequests(pageLink) {
-        BackendAxios.get(pageLink || '/api/admin/fetch-fund-requests').then(res => {
+        BackendAxios.get(pageLink || '/api/admin/settlement-requests').then(res => {
             setPagination({
                 current_page: res.data.current_page,
                 total_pages: parseInt(res.data.last_page),
@@ -184,10 +184,10 @@ const FundRequests = () => {
     return (
         <>
             <Layout pageTitle={'Fund Request'}>
-                <Text fontWeight={'semibold'} fontSize={'lg'}>Fund Requests From Your Members</Text>
+                <Text fontWeight={'semibold'} fontSize={'lg'}>Fund Settlement Requests From Your Members</Text>
 
                 <Box py={6}>
-                    <Text fontWeight={'medium'} pb={4}>Search and manage fund requests</Text>
+                    <Text fontWeight={'medium'} pb={4}>Manage Fund Settlements</Text>
                     <HStack spacing={4} my={4}>
                         <Button size={['xs', 'sm']} colorScheme={'twitter'} leftIcon={<FaFileCsv />}>CSV</Button>
                         <Button size={['xs', 'sm']} colorScheme={'whatsapp'} leftIcon={<SiMicrosoftexcel />}>Excel</Button>
