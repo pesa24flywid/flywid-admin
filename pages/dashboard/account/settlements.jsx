@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Layout from '../layout'
 import {
     Stack,
@@ -20,6 +20,7 @@ import { BsCheck, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsCh
 import BackendAxios from '@/lib/utils/axios'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
+import { DownloadTableExcel } from 'react-export-table-to-excel';
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -41,15 +42,14 @@ const FundRequests = () => {
             cellRenderer: 'statusCellRenderer'
         },
         { headerName: "Request Timestamp", field: 'created_at' },
-        { headerName: "Trnxn ID", field: 'transaction_id' },
+        { headerName: "Trnxn ID", field: 'id' },
         { headerName: "Amount", field: 'amount' },
         { headerName: "Requested Bank", field: 'bank_name' },
-        { headerName: "Transaction Type", field: 'transaction_type' },
-        { headerName: "Transaction Receipt", field: 'receipt' },
+
+
         { headerName: "User Name", field: 'name', cellRenderer: 'userCellRenderer' },
         { headerName: "User Phone", field: 'phone_number' },
-        { headerName: "Updated By", field: 'user_id' },
-        { headerName: "Remarks", field: 'remarks' },
+        { headerName: "User Remarks", field: 'message' },
         {
             headerName: "Admin Remarks",
             field: 'admin_remarks',
@@ -71,22 +71,22 @@ const FundRequests = () => {
 
     function fetchRequests(pageLink) {
         BackendAxios.get(pageLink || '/api/admin/settlement-requests').then(res => {
-            setPagination({
-                current_page: res.data.current_page,
-                total_pages: parseInt(res.data.last_page),
-                first_page_url: res.data.first_page_url,
-                last_page_url: res.data.last_page_url,
-                next_page_url: res.data.next_page_url,
-                prev_page_url: res.data.prev_page_url,
-            })
-            setRowData(res.data.data)
-            setPrintableRow(res.data.data)
+            // setPagination({
+            //     current_page: res.data.current_page,
+            //     total_pages: parseInt(res.data.last_page),
+            //     first_page_url: res.data.first_page_url,
+            //     last_page_url: res.data.last_page_url,
+            //     next_page_url: res.data.next_page_url,
+            //     prev_page_url: res.data.prev_page_url,
+            // })
+            setRowData(res.data)
+            setPrintableRow(res.data)
         }).catch(err => {
             console.log(err)
             Toast({
                 status: 'error',
                 title: 'Error Occured',
-                description: err.response.data.message || err.response.data || err.message
+                description: err.response?.data?.message || err.response?.data || err.message
             })
         })
     }
@@ -181,6 +181,7 @@ const FundRequests = () => {
         )
     }
 
+    const tableRef = useRef(null)
     return (
         <>
             <Layout pageTitle={'Fund Request'}>
@@ -189,14 +190,18 @@ const FundRequests = () => {
                 <Box py={6}>
                     <Text fontWeight={'medium'} pb={4}>Manage Fund Settlements</Text>
                     <HStack spacing={4} my={4}>
-                        <Button size={['xs', 'sm']} colorScheme={'twitter'} leftIcon={<FaFileCsv />}>CSV</Button>
-                        <Button size={['xs', 'sm']} colorScheme={'whatsapp'} leftIcon={<SiMicrosoftexcel />}>Excel</Button>
+                        <DownloadTableExcel
+                            filename="UsersList"
+                            sheet="users"
+                            currentTableRef={tableRef.current}
+                        >
+                            <Button size={['xs', 'sm']} colorScheme={'whatsapp'} leftIcon={<SiMicrosoftexcel />}>Excel</Button>
+                        </DownloadTableExcel>
                         <Button size={['xs', 'sm']} colorScheme={'red'} leftIcon={<FaFilePdf />} onClick={ExportPDF}>PDF</Button>
                         <Button size={['xs', 'sm']} colorScheme={'facebook'} leftIcon={<FaPrint />} onClick={ExportPDF}>Print</Button>
                     </HStack>
 
-
-                    <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
+                    {/* <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
                         <Button
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
@@ -230,7 +235,7 @@ const FundRequests = () => {
                             onClick={() => fetchRequests(pagination.last_page_url)}
                         ><BsChevronDoubleRight />
                         </Button>
-                    </HStack>
+                    </HStack> */}
                     <Box
                         rounded={16} overflow={'hidden'}
                         className='ag-theme-alpine ag-theme-pesa24-blue'
@@ -260,7 +265,7 @@ const FundRequests = () => {
 
                         </AgGridReact>
                     </Box>
-                    <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
+                    {/* <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
                         <Button
                             colorScheme={'twitter'}
                             fontSize={12} size={'xs'}
@@ -294,11 +299,11 @@ const FundRequests = () => {
                             onClick={() => fetchRequests(pagination.last_page_url)}
                         ><BsChevronDoubleRight />
                         </Button>
-                    </HStack>
+                    </HStack> */}
 
 
                     <VisuallyHidden>
-                        <table id='printable-table'>
+                        <table id='printable-table' ref={tableRef}>
                             <thead>
                                 <tr>
                                     <th>#</th>
