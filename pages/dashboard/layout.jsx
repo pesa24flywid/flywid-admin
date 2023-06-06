@@ -63,21 +63,25 @@ const menuOptions = [
     icon: <FaUser />,
     children: [
       {
+        id: "view-profile",
         title: "view profile",
         link: "/dashboard/profile?pageid=profile",
         status: true
       },
       {
+        id: "edit-profile",
         title: "edit profile",
         link: "/dashboard/profile/edit?pageid=profile",
         status: true
       },
       {
+        id: "reset-profile",
         title: "reset mpin",
         link: "/dashboard/profile/reset-mpin?pageid=profile",
         status: true
       },
       {
+        id: "reset-password",
         title: "reset password",
         link: "/dashboard/profile/reset-password?pageid=profile",
         status: true
@@ -93,7 +97,7 @@ const menuOptions = [
   },
   {
     type: "link",
-    id: "package",
+    id: "commission-package-view",
     name: "commission package",
     icon: <FaPercentage />,
     link: "/dashboard/commission-package/?pageid=package",
@@ -105,35 +109,35 @@ const menuOptions = [
     icon: <HiUserGroup />,
     children: [
       {
+        id: "user-create",
         title: "create user",
         link: "/dashboard/users/create-user?pageid=users",
         status: true,
       },
       {
+        id: "user-view",
         title: "users list",
         link: "/dashboard/users/users-list?pageid=users",
         status: true,
       },
       {
+        id: "user-edit",
         title: "manage user",
         link: "/dashboard/users/manage-user?pageid=users",
         status: true,
       },
       {
+        id: "manage-role-parent",
         title: "manage role & parent",
         link: "/dashboard/users/manage-user/edit-role-parent?pageid=users",
         status: true,
       },
       {
+        id: "manage-admin",
         title: "manage admin",
         link: "/dashboard/users/create-admin?pageid=users",
         status: true,
-      },
-      {
-        title: "settlement accounts",
-        link: "/dashboard/users/settlement-accounts?pageid=users",
-        status: true,
-      },
+      }
     ]
   },
   {
@@ -143,26 +147,31 @@ const menuOptions = [
     icon: <BsBriefcaseFill />,
     children: [
       {
+        id: "manage-global-services",
         title: "manage global services",
         link: "/dashboard/services/manage-services?pageid=services",
         status: true,
       },
       {
-        title: "services status",
+        id: "manage-portal-services",
+        title: "manage portal services",
         link: "/dashboard/services/services-status?pageid=services",
         status: false,
       },
       {
+        id: "manage-operator-categories",
         title: "manage operator categories",
         link: "/dashboard/services/manage-categories?pageid=services",
         status: true,
       },
       {
+        id: "manage-operators",
         title: "manage operators",
         link: "/dashboard/services/manage-operators?pageid=services",
         status: true,
       },
       {
+        id: "manage-cms-billers",
         title: "manage CMS billers",
         link: "/dashboard/services/manage-cms-billers?pageid=services",
         status: true,
@@ -176,36 +185,40 @@ const menuOptions = [
     icon: <BsCoin />,
     children: [
       {
+        id: "fund-transfer-view",
         title: "fund transfer",
         link: "/dashboard/account/fund-transfer?pageid=account",
         status: true,
       },
       {
+        id: "fund-request-view",
         title: "fund request",
         link: "/dashboard/account/fund-request?pageid=account",
         status: true,
       },
       {
+        id: "add-admin-funds",
         title: "add money",
         link: "/dashboard/account/add-money?pageid=account",
         status: true,
       },
+      // {
+      //   title: "wallet balance",
+      //   link: "/dashboard/account/wallet-balance?pageid=account",
+      //   status: false,
+      // },
+      // {
+      //   title: "wallet transactions",
+      //   link: "/dashboard/account/wallet-transactions?pageid=account",
+      //   status: false,
+      // },
+      // {
+      //   title: "add bank",
+      //   link: "/dashboard/account/add-bank?pageid=account",
+      //   status: false,
+      // },
       {
-        title: "wallet balance",
-        link: "/dashboard/account/wallet-balance?pageid=account",
-        status: false,
-      },
-      {
-        title: "wallet transactions",
-        link: "/dashboard/account/wallet-transactions?pageid=account",
-        status: false,
-      },
-      {
-        title: "add bank",
-        link: "/dashboard/account/add-bank?pageid=account",
-        status: false,
-      },
-      {
+        id: "settlement-requests-view",
         title: "settlement requests",
         link: "/dashboard/account/settlements?pageid=account",
         status: true,
@@ -218,26 +231,28 @@ const menuOptions = [
     id: "controls",
     icon: <AiFillApi />,
     children: [
+      // {
+      //   title: "add new operator",
+      //   link: "/dashboard/controls/add-operator?pageid=controls",
+      //   status: false,
+      // },
       {
-        title: "add new operator",
-        link: "/dashboard/controls/add-operator?pageid=controls",
-        status: false,
-      },
-      {
+        id: "manage-banks",
         title: "manage banks",
         link: "/dashboard/controls/manage-banks?pageid=controls",
         status: true,
       },
       {
+        id: "preferences",
         title: "preferences",
         link: "/dashboard/controls/preferences?pageid=controls",
         status: true,
       },
-      {
-        title: "manage notifications",
-        link: "/dashboard/controls/notifications?pageid=controls",
-        status: false,
-      },
+      // {
+      //   title: "manage notifications",
+      //   link: "/dashboard/controls/notifications?pageid=controls",
+      //   status: false,
+      // },
     ]
   },
   {
@@ -247,11 +262,13 @@ const menuOptions = [
     icon: <IoIosFlash />,
     children: [
       {
+        id: "organisations-view",
         title: "all organisations",
         link: "/dashboard/organisation?pageid=whitelabel",
         status: true,
       },
       {
+        id: "organisations-create",
         title: "create whitelabel",
         link: "/dashboard/organisation/create?pageid=whitelabel",
         status: true,
@@ -265,106 +282,118 @@ const menuOptions = [
     icon: <HiDocumentReport />,
     children: [
       {
+        id: "report-aeps",
         title: "aeps",
         link: "/dashboard/reports/aeps?pageid=reports",
         status: true,
       },
       {
+        id: "report-bbps",
         title: "bbps",
         link: "/dashboard/reports/bbps?pageid=reports",
         status: true,
       },
       {
+        id: "report-dmt",
         title: "dmt",
         link: "/dashboard/reports/dmt?pageid=reports",
         status: true,
       },
       {
+        id: "report-recharge",
         title: "recharge",
         link: "/dashboard/reports/recharge?pageid=reports",
         status: true,
       },
+      // {
+      //   id: "report-matm",
+      //   title: "matm",
+      //   link: "/dashboard",
+      //   status: false,
+      // },
       {
-        title: "matm",
-        link: "/dashboard",
-        status: false,
-      },
-      {
+        id: "report-payout",
         title: "payout",
         link: "/dashboard/reports/payout?pageid=reports",
         status: true,
       },
       {
+        id: "report-cms",
         title: "cms",
         link: "/dashboard/reports/cms?pageid=reports",
         status: true,
       },
+      // {
+      //   title: "pg",
+      //   link: "/dashboard",
+      //   status: false,
+      // },
+      // {
+      //   title: "qr code",
+      //   link: "/dashboard",
+      //   status: false,
+      // },
       {
-        title: "pg",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "qr code",
-        link: "/dashboard",
-        status: false,
-      },
-      {
-        title: "virtual account",
-        link: "/dashboard",
-        status: false,
-      },
-      {
+        id: "report-fund-request",
         title: "fund request",
         link: "/dashboard",
         status: true,
       },
       {
+        id: "report-fund-transfer",
         title: "fund transfer",
         link: "/dashboard",
         status: true,
       },
+      // {
+      //   title: "wallet transfer",
+      //   link: "/dashboard",
+      //   status: false,
+      // },
       {
-        title: "wallet transfer",
-        link: "/dashboard",
-        status: false,
-      },
-      {
+        title: "report-lic",
         title: "lic report",
         link: "/dashboard",
         status: false,
       },
       {
+        id: "report-fastag",
         title: "fastag",
         link: "/dashboard",
         status: false,
       },
       {
-        title: "axis account open",
+        id: "report-axis-account",
+        title: "axis accounts",
         link: "/dashboard",
         status: false,
       },
       {
+        id: "transaction-ledger",
         title: "transaction ledger",
         link: "/dashboard/reports/transactions?pageid=reports",
         status: true,
       },
       {
+        id: "daily-sales",
         title: "daily sales",
         link: "/dashboard/reports/transactions/daily?pageid=reports",
         status: true,
       },
       {
+        id: "live-sales",
         title: "live sales",
         link: "/dashboard/reports/transactions/live?pageid=reports",
         status: true,
       },
       {
+        id: "user-ledger",
         title: "user ledger",
         link: "/dashboard/reports/transactions/user-ledger?pageid=reports",
         status: true,
       },
       {
+        id: "login-reports",
         title: "login report",
         link: "/dashboard/reports/logins?pageid=reports",
         status: true,
@@ -373,8 +402,8 @@ const menuOptions = [
   },
   {
     type: "link",
+    id: "support-tickets-view",
     name: "support tickets",
-    id: "support",
     link: "/dashboard/support-tickets?pageid=support",
     icon: <IoMdHelpBuoy />,
   }
@@ -385,8 +414,7 @@ const menuOptions = [
 const Layout = (props) => {
   const Router = useRouter()
   const Toast = useToast({ position: 'top-right' })
-  const { pageid } = Router.query
-  const [activePage, setActivePage] = useState("dashboard")
+  const [myPermissions, setMyPermissions] = useState([])
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [wallet, setWallet] = useState("0")
   const [aepsStatus, setAepsStatus] = useState(true)
@@ -420,15 +448,6 @@ const Layout = (props) => {
     })
   }
 
-  // useEffect(() => {
-  //   if (Router.isReady && pageid) {
-  //     if (document.getElementById(pageid)) {
-  //       document.getElementById(pageid).style.backgroundColor = "#3C79F5"
-  //       document.getElementById(pageid).style.color = "#FFF"
-  //     }
-  //   }
-  // }, [Router.isReady])
-
   // Feeding all user details to the sidepanel
   useEffect(() => {
     setUserName(localStorage.getItem("userName"))
@@ -454,6 +473,10 @@ const Layout = (props) => {
       setWallet(res.data[0].wallet)
     }).catch((err) => {
       setWallet('0')
+    })
+
+    BackendAxios.get("/api/admin/user-permissions").then(res=>{
+      setMyPermissions(res.data?.map(permission => (permission.name)))
     })
   }, [])
 
@@ -532,7 +555,7 @@ const Layout = (props) => {
             <VStack spacing={2} w={'full'}>
               {
                 menuOptions.map((item, key) => {
-                  if (item.type == "link")
+                  if (item.type == "link" && myPermissions.includes(item.id))
                     return (
                       <Link
                         href={item.link} key={key}
@@ -569,9 +592,9 @@ const Layout = (props) => {
                           <AccordionPanel pb={4}>
                             {
                               item.children.map((child, key) => {
-                                if (child.status) {
+                                if (child.status && myPermissions.includes(child.id)) {
                                   return (
-                                    <Link href={child.link} style={{ width: "100%" }}>
+                                    <Link key={key} href={child.link} style={{ width: "100%" }}>
                                       <Text
                                         fontSize={'md'}
                                         textTransform={'capitalize'}
