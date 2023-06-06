@@ -8,7 +8,16 @@ import {
     Button,
     Box,
     VisuallyHidden,
-    useToast
+    useToast,
+    useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    PinInput,
+    PinInputField
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import { SiMicrosoftexcel } from 'react-icons/si'
@@ -33,6 +42,9 @@ const FundRequests = () => {
     const Toast = useToast({
         position: 'top-right'
     })
+    const { isOpen, onClose, onOpen } = useDisclosure()
+    const [currentCell, setCurrentCell] = useState({})
+    const [mpin, setMpin] = useState("")
     const [rowData, setRowData] = useState([])
     const [columnDefs, setColumnDefs] = useState([
         {
@@ -97,34 +109,14 @@ const FundRequests = () => {
 
 
     const statusCellRenderer = (params) => {
-        function updateFundRequest(updateTo) {
-            console.log(params)
-            if (updateTo == "approved") {
-                BackendAxios.post(`/api/admin/update-fund-requests`, {
-                    id: params.data.id,
-                    beneficiaryId: params.data.user_id,
-                    status: updateTo,
-                    amount: params.data.amount
-                }).then(res => {
-                    Toast({
-                        status: 'success',
-                        description: 'Status Updated'
-                    })
-                    fetchRequests()
-                }).catch(err => {
-                    Toast({
-                        status: 'error',
-                        description: err.response.data.message || err.response.data || err.message
-                    })
-                })
-            }
-            if (updateTo == "reversed" || updateTo == "deleted" && params.data.admin_remarks) {
-                BackendAxios.post(`/api/admin/update-fund-requests`, {
+        function updateRequest(updateTo) {
+            if (updateTo == "reversed" && params.data.admin_remarks) {
+                BackendAxios.post(`/api/admin/settlement-requests`, {
                     beneficiaryId: params.data.user_id,
                     id: params.data.id,
                     status: updateTo,
-                    amount: 0,
-                    remarks: params.data.admin_remarks
+                    approved: false,
+                    adminRemarks: params.data.admin_remarks
                 }).then(res => {
                     Toast({
                         status: 'success',
@@ -148,9 +140,12 @@ const FundRequests = () => {
 
         return (
             <>
-                <HStack h={'full'}>
+                <HStack h={'full'} pos={'relative'}>
                     {params.data.status == "pending" &&
-                        <Button size={'xs'} leftIcon={<BsCheck />} colorScheme='whatsapp' onClick={() => updateFundRequest("approved")}>Approve</Button>
+                        <Button size={'xs'} leftIcon={<BsCheck />} colorScheme='whatsapp' onClick={() => {
+                            setCurrentCell(params)
+                            onOpen()
+                        }}>Approve</Button>
                     }
                     {params.data.status != "pending" &&
                         <Button
@@ -162,11 +157,7 @@ const FundRequests = () => {
                     }
                     {
                         params.data.status == "pending" &&
-                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='orange' onClick={() => updateFundRequest("reversed")}>Reject</Button>
-                    }
-                    {
-                        params.data.status == "pending" &&
-                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='red' onClick={() => updateFundRequest("deleted")}>Delete</Button>
+                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='orange' onClick={() => updateRequest("reversed")}>Reject</Button>
                     }
                 </HStack>
             </>
@@ -181,13 +172,50 @@ const FundRequests = () => {
         )
     }
 
+    function approveRequest(params) {
+        Toast({
+            description: 'Payout initiated'
+        })
+
+        BackendAxios.post('api/paysprint/payout/new-payout', {
+            amount: params.data.amount,
+            userId: params.data.user_id,
+            mpin: mpin
+        }).then(() => {
+            BackendAxios.post(`/api/admin/settlement-requests`, {
+                id: params.data.id,
+                beneficiaryId: params.data.user_id,
+                status: "approved",
+                adminRemarks: params.data.admin_remarks || "Request approved!",
+                approved: true
+            }).then(res => {
+                Toast({
+                    status: 'success',
+                    description: 'Payout Successful!'
+                })
+                fetchRequests()
+                onClose()
+            }).catch(err => {
+                Toast({
+                    status: 'error',
+                    description: err.response?.data?.message || err.response?.data || err.message
+                })
+            })
+        }).catch(err => {
+            Toast({
+                status: 'error',
+                description: err.response?.data?.message || err.response?.data || err.message
+            })
+        })
+    }
+
     const tableRef = useRef(null)
     return (
         <>
-            <Layout pageTitle={'Fund Request'}>
+            <Layout pageTitle={'Settlement Request'}>
                 <Text fontWeight={'semibold'} fontSize={'lg'}>Fund Settlement Requests From Your Members</Text>
 
-                <Box py={6}>
+                <Box py={6} pos={'relative'}>
                     <Text fontWeight={'medium'} pb={4}>Manage Fund Settlements</Text>
                     <HStack spacing={4} my={4}>
                         <DownloadTableExcel
@@ -346,6 +374,30 @@ const FundRequests = () => {
 
                 </Box>
             </Layout>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader textAlign={'center'}>
+                        Enter your MPIN to confirm payout.
+                    </ModalHeader>
+                    <ModalBody>
+                        <HStack alignItems={'center'} justifyContent={'center'}>
+                            <PinInput otp onComplete={value => setMpin(value)}>
+                                <PinInputField bg={'aqua'} />
+                                <PinInputField bg={'aqua'} />
+                                <PinInputField bg={'aqua'} />
+                                <PinInputField bg={'aqua'} />
+                            </PinInput>
+                        </HStack>
+                    </ModalBody>
+                    <ModalFooter>
+                        <HStack justifyContent={'flex-end'}>
+                            <Button colorScheme='twitter' onClick={() => approveRequest(currentCell)}>Confirm</Button>
+                        </HStack>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </>
     )
 }

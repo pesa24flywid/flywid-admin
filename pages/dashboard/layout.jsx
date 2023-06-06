@@ -22,6 +22,7 @@ import {
   AccordionButton,
   AccordionPanel,
   useToast,
+  Avatar
 } from '@chakra-ui/react'
 import Head from 'next/head'
 import {
@@ -524,10 +525,7 @@ const Layout = (props) => {
             color={'#FFF'}
           >
             <VStack py={8}>
-              <Image
-                src={profilePic || 'https://xsgames.co/randomusers/assets/avatars/male/8.jpg'}
-                boxSize={24} rounded={'full'} border={'2px'}
-              />
+              <Avatar name={userName} src={profilePic} size={['sm', 'xl']} border={'2px'} borderColor={'#FFF'} />
               <Text fontSize={'xl'} color={'#FFF'} textTransform={'capitalize'}>{userName}</Text>
               <Text fontSize={'sm'} color={'#FAFAFA'} textTransform={'capitalize'}>Pesa24 - {userType}</Text>
             </VStack>
