@@ -315,6 +315,16 @@ const Index = () => {
             })
         })
     }
+
+    // function searchUser(e) {
+    //     if (!e || e == "") {
+    //         fetchUsersList()
+    //         return
+    //     }
+    //     setFetchedUsers(fetchedUsers.filter(user => (Number(user.id) == Number(e.target.value) || user.first_name?.toUpperCase() === e.target.value?.toUpperCase() || user.last_name?.toUpperCase() === e.target.value?.toUpperCase() || Number(user.phone_number) == Number(e.target.value))
+    //     ))
+    // }
+
     const tableRef = useRef(null)
     return (
         <>
@@ -404,11 +414,12 @@ const Index = () => {
                                                     Print
                                                 </Button>
                                             </HStack>
-                                            <Input
+                                            {/* <Input
                                                 bg={'white'}
                                                 w={['full', 'xs']}
                                                 placeholder={'Search Here'}
-                                            />
+                                                onChange={e => searchUser(e)}
+                                            /> */}
                                         </Stack>
 
                                         <HStack spacing={2} mt={12} py={4} bg={'white'} justifyContent={'center'}>
@@ -447,7 +458,7 @@ const Index = () => {
                                             </Button>
                                         </HStack>
                                         {/* Table */}
-                                        <TableContainer my={6}>
+                                        <TableContainer my={6} h={'xl'} overflowY={'scroll'}>
                                             {isLoading ? <Text>Loading data please wait...</Text> :
                                                 <Table variant='striped' colorScheme='teal'>
                                                     <Thead>

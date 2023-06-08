@@ -221,9 +221,9 @@ const CreateAdmin = () => {
           direction={['column', 'row']}
           gap={8} justifyContent={'space-between'}
         >
-          <Box p={4} 
+          <Box p={4}
             flex={['unset', 2]}
-            >
+          >
             <Text fontSize={'lg'} fontWeight={'semibold'} my={4}>Manage Admin Members</Text>
             <Stack
               direction={['column', 'row']}
@@ -300,8 +300,8 @@ const CreateAdmin = () => {
                         })
                       }
                     </CheckboxGroup>
-                    <Button colorScheme={'twitter'} leftIcon={<BiCheck fontSize={20} />} onClick={saveUserPermissions}>Save Permissions</Button>
                   </Flex>
+                  <Button mt={8} colorScheme={'twitter'} leftIcon={<BiCheck fontSize={20} />} onClick={saveUserPermissions}>Save Permissions</Button>
                 </Box>
 
               ) : fetchedUser.role == "retailer" ? <Button colorScheme={'twitter'} onClick={() => changeRole('admin')}>Make Admin</Button> : null

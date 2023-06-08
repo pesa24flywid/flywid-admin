@@ -26,8 +26,8 @@ const Index = () => {
     const Toast = useToast({ position: 'top-right' })
     const [organisations, setOrganisations] = useState([])
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [selectedOrganisationId, setSelectedOrganisationId] = useState("")
-    useEffect(() => {
+
+    function fetchOrganisations(){
         BackendAxios.get('/api/admin/organizations').then(res => {
             setOrganisations(res.data)
         }).catch(err => {
@@ -37,11 +37,16 @@ const Index = () => {
                 description: err.response?.data?.message || err.response?.data || err.message
             })
         })
+    }
+
+    useEffect(() => {
+        fetchOrganisations()
     }, [])
+
 
     const Formik = useFormik({
         initialValues: {
-            firmId: "",
+            organizationId: "",
             firmName: "",
             authorisedNumbers: "",
             code: "",
@@ -49,36 +54,49 @@ const Index = () => {
             email: "",
             phoneNumber: "",
             coi: "",
-            coiAttachment: null,
             gst: "",
-            gstAttachment: null,
             mou: "",
-            mouAttachment: null,
             aoa: "",
-            aoaAttachment: null,
             firmPan: "",
-            firmPanAttachment: null,
             signatoryPan: "",
-            signatoryPanAttachment: null,
             signatoryAadhaar: "",
-            signatoryAadhaarAttachment: null,
-            signatoryPhoto: null,
         },
         onSubmit: (values) => {
-            FormAxios.post(`/api/admin/create-organization`, values).then(res => {
+            FormAxios.post(`/api/admin/update-organization`, values).then(res => {
                 Toast({
                     status: 'success',
-                    description: 'Whitelable organisation added'
+                    description: 'Whitelable organisation updated'
                 })
+                onClose()
+                fetchOrganisations()
             }).catch(err => {
                 Toast({
                     status: 'error',
                     title: 'Error while creating organisation',
                     description: err.response?.data?.message || err.response?.data || err.message
                 })
+                onClose()
             })
         }
     })
+
+    useEffect(()=>{
+        BackendAxios.get(`/api/admin/organizations/${Formik.values.organizationId}`).then(res=>{
+            if(res.data.length){
+                Formik.setFieldValue("firmName", res.data[0].firm_name)
+                Formik.setFieldValue("phoneNumber", res.data[0].phone_number)
+                Formik.setFieldValue("firmAddress", res.data[0].firm_address)
+                Formik.setFieldValue("email", res.data[0].email)
+                Formik.setFieldValue("coi", res.data[0].coi)
+                Formik.setFieldValue("gst", res.data[0].gst)
+                Formik.setFieldValue("mou", res.data[0].mou)
+                Formik.setFieldValue("aoa", res.data[0].aoa)
+                Formik.setFieldValue("firmPan", res.data[0].firm_pan)
+                Formik.setFieldValue("signatoryPan", res.data[0].signatory_pan)
+                Formik.setFieldValue("signatoryAadhaar", res.data[0].signatory_aadhaar)
+            }
+        })
+    },[Formik.values.organizationId])
 
     return (
         <>
@@ -97,7 +115,7 @@ const Index = () => {
                                     key={key} p={4}
                                     bg={'#FFF'}
                                     onClick={() => {
-                                        Formik.setFieldValue("firmId", organisation.id)
+                                        Formik.setFieldValue("organizationId", organisation.id)
                                         onOpen()
                                     }}
                                 >
@@ -108,37 +126,37 @@ const Index = () => {
                                     >{organisation.firm_name} ({organisation.code})
                                     </Text>
                                     <HStack justifyContent={'space-between'}>
-                                        <Text fontWeight={'semibold'}>PAN:</Text>
-                                        <Text textTransform={'uppercase'}>{organisation.firm_pan}</Text>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>PAN:</Text>
+                                        <Text fontSize={'xs'} textTransform={'uppercase'}>{organisation.firm_pan}</Text>
                                     </HStack>
                                     <HStack justifyContent={'space-between'}>
-                                        <Text fontWeight={'semibold'}>AoA:</Text>
-                                        <Text textTransform={'uppercase'}>{organisation.aoa}</Text>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>AoA:</Text>
+                                        <Text fontSize={'xs'} textTransform={'uppercase'}>{organisation.aoa}</Text>
                                     </HStack>
                                     <HStack justifyContent={'space-between'}>
-                                        <Text fontWeight={'semibold'}>CoI:</Text>
-                                        <Text textTransform={'uppercase'}>{organisation.coi}</Text>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>CoI:</Text>
+                                        <Text fontSize={'xs'} textTransform={'uppercase'}>{organisation.coi}</Text>
                                     </HStack>
                                     <HStack justifyContent={'space-between'}>
-                                        <Text fontWeight={'semibold'}>GST:</Text>
-                                        <Text textTransform={'uppercase'}>{organisation.gst}</Text>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>GST:</Text>
+                                        <Text fontSize={'xs'} textTransform={'uppercase'}>{organisation.gst}</Text>
                                     </HStack>
                                     <HStack justifyContent={'space-between'}>
-                                        <Text fontWeight={'semibold'}>MoU:</Text>
-                                        <Text textTransform={'uppercase'}>{organisation.mou}</Text>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>MoU:</Text>
+                                        <Text fontSize={'xs'} textTransform={'uppercase'}>{organisation.mou}</Text>
                                     </HStack>
                                     <br />
                                     <HStack justifyContent={'space-between'}>
-                                        <Text fontWeight={'semibold'}>Signatory PAN:</Text>
-                                        <Text textTransform={'uppercase'}>{organisation.signatory_pan}</Text>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Signatory PAN:</Text>
+                                        <Text fontSize={'xs'} textTransform={'uppercase'}>{organisation.signatory_pan}</Text>
                                     </HStack>
                                     <HStack justifyContent={'space-between'}>
-                                        <Text fontWeight={'semibold'}>Signatory Aadhaar:</Text>
-                                        <Text textTransform={'uppercase'}>{organisation.signatory_aadhaar}</Text>
+                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Signatory Aadhaar:</Text>
+                                        <Text fontSize={'xs'} textTransform={'uppercase'}>{organisation.signatory_aadhaar}</Text>
                                     </HStack>
                                     <br />
-                                    <Text>{organisation.email}</Text>
-                                    <Text>{organisation.phone_number}</Text>
+                                    <Text fontSize={'xs'}>{organisation.email}</Text>
+                                    <Text fontSize={'xs'}>{organisation.phone_number}</Text>
                                 </Box>
                             ))
                         }
@@ -154,111 +172,60 @@ const Index = () => {
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Company Name</FormLabel>
-                                <Input name='firmName' onChange={Formik.handleChange} />
+                                <Input name='firmName' value={Formik.values.firmName} onChange={Formik.handleChange} />
                             </FormControl>
                             <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Comapny Code</FormLabel>
-                                <Input name='code' onChange={Formik.handleChange} />
+                                <FormLabel>Phone Number</FormLabel>
+                                <Input name='phoneNumber' value={Formik.values.phoneNumber} onChange={Formik.handleChange} />
                             </FormControl>
                         </Stack>
 
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Phone Number</FormLabel>
-                                <Input name='phoneNumber' onChange={Formik.handleChange} />
+                                <FormLabel>Email</FormLabel>
+                                <Input name='email' value={Formik.values.email} onChange={Formik.handleChange} />
                             </FormControl>
                             <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Email</FormLabel>
-                                <Input name='email' onChange={Formik.handleChange} />
+                                <FormLabel>COI</FormLabel>
+                                <Input name='coi' value={Formik.values.coi} onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
                         </Stack>
 
                         <FormControl pb={4} w={['full', 'lg']}>
                             <FormLabel>Company Address</FormLabel>
-                            <Textarea name='firmAddress' onChange={Formik.handleChange} />
+                            <Textarea name='firmAddress' value={Formik.values.firmAddress} onChange={Formik.handleChange} />
                         </FormControl>
 
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>COI</FormLabel>
-                                <Input name='coi' onChange={Formik.handleChange} textTransform={'uppercase'} />
-                            </FormControl>
-                            <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Upload COI</FormLabel>
-                                <Input name='coiAttachment' type='file' onChange={e => Formik.setFieldValue("coiAttachment", e.currentTarget.files[0])} />
-                            </FormControl>
-                        </Stack>
-
-                        <Stack mb={4} direction={['column', 'row']} spacing={8}>
-                            <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>GST</FormLabel>
-                                <Input name='gst' onChange={Formik.handleChange} textTransform={'uppercase'} />
+                                <Input name='gst' value={Formik.values.gst} onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
-                            <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Upload GST</FormLabel>
-                                <Input name='gstAttachment' type='file' onChange={e => Formik.setFieldValue("gstAttachment", e.currentTarget.files[0])} />
-                            </FormControl>
-                        </Stack>
-
-                        <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>MOU</FormLabel>
-                                <Input name='mou' onChange={Formik.handleChange} textTransform={'uppercase'} />
-                            </FormControl>
-                            <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Upload MOU</FormLabel>
-                                <Input name='mouAttachment' type='file' onChange={e => Formik.setFieldValue("mouAttachment", e.currentTarget.files[0])} />
+                                <Input name='mou' value={Formik.values.mou} onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
                         </Stack>
 
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>AOA</FormLabel>
-                                <Input name='aoa' onChange={Formik.handleChange} textTransform={'uppercase'} />
+                                <Input name='aoa' value={Formik.values.aoa} onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
-                            <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Upload AOA</FormLabel>
-                                <Input name='aoaAttachment' type='file' onChange={e => Formik.setFieldValue("aoaAttachment", e.currentTarget.files[0])} />
-                            </FormControl>
-                        </Stack>
-
-                        <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Firm PAN</FormLabel>
-                                <Input name='firmPan' onChange={Formik.handleChange} textTransform={'uppercase'} />
-                            </FormControl>
-                            <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Upload PAN</FormLabel>
-                                <Input name='firmPanAttachment' type='file' onChange={e => Formik.setFieldValue("firmPanAttachment", e.currentTarget.files[0])} />
+                                <Input name='firmPan' value={Formik.values.firmPan} onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
                         </Stack>
 
                         <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Signatory PAN</FormLabel>
-                                <Input name='signatoryPan' onChange={Formik.handleChange} textTransform={'uppercase'} />
+                                <Input name='signatoryPan' value={Formik.values.signatoryPan} onChange={Formik.handleChange} textTransform={'uppercase'} />
                             </FormControl>
-                            <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Upload Signatory PAN</FormLabel>
-                                <Input name='signatoryPanAttachment' type='file' onChange={e => Formik.setFieldValue("signatoryPanAttachment", e.currentTarget.files[0])} />
-                            </FormControl>
-                        </Stack>
-
-                        <Stack mb={4} direction={['column', 'row']} spacing={8}>
                             <FormControl pb={4} w={['full', 'xs']}>
                                 <FormLabel>Signatory Aadhaar</FormLabel>
-                                <Input name='signatoryAadhaar' type='phone' onChange={Formik.handleChange} />
-                            </FormControl>
-                            <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Upload Signatory Aadhaar</FormLabel>
-                                <Input name='signatoryAadhaarAttachment' type='file' onChange={e => Formik.setFieldValue("signatoryAadhaarAttachment", e.currentTarget.files[0])} />
-                            </FormControl>
-                        </Stack>
-
-                        <Stack mb={4} direction={['column', 'row']} spacing={8}>
-                            <FormControl pb={4} w={['full', 'xs']}>
-                                <FormLabel>Upload Signatory Photo</FormLabel>
-                                <Input name='signatoryPhoto' type='file' onChange={e => Formik.setFieldValue("signatoryPhoto", e.currentTarget.files[0])} />
+                                <Input name='signatoryAadhaar' value={Formik.values.signatoryAadhaar} type='phone' onChange={Formik.handleChange} />
                             </FormControl>
                         </Stack>
                     </ModalBody>
