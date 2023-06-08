@@ -223,6 +223,7 @@ const Ledger = () => {
                             floatingFilter: true,
                             resizable: true,
                         }}
+                        onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
                         components={{
                             'userCellRenderer': userCellRenderer
                         }}

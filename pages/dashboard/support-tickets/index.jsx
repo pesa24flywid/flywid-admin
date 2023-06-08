@@ -130,6 +130,7 @@ const SupportTickets = () => {
                         components={{
                             'userCellRenderer': userCellRenderer
                         }}
+                        onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
                         onCellValueChanged={onCellValueChange}
                     >
 

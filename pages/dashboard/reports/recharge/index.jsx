@@ -275,6 +275,7 @@ const Index = () => {
                                 resizable: true,
                                 sortable: true,
                             }}
+                            onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
                             components={{
                                 'receiptCellRenderer': receiptCellRenderer,
                                 'creditCellRenderer': creditCellRenderer,

@@ -168,6 +168,7 @@ const Ledger = () => {
                             floatingFilter: true,
                             resizable: true,
                         }}
+                        onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
                         onFilterChanged={
                             (params) => {
                                 setPrintableRow(params.api.getRenderedNodes().map((item) => {

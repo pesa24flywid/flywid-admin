@@ -58,6 +58,7 @@ const Index = () => {
                         <AgGridReact
                             rowData={rowData}
                             columnDefs={columnDefs}
+                            onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
                         >
 
                         </AgGridReact>
