@@ -1,11 +1,10 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-*{
+* {
     font-family: 'Poppins', sans-serif;
 }
 
-td{
+td {
     vertical-align: top;
 }
 
@@ -21,10 +20,17 @@ td{
     color: #FFF;
     font-size: 10px;
 }
+
 .ag-theme-pesa24-blue .ag-cell {
     font-size: 10px;
 }
 
 .ag-theme-pesa24-blue .ag-floating-filter {
     color: #333;
+}
+
+@media print {
+    .hide-print {
+        visibility: hidden;
+    }
 }

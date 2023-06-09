@@ -77,6 +77,7 @@ const Index = () => {
     const Toast = useToast({
         position: 'top-right'
     })
+    const [query, setQuery] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [userObjId, setUserObjId] = useState("")
     const [permissionsDrawer, setPermissionsDrawer] = useState(false)
@@ -316,14 +317,9 @@ const Index = () => {
         })
     }
 
-    // function searchUser(e) {
-    //     if (!e || e == "") {
-    //         fetchUsersList()
-    //         return
-    //     }
-    //     setFetchedUsers(fetchedUsers.filter(user => (Number(user.id) == Number(e.target.value) || user.first_name?.toUpperCase() === e.target.value?.toUpperCase() || user.last_name?.toUpperCase() === e.target.value?.toUpperCase() || Number(user.phone_number) == Number(e.target.value))
-    //     ))
-    // }
+    function searchUser(e) {
+
+    }
 
     const tableRef = useRef(null)
     return (
@@ -376,14 +372,6 @@ const Index = () => {
                                             alignItems={'center'}
                                         >
                                             <HStack spacing={4}>
-                                                <Button
-                                                    size={['xs', 'sm']}
-                                                    colorScheme={'twitter'}
-                                                    leftIcon={<FaFileCsv />}
-                                                >
-                                                    CSV
-                                                </Button>
-
                                                 <DownloadTableExcel
                                                     filename="UsersList"
                                                     sheet="users"
@@ -414,12 +402,15 @@ const Index = () => {
                                                     Print
                                                 </Button>
                                             </HStack>
-                                            {/* <Input
-                                                bg={'white'}
-                                                w={['full', 'xs']}
-                                                placeholder={'Search Here'}
-                                                onChange={e => searchUser(e)}
-                                            /> */}
+                                            <HStack>
+                                                <Input
+                                                    bg={'white'}
+                                                    w={['full', 'xs']}
+                                                    placeholder={'Search User ID or Number'}
+                                                    onChange={e => setQuery(e.target.value)}
+                                                />
+                                                <Button colorScheme='twitter' onClick={searchUser}>Search</Button>
+                                            </HStack>
                                         </Stack>
 
                                         <HStack spacing={2} mt={12} py={4} bg={'white'} justifyContent={'center'}>

@@ -63,25 +63,25 @@ const menuOptions = [
     icon: <FaUser />,
     children: [
       {
-        id: "view-profile",
+        id: "basic-view-profile",
         title: "view profile",
         link: "/dashboard/profile?pageid=profile",
         status: true
       },
       {
-        id: "edit-profile",
+        id: "basic-edit-profile",
         title: "edit profile",
         link: "/dashboard/profile/edit?pageid=profile",
         status: true
       },
       {
-        id: "reset-profile",
+        id: "basic-reset-mpin",
         title: "reset mpin",
         link: "/dashboard/profile/reset-mpin?pageid=profile",
         status: true
       },
       {
-        id: "reset-password",
+        id: "basic-reset-password",
         title: "reset password",
         link: "/dashboard/profile/reset-password?pageid=profile",
         status: true
@@ -90,7 +90,7 @@ const menuOptions = [
   },
   {
     type: "link",
-    name: "dashboard",
+    name: "basic-dashboard",
     id: "dashboard",
     link: "/dashboard?pageid=dashboard",
     icon: <BsSpeedometer />
@@ -218,7 +218,8 @@ const menuOptions = [
       //   status: false,
       // },
       {
-        id: "settlement-requests-view",
+        // id: "settlement-requests-view",
+        id: "settlement-account",
         title: "settlement requests",
         link: "/dashboard/account/settlements?pageid=account",
         status: true,
@@ -262,13 +263,13 @@ const menuOptions = [
     icon: <IoIosFlash />,
     children: [
       {
-        id: "organisations-view",
+        id: "all-organizations",
         title: "all organisations",
         link: "/dashboard/organisation?pageid=whitelabel",
         status: true,
       },
       {
-        id: "organisations-create",
+        id: "create-whitelabel",
         title: "create whitelabel",
         link: "/dashboard/organisation/create?pageid=whitelabel",
         status: true,
@@ -546,6 +547,7 @@ const Layout = (props) => {
             overflowY={'scroll'}
             paddingX={2}
             color={'#FFF'}
+            className='hide-print'
           >
             <VStack py={8}>
               <Avatar name={userName} src={profilePic} size={['sm', 'xl']} border={'2px'} borderColor={'#FFF'} />
@@ -555,7 +557,8 @@ const Layout = (props) => {
             <VStack spacing={2} w={'full'}>
               {
                 menuOptions.map((item, key) => {
-                  if (item.type == "link" && myPermissions.includes(item.id))
+                  // if (item.type == "link" && myPermissions.includes(item.id))
+                  if (item.type == "link")
                     return (
                       <Link
                         href={item.link} key={key}
@@ -592,7 +595,8 @@ const Layout = (props) => {
                           <AccordionPanel pb={4}>
                             {
                               item.children.map((child, key) => {
-                                if (child.status && myPermissions.includes(child.id)) {
+                                // if (child.status && myPermissions.includes(child.id)) {
+                                if (child.status) {
                                   return (
                                     <Link key={key} href={child.link} style={{ width: "100%" }}>
                                       <Text
@@ -638,14 +642,14 @@ const Layout = (props) => {
             justifyContent={['center', 'space-between']}>
             <HStack justifyContent={'space-between'}>
               <Show below='md'>
-                <Button variant={'unstyled'} onClick={onOpen}>
+                <Button variant={'unstyled'} className='hide-print' onClick={onOpen}>
                   <HiOutlineMenuAlt1 fontSize={20} />
                 </Button>
               </Show>
               {/* <Image src='/logo_long.png' w={16} /> */}
               <Text fontSize={'lg'} fontWeight={'bold'}>Pesa24</Text>
             </HStack>
-            <HStack spacing={6} justifyContent={['space-between']}>
+            <HStack spacing={6} justifyContent={['space-between']} className='hide-print'>
               <Stack direction={['column', 'row']} spacing={2}>
                 <Text fontSize={'xs'}>AePS</Text>
                 <Switch

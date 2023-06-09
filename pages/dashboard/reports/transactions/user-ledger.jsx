@@ -93,6 +93,11 @@ const UserLedger = () => {
             field: "created_at"
         },
         {
+            headerName: "Transaction Status",
+            field: 'status',
+            cellRenderer: 'statusCellRenderer'
+        },
+        {
             headerName: "Additional Info",
             field: "metadata"
         },

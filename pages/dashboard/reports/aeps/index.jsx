@@ -35,6 +35,11 @@ import 'jspdf-autotable'
 import Layout from '../../layout';
 import { DownloadTableExcel } from 'react-export-table-to-excel';
 import { SiMicrosoftexcel } from 'react-icons/si';
+import { Stack } from '@chakra-ui/react';
+import { FormControl } from '@chakra-ui/react';
+import { FormLabel } from '@chakra-ui/react';
+import { Input } from '@chakra-ui/react';
+import { useFormik } from 'formik';
 
 function StatementTable({ ministatement }) {
     if (typeof (ministatement) == Array && ministatement.length === 0) {
@@ -152,7 +157,7 @@ const Index = () => {
     ])
 
     function fetchTransactions(pageLink) {
-        BackendAxios.get(pageLink || `/api/admin/transactions-type/${transactionKeyword}?page=1`).then((res) => {
+        BackendAxios.get(pageLink || `/api/admin/transactions-type/${transactionKeyword}?from=${Formik.values.from}&to=${Formik.values.to}&page=1`).then((res) => {
             setPagination({
                 current_page: res.data.current_page,
                 total_pages: parseInt(res.data.last_page),
@@ -238,6 +243,13 @@ const Index = () => {
         )
     }
 
+    const Formik = useFormik({
+        initialValues: {
+            from: "",
+            to: ""
+        }
+    })
+
     return (
         <>
             <Layout pageTitle={'AePS Reports'}>
@@ -257,6 +269,34 @@ const Index = () => {
                         </Button>
                     </DownloadTableExcel>
                     <Button onClick={ExportPDF} colorScheme={'red'} size={'sm'}>Export PDF</Button>
+                </HStack>
+                <Box p={2} bg={'twitter.500'}>
+                    <Text color={'#FFF'}>Search Transactions</Text>
+                </Box>
+                <Stack
+                    p={4} spacing={8} w={'full'}
+                    direction={['column', 'row']}
+                >
+                    <FormControl w={['full', 'xs']}>
+                        <FormLabel>From Date</FormLabel>
+                        <Input
+                            name='from' onChange={Formik.handleChange}
+                            type='date' bg={'white'}
+                        />
+                    </FormControl>
+                    <FormControl w={['full', 'xs']}>
+                        <FormLabel>To Date</FormLabel>
+                        <Input
+                            name='to' onChange={Formik.handleChange}
+                            type='date' bg={'white'}
+                        />
+                    </FormControl>
+                </Stack>
+                <HStack mb={4} justifyContent={'flex-end'}>
+                    <Button
+                        onClick={() => fetchTransactions()}
+                        colorScheme={'twitter'}
+                    >Search</Button>
                 </HStack>
                 <HStack spacing={2} py={4} mt={24} bg={'white'} justifyContent={'center'}>
                     <Button

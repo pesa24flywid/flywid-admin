@@ -283,6 +283,27 @@ const CreateAdmin = () => {
                   <Button colorScheme={'whatsapp'} mb={6} onClick={() => changeRole('retailer')}>Make Retailer</Button>
 
                   <Text py={8} pb={4} fontSize={'lg'} fontWeight={'semibold'}>Manage Permissions</Text>
+                  <Text pt={4} fontSize={'sm'}>Basic Permissions</Text>
+                  <Flex direction={'row'} gap={4} justifyContent={'flex-start'} flexWrap={'wrap'} pb={4}>
+                    <CheckboxGroup onChange={values => setPermissions(values)} defaultValue={fetchedUser.permissions}>
+                      {
+                        predefinedPermissions.map((permission, key) => {
+                          if (permission.value.includes("basic"))
+                            return (
+                              <Checkbox
+                                w={['full', 'xs']}
+                                value={permission.value}
+                                textTransform={'capitalize'}
+                                key={key} py={1} rounded={8}
+                              >
+                                {permission.value.replace(/-/g, " ")}
+                              </Checkbox>
+                            )
+                        })
+                      }
+                    </CheckboxGroup>
+                  </Flex>
+                  <hr />
                   <Text pt={4} fontSize={'sm'}>User Related Permissions</Text>
                   <Flex direction={'row'} gap={4} justifyContent={'flex-start'} flexWrap={'wrap'} pb={4}>
                     <CheckboxGroup onChange={values => setPermissions(values)} defaultValue={fetchedUser.permissions}>
@@ -383,6 +404,7 @@ const CreateAdmin = () => {
                               && !permission.value.includes("sale")
                               && !permission.value.includes("transaction")
                               && !permission.value.includes("account")
+                              && !permission.value.includes("basic")
                             )
                               return (
                                 <Checkbox
