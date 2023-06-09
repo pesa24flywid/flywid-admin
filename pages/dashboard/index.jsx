@@ -6,12 +6,14 @@ import {
   HStack,
   Select,
   Text,
-  VStack
+  VStack,
+  TableContainer,
+  Table,
+  Thead,
+  Tr, Th, Td,
+  Tbody
 } from '@chakra-ui/react'
 import DataCard, { TransactionCard } from '@/HOC/DataCard'
-import {
-  SiRazorpay
-} from 'react-icons/si'
 import {
   FaUserAlt,
   FaUserPlus,
@@ -22,11 +24,13 @@ import {
 import {
   IoMdHelpBuoy,
 } from 'react-icons/io'
-
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import BackendAxios from '@/lib/utils/axios'
+import { Doughnut } from 'react-chartjs-2';
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js'
+Chart.register(ArcElement, Tooltip, Legend);
 
 const Index = () => {
   const [rowData, setRowData] = useState([
@@ -96,10 +100,10 @@ const Index = () => {
     }).then(() => {
       BackendAxios.get(`/api/admin/role-count/retailer`).then(res => {
         setRetailers(res.data)
-      }).then(()=>{
+      }).then(() => {
         BackendAxios.get(`/api/admin/role-count/distributor`).then(res => {
           setDistributors(res.data)
-        }).then(()=>{
+        }).then(() => {
           BackendAxios.get(`/api/admin/role-count/super_distributor`).then(res => {
             setSuperDistributors(res.data)
           })
@@ -109,6 +113,35 @@ const Index = () => {
       console.log(err)
     })
   }
+
+  const data = {
+    labels: ['AePS', 'DMT', 'Recharge', 'BBPS'],
+    datasets: [
+      {
+        data: [
+          Math.abs(aepsData?.credit - aepsData?.debit), 
+          Math.abs(dmtData?.credit - dmtData?.debit), 
+          Math.abs(rechargeData?.credit - rechargeData?.debit), 
+          Math.abs(bbpsData?.credit - bbpsData?.debit)
+        ],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#36F5AB'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#36D6EB'],
+      },
+    ],
+  };
+
+  const options = {
+    maintainAspectRatio: false,
+    responsive: true,
+    cutout: 20,
+    legend: {
+      display: true,
+      position: 'bottom', // Adjust the position of the legend (e.g., 'top', 'left', 'right', 'bottom')
+      labels: {
+        fontSize: 12,
+      },
+    },
+  };
 
   return (
     <>
@@ -127,71 +160,115 @@ const Index = () => {
               <option value="year">1 Year</option>
             </Select>
           </HStack>
-          <Stack direction={['row']}
-            w={'full'} py={2} spacing={[0, 4]}
-            justifyContent={'space-between'}
-            flexWrap={'wrap'} alignItems={['flex-start']}
-          >
-            <DataCard
-              title={'Logins'}
-              data={usersData?.login}
-              icon={<BiLogIn color='#FF7B54' size={'32'} />}
-              color={'#FF7B54'}
-            />
-            <DataCard
-              title={'Registrations'}
-              data={usersData?.registration}
-              icon={<FaUserPlus color='#FF7B54' size={'28'} />}
-              color={'#FF7B54'}
-            />
-            <DataCard
-              title={'Support Tickets'}
-              data={usersData?.tickets}
-              icon={<IoMdHelpBuoy color='#FF7B54' size={'32'} />}
-              color={'#FF7B54'}
-            />
-          </Stack>
-          <Stack direction={['row']}
-            w={'full'} py={2} spacing={[0, 4]}
-            justifyContent={'space-between'}
-            flexWrap={'wrap'} alignItems={['flex-start']}
-          >
-            <DataCard
-              title={'Retailers'}
-              data={retailers}
-              icon={<FaUserAlt color='#6C00FF' size={'32'} />}
-              color={'#6C00FF'}
-            />
-            <DataCard
-              title={'Distributors'}
-              data={distributors}
-              icon={<FaUserAlt color='#6C00FF' size={'28'} />}
-              color={'#6C00FF'}
-            />
-            <DataCard
-              title={'Super Distributors'}
-              data={superDistributors}
-              icon={<FaUserAlt color='#6C00FF' size={'32'} />}
-              color={'#6C00FF'}
-            />
-          </Stack>
-          <Stack direction={['row']}
-            w={'full'} py={2} spacing={[0, 4]}
-            justifyContent={'space-between'}
-            flexWrap={'wrap'} alignItems={['flex-start']}
-          >
-            <DataCard
-              title={'Market Balance'}
-              data={0}
-              icon={<BiRupee color='#FFB100' size={'28'} />}
-              color={'#FFB100'}
-            />
-            <DataCard
-              title={'Reserved Balance'}
-              data={0}
-              icon={<BiRupee color='#FFB100' size={'32'} />}
-              color={'#FFB100'}
-            />
+          <Stack w={'full'} direction={['column', 'row']} gap={8} justifyContent={'space-between'}>
+            <Box>
+              <Stack direction={['row']}
+                w={'full'} py={2} spacing={[0, 4]}
+                justifyContent={'space-between'}
+                flexWrap={'wrap'} alignItems={['flex-start']}
+              >
+                <DataCard
+                  title={'Logins'}
+                  data={usersData?.login}
+                  icon={<BiLogIn color='#FF7B54' size={'32'} />}
+                  color={'#FF7B54'}
+                />
+                <DataCard
+                  title={'Registrations'}
+                  data={usersData?.registration}
+                  icon={<FaUserPlus color='#FF7B54' size={'28'} />}
+                  color={'#FF7B54'}
+                />
+                <DataCard
+                  title={'Support Tickets'}
+                  data={usersData?.tickets}
+                  icon={<IoMdHelpBuoy color='#FF7B54' size={'32'} />}
+                  color={'#FF7B54'}
+                />
+              </Stack>
+              <Stack direction={['row']}
+                w={'full'} py={2} spacing={[0, 4]}
+                justifyContent={'space-between'}
+                flexWrap={'wrap'} alignItems={['flex-start']}
+              >
+                <DataCard
+                  title={'Retailers'}
+                  data={retailers}
+                  icon={<FaUserAlt color='#6C00FF' size={'32'} />}
+                  color={'#6C00FF'}
+                />
+                <DataCard
+                  title={'Distributors'}
+                  data={distributors}
+                  icon={<FaUserAlt color='#6C00FF' size={'28'} />}
+                  color={'#6C00FF'}
+                />
+                <DataCard
+                  title={'Super Distributors'}
+                  data={superDistributors}
+                  icon={<FaUserAlt color='#6C00FF' size={'32'} />}
+                  color={'#6C00FF'}
+                />
+              </Stack>
+              <Stack direction={['row']}
+                w={'full'} py={2} spacing={[0, 4]}
+                justifyContent={'flex-start'}
+                flexWrap={'wrap'} alignItems={['flex-start']}
+              >
+                <DataCard
+                  title={'Market Balance'}
+                  data={0}
+                  icon={<BiRupee color='#FFB100' size={'28'} />}
+                  color={'#FFB100'}
+                />
+                <DataCard
+                  title={'Reserved Balance'}
+                  data={0}
+                  icon={<BiRupee color='#FFB100' size={'32'} />}
+                  color={'#FFB100'}
+                />
+              </Stack>
+            </Box>
+            <TableContainer w={['full', 'sm']}>
+              <Table rounded={16} overflow={'hidden'}>
+                <Thead bgColor={'twitter.500'}>
+                  <Tr>
+                    <Th color={'#FFF'}>Type</Th>
+                    <Th color={'#FFF'}>Pending</Th>
+                  </Tr>
+                </Thead>
+                <Tbody fontSize={'xs'}>
+                  <Tr>
+                    <Td py={2}>Fund Requests</Td>
+                    <Td py={2}>0</Td>
+                  </Tr>
+                  <Tr>
+                    <Td py={2}>KYC Verification</Td>
+                    <Td py={2}>0</Td>
+                  </Tr>
+                  <Tr>
+                    <Td py={2}>Settlement Account Verification</Td>
+                    <Td py={2}>0</Td>
+                  </Tr>
+                  <Tr>
+                    <Td py={2}>Pending Support Tickets</Td>
+                    <Td py={2}>0</Td>
+                  </Tr>
+                  <Tr>
+                    <Td py={2}>Pending Recharge</Td>
+                    <Td py={2}>0</Td>
+                  </Tr>
+                  <Tr>
+                    <Td py={2}>Pending DMT</Td>
+                    <Td py={2}>0</Td>
+                  </Tr>
+                  <Tr>
+                    <Td py={2}>Live Users</Td>
+                    <Td py={2}>0</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TableContainer>
           </Stack>
           <Stack
             direction={['column', 'row']}
@@ -288,14 +365,14 @@ const Index = () => {
 
           </Stack>
 
-          <Stack direction={['column', 'row']} py={6}>
+          <Stack direction={['column', 'row']} justifyContent={'space-between'} py={6}>
             <Box>
               <Text pb={2} fontWeight={'semibold'}>Recent Login Activity</Text>
               <Box
                 className='ag-theme-alpine ag-theme-pesa24-blue'
                 w={['full', 'lg']} h={'xs'}
                 rounded={16} overflow={'hidden'}
-                >
+              >
                 <AgGridReact
                   rowData={rowData}
                   columnDefs={columnDefs}
@@ -304,6 +381,9 @@ const Index = () => {
                 </AgGridReact>
               </Box>
             </Box>
+            <VStack w={['full', 'sm']}>
+              <Doughnut data={data} options={options} />
+            </VStack>
           </Stack>
         </Box>
       </Layout>

@@ -13,13 +13,13 @@ import {
   Button,
   Text,
   useToast,
-  Drawer,
-  DrawerHeader,
-  DrawerBody,
-  DrawerContent,
-  DrawerOverlay,
-  DrawerCloseButton,
-  DrawerFooter,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  ModalCloseButton,
+  ModalFooter,
 } from '@chakra-ui/react'
 import { BsEyeSlash, BsEye } from 'react-icons/bs'
 import { useFormik } from "formik";
@@ -216,22 +216,21 @@ const Auth = () => {
         </VStack>
       </VStack>
 
-      {/* OTP Drawer */}
-      <Drawer
+      {/* OTP Modal */}
+      <Modal
         isOpen={isOtpSent}
         onClose={() => setIsOtpSent(false)}
-        placement={'bottom'}
-        size={'xs'}
+        isCentered={true}
       >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalHeader>
             <Text>
               Enter OTP
             </Text>
-          </DrawerHeader>
-          <DrawerBody>
+          </ModalHeader>
+          <ModalBody>
             <VStack>
               <HStack spacing={4}>
                 <PinInput otp onComplete={(values) => formik.setFieldValue("otp", values)}>
@@ -242,8 +241,8 @@ const Auth = () => {
                 </PinInput>
               </HStack>
             </VStack>
-          </DrawerBody>
-          <DrawerFooter>
+          </ModalBody>
+          <ModalFooter>
             <Button
               colorScheme={'twitter'}
               variant={'outline'}
@@ -259,9 +258,9 @@ const Auth = () => {
             >
               Submit
             </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
     </>
   )

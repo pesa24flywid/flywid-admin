@@ -282,21 +282,119 @@ const CreateAdmin = () => {
                 <Box my={4}>
                   <Button colorScheme={'whatsapp'} mb={6} onClick={() => changeRole('retailer')}>Make Retailer</Button>
 
-                  <Text pb={4} pt={8} fontSize={'lg'}>Manage Permissions</Text>
-                  <Flex direction={'row'} gap={10} flexWrap={'wrap'}>
+                  <Text py={8} pb={4} fontSize={'lg'} fontWeight={'semibold'}>Manage Permissions</Text>
+                  <Text pt={4} fontSize={'sm'}>User Related Permissions</Text>
+                  <Flex direction={'row'} gap={4} justifyContent={'flex-start'} flexWrap={'wrap'} pb={4}>
                     <CheckboxGroup onChange={values => setPermissions(values)} defaultValue={fetchedUser.permissions}>
                       {
                         predefinedPermissions.map((permission, key) => {
-                          return (
-                            <Checkbox
-                              value={permission.value}
-                              textTransform={'capitalize'}
-                              key={key} px={4} bg={'aqua'}
-                              py={3} rounded={8}
-                            >
-                              {permission.value.replace(/-/g, " ")}
-                            </Checkbox>
-                          )
+                          if (permission.value.includes("user") || permission.value.includes("role-parent"))
+                            return (
+                              <Checkbox
+                                w={['full', 'xs']}
+                                value={permission.value}
+                                textTransform={'capitalize'}
+                                key={key} py={1} rounded={8}
+                              >
+                                {permission.value.replace(/-/g, " ")}
+                              </Checkbox>
+                            )
+                        })
+                      }
+                    </CheckboxGroup>
+                  </Flex>
+                  <hr />
+                  <Text pt={8} pb={4} fontSize={'sm'}>Reports Related Permissions</Text>
+                  <Flex direction={'row'} gap={4} justifyContent={'flex-start'} flexWrap={'wrap'} pb={4}>
+                    <CheckboxGroup onChange={values => setPermissions(values)} defaultValue={fetchedUser.permissions}>
+                      {
+                        predefinedPermissions.map((permission, key) => {
+                          if (permission.value.includes("report") || permission.value.includes("sale") || permission.value.includes("transaction"))
+                            return (
+                              <Checkbox
+                                w={['full', 'xs']}
+                                value={permission.value}
+                                textTransform={'capitalize'}
+                                key={key} py={1} rounded={8}
+                              >
+                                {permission.value.replace(/-/g, " ")}
+                              </Checkbox>
+                            )
+                        })
+                      }
+                    </CheckboxGroup>
+                  </Flex>
+                  <hr />
+                  <Text pt={8} pb={4} fontSize={'sm'}>Account Related Permissions</Text>
+                  <Flex direction={'row'} gap={4} justifyContent={'flex-start'} flexWrap={'wrap'} pb={4}>
+                    <CheckboxGroup onChange={values => setPermissions(values)} defaultValue={fetchedUser.permissions}>
+                      {
+                        predefinedPermissions.map((permission, key) => {
+                          if (permission.value.includes("fund") || permission.value.includes("account"))
+                            return (
+                              <Checkbox
+                                w={['full', 'xs']}
+                                value={permission.value}
+                                textTransform={'capitalize'}
+                                key={key} py={1} rounded={8}
+                              >
+                                {permission.value.replace(/-/g, " ")}
+                              </Checkbox>
+                            )
+                        })
+                      }
+                    </CheckboxGroup>
+                  </Flex>
+                  <hr />
+                  <Text pt={8} pb={4} fontSize={'sm'}>Portal Management Permissions</Text>
+                  <Flex direction={'row'} gap={4} justifyContent={'flex-start'} flexWrap={'wrap'} pb={4}>
+                    <CheckboxGroup onChange={values => setPermissions(values)} defaultValue={fetchedUser.permissions}>
+                      {
+                        predefinedPermissions.map((permission, key) => {
+                          if (!permission.value.includes("admin")) {
+                            if (permission.value.includes("manage") || permission.value.includes("preference"))
+                              return (
+                                <Checkbox
+                                  w={['full', 'xs']}
+                                  value={permission.value}
+                                  textTransform={'capitalize'}
+                                  key={key} py={1} rounded={8}
+                                >
+                                  {permission.value.replace(/-/g, " ")}
+                                </Checkbox>
+                              )
+                          }
+                        })
+                      }
+                    </CheckboxGroup>
+                  </Flex>
+                  <hr />
+                  <Text pt={8} pb={4} fontSize={'sm'}>Other Permissions</Text>
+                  <Flex direction={'row'} gap={4} justifyContent={'flex-start'} flexWrap={'wrap'} pb={4}>
+                    <CheckboxGroup onChange={values => setPermissions(values)} defaultValue={fetchedUser.permissions}>
+                      {
+                        predefinedPermissions.map((permission, key) => {
+                          if (!permission.value.includes("admin")) {
+                            if (!permission.value.includes("manage")
+                              && !permission.value.includes("preference")
+                              && !permission.value.includes("fund")
+                              && !permission.value.includes("user")
+                              && !permission.value.includes("report")
+                              && !permission.value.includes("sale")
+                              && !permission.value.includes("transaction")
+                              && !permission.value.includes("account")
+                            )
+                              return (
+                                <Checkbox
+                                  w={['full', 'xs']}
+                                  value={permission.value}
+                                  textTransform={'capitalize'}
+                                  key={key} py={1} rounded={8}
+                                >
+                                  {permission.value.replace(/-/g, " ")}
+                                </Checkbox>
+                              )
+                          }
                         })
                       }
                     </CheckboxGroup>
@@ -310,55 +408,56 @@ const CreateAdmin = () => {
 
           <VStack
             w={['full', 'xs']}
-            padding={4}
+            padding={4} pos={'relative'}
             flex={['unset', 1]}
             alignItems={'flex-start'}
             justifyContent={'flex-start'}
-            boxShadow={'lg'}
-            h={['auto', '90vh']}
+            h={['auto', '100vh']}
             overflowY={'scroll'}
           >
-            <Text fontSize={'lg'} fontWeight={'semibold'} my={4}>Existing Admin Employees</Text>
+            <Box position={['relative', 'static']} top={0}>
+              <Text fontSize={'lg'} fontWeight={'semibold'} my={4}>Existing Admin Employees</Text>
 
-            <VStack
-              gap={8} pt={8}
-              alignItems={'flex-start'}
-              justifyContent={'flex-start'}
-            >
-              {allAdmins.map((admin, key) => (
-                <Box
-                  p={4} rounded={8}
-                  boxShadow={'md'}
-                  key={key}
-                >
-                  <Text fontSize={'md'} fontWeight={'semibold'}>{admin.name} ({admin.id})</Text>
-                  <Text fontSize={'md'}>{admin.phone_number}</Text>
-                  <Text fontSize={'xs'}>{admin.email}</Text>
-                  <HStack
-                    w={'full'} pt={4}
-                    justifyContent={'space-between'}
+              <VStack
+                gap={8} pt={8}
+                alignItems={'flex-start'}
+                justifyContent={'flex-start'}
+              >
+                {allAdmins.map((admin, key) => (
+                  <Box
+                    p={4} rounded={8}
+                    boxShadow={'md'}
+                    key={key}
                   >
-                    <Button
-                      size={'sm'}
-                      onClick={() => {
-                        setFetchedUser({ user_id: admin.id })
-                        verifyBeneficiary(admin.id)
-                      }}
-                    >Permissions</Button>
-                    <Button
-                      colorScheme='red'
-                      size={'sm'}
-                      onClick={() => {
-                        setFetchedUser({ user_id: admin.id })
-                        changeRole('retailer', admin.id)
-                      }}
-                    >Make Retailer</Button>
-                  </HStack>
-                </Box>
-              ))
-              }
+                    <Text fontSize={'md'} fontWeight={'semibold'}>{admin.name} ({admin.id})</Text>
+                    <Text fontSize={'md'}>{admin.phone_number}</Text>
+                    <Text fontSize={'xs'}>{admin.email}</Text>
+                    <HStack
+                      w={'full'} pt={4}
+                      justifyContent={'space-between'}
+                    >
+                      <Button
+                        size={'sm'}
+                        onClick={() => {
+                          setFetchedUser({ user_id: admin.id })
+                          verifyBeneficiary(admin.id)
+                        }}
+                      >Permissions</Button>
+                      <Button
+                        colorScheme='red'
+                        size={'sm'}
+                        onClick={() => {
+                          setFetchedUser({ user_id: admin.id })
+                          changeRole('retailer', admin.id)
+                        }}
+                      >Make Retailer</Button>
+                    </HStack>
+                  </Box>
+                ))
+                }
 
-            </VStack>
+              </VStack>
+            </Box>
           </VStack>
         </Stack>
       </Layout>

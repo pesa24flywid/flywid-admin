@@ -10,7 +10,7 @@ const DataCard = ({ title, data, icon, color }) => {
         mb={[6, 0]}
         spacing={4}
         rounded={4}
-        minW={['46%', '64']}
+        minW={['46%', '52']}
         p={3} bg={'white'}
         boxShadow={'md'}
         transition={'.3s ease'}
