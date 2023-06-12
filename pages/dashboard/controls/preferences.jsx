@@ -186,6 +186,32 @@ const Preferences = () => {
                         </HStack>
                     </Box>
                 </Stack>
+                <Stack
+                    direction={['column', 'row']}
+                    justifyContent={'space-between'}
+                    pt={16} pb={8} gap={10}
+                >
+                    <Box>
+                        <Text>LIC Transaction Type</Text>
+                        <HStack p={2} rounded={8}>
+                            <Button
+                                w={36}
+                                colorScheme={
+                                    globalInfo.lic_type == "online" ?
+                                        "twitter" : "gray"
+                                }
+                                onClick={() => updateOrganisation({ lic_type: "online" })}
+                            >Online</Button>
+                            <Button
+                                w={36}
+                                colorScheme={globalInfo.lic_type == "offline" ?
+                                    "twitter" : "gray"
+                                }
+                                onClick={() => updateOrganisation({ lic_type: "offline" })}
+                            >Offline</Button>
+                        </HStack>
+                    </Box>
+                </Stack>
                 <Box mt={8} mb={6}>
                     <Text pb={12}>Portal Registration Settings</Text>
                     <TableContainer w={'full'}>
