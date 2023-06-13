@@ -119,7 +119,7 @@ const Index = () => {
 
   function getPendingRequests(){
     BackendAxios.get("/api/admin/pending-requests").then(res => {
-
+      setPendingRequests(res.data)
     }).catch(err => {
       console.log(err)
     })
@@ -251,31 +251,27 @@ const Index = () => {
                 <Tbody fontSize={'xs'}>
                   <Tr>
                     <Td py={2}>Fund Requests</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.funds || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>KYC Verification</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.profile || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>Settlement Account Verification</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.accounts || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>Pending Support Tickets</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.tickets || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>Pending Recharge</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.recharge || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>Pending DMT</Td>
-                    <Td py={2}>0</Td>
-                  </Tr>
-                  <Tr>
-                    <Td py={2}>Live Users</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.dmt || 0}</Td>
                   </Tr>
                 </Tbody>
               </Table>
