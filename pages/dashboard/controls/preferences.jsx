@@ -33,6 +33,7 @@ const Preferences = () => {
     const [cmsStatus, setCmsStatus] = useState(false)
     const [fastagStatus, setFastagStatus] = useState(false)
     const [axisStatus, setAxisStatus] = useState(false)
+    const [organisationInfo, setOrganisationInfo] = useState({})
 
     function fetchOrganisationServiceStatus() {
         ClientAxios.get("/api/organisation").then(res => {
@@ -46,6 +47,7 @@ const Preferences = () => {
             setCmsStatus(res.data.cms_status)
             setFastagStatus(res.data.fastag_status)
             setAxisStatus(res.data.axis_status)
+            setOrganisationInfo(res.data)
         }).catch(err => {
             console.log(err.message)
         })
@@ -197,14 +199,14 @@ const Preferences = () => {
                             <Button
                                 w={36}
                                 colorScheme={
-                                    globalInfo.lic_type == "online" ?
+                                    organisationInfo.lic_type == "online" ?
                                         "twitter" : "gray"
                                 }
                                 onClick={() => updateOrganisation({ lic_type: "online" })}
                             >Online</Button>
                             <Button
                                 w={36}
-                                colorScheme={globalInfo.lic_type == "offline" ?
+                                colorScheme={organisationInfo.lic_type == "offline" ?
                                     "twitter" : "gray"
                                 }
                                 onClick={() => updateOrganisation({ lic_type: "offline" })}

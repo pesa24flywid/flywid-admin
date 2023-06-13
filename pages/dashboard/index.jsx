@@ -75,6 +75,8 @@ const Index = () => {
   const [distributors, setDistributors] = useState("")
   const [superDistributors, setSuperDistributors] = useState("")
 
+  const [pendingRequests, setPendingRequests] = useState({})
+
   useEffect(() => {
     BackendAxios.get('/api/admin/logins').then(res => {
       setRowData(res.data)
@@ -82,6 +84,7 @@ const Index = () => {
       console.log(err)
     })
     getOverview()
+    getPendingRequests()
   }, [])
 
   function getOverview(tenure) {
@@ -114,14 +117,22 @@ const Index = () => {
     })
   }
 
+  function getPendingRequests(){
+    BackendAxios.get("/api/admin/pending-requests").then(res => {
+
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
   const data = {
     labels: ['AePS', 'DMT', 'Recharge', 'BBPS'],
     datasets: [
       {
         data: [
-          Math.abs(aepsData?.credit - aepsData?.debit), 
-          Math.abs(dmtData?.credit - dmtData?.debit), 
-          Math.abs(rechargeData?.credit - rechargeData?.debit), 
+          Math.abs(aepsData?.credit - aepsData?.debit),
+          Math.abs(dmtData?.credit - dmtData?.debit),
+          Math.abs(rechargeData?.credit - rechargeData?.debit),
           Math.abs(bbpsData?.credit - bbpsData?.debit)
         ],
         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#36F5AB'],
