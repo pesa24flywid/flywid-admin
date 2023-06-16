@@ -90,8 +90,8 @@ const menuOptions = [
   },
   {
     type: "link",
-    name: "basic-dashboard",
-    id: "dashboard",
+    name: "dashboard",
+    id: "basic-dashboard",
     link: "/dashboard?pageid=dashboard",
     icon: <BsSpeedometer />
   },

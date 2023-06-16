@@ -75,6 +75,8 @@ const Index = () => {
   const [distributors, setDistributors] = useState("")
   const [superDistributors, setSuperDistributors] = useState("")
 
+  const [pendingRequests, setPendingRequests] = useState({})
+
   useEffect(() => {
     BackendAxios.get('/api/admin/logins').then(res => {
       setRowData(res.data)
@@ -82,6 +84,7 @@ const Index = () => {
       console.log(err)
     })
     getOverview()
+    getPendingRequests()
   }, [])
 
   function getOverview(tenure) {
@@ -114,14 +117,22 @@ const Index = () => {
     })
   }
 
+  function getPendingRequests(){
+    BackendAxios.get("/api/admin/pending-requests").then(res => {
+      setPendingRequests(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
   const data = {
     labels: ['AePS', 'DMT', 'Recharge', 'BBPS'],
     datasets: [
       {
         data: [
-          Math.abs(aepsData?.credit - aepsData?.debit), 
-          Math.abs(dmtData?.credit - dmtData?.debit), 
-          Math.abs(rechargeData?.credit - rechargeData?.debit), 
+          Math.abs(aepsData?.credit - aepsData?.debit),
+          Math.abs(dmtData?.credit - dmtData?.debit),
+          Math.abs(rechargeData?.credit - rechargeData?.debit),
           Math.abs(bbpsData?.credit - bbpsData?.debit)
         ],
         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#36F5AB'],
@@ -240,31 +251,27 @@ const Index = () => {
                 <Tbody fontSize={'xs'}>
                   <Tr>
                     <Td py={2}>Fund Requests</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.funds || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>KYC Verification</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.profile || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>Settlement Account Verification</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.accounts || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>Pending Support Tickets</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.tickets || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>Pending Recharge</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.recharge || 0}</Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>Pending DMT</Td>
-                    <Td py={2}>0</Td>
-                  </Tr>
-                  <Tr>
-                    <Td py={2}>Live Users</Td>
-                    <Td py={2}>0</Td>
+                    <Td py={2}>{pendingRequests?.dmt || 0}</Td>
                   </Tr>
                 </Tbody>
               </Table>
