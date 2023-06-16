@@ -533,7 +533,7 @@ const Layout = (props) => {
 
   return (
     <>
-      <Head><title>{`Pesa24 Admin | ${props.pageTitle || "No Title"}`}</title></Head>
+      <Head><title>{`Janpay Admin | ${props.pageTitle || "No Title"}`}</title></Head>
       <HStack spacing={0} alignItems={'flex-start'}>
 
         {/* Sidebar */}
@@ -552,7 +552,7 @@ const Layout = (props) => {
             <VStack py={8}>
               <Avatar name={userName} src={profilePic} size={['sm', 'xl']} border={'2px'} borderColor={'#FFF'} />
               <Text fontSize={'xl'} color={'#FFF'} textTransform={'capitalize'}>{userName}</Text>
-              <Text fontSize={'sm'} color={'#FAFAFA'} textTransform={'capitalize'}>Pesa24 - {userType}</Text>
+              <Text fontSize={'sm'} color={'#FAFAFA'} textTransform={'capitalize'}>JANPAY - {userType}</Text>
             </VStack>
             <VStack spacing={2} w={'full'}>
               {
@@ -647,7 +647,7 @@ const Layout = (props) => {
                 </Button>
               </Show>
               {/* <Image src='/logo_long.png' w={16} /> */}
-              <Text fontSize={'lg'} fontWeight={'bold'}>Pesa24</Text>
+              <Text fontSize={'lg'} fontWeight={'bold'}>JANPAY</Text>
             </HStack>
             <HStack spacing={6} justifyContent={['space-between']} className='hide-print'>
               <Stack direction={['column', 'row']} spacing={2}>
