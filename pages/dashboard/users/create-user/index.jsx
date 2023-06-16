@@ -65,28 +65,20 @@ const Index = () => {
             pan: null,
         },
         onSubmit: (values) => {
-            if (values.profilePic && values.aadhaarBack && values.aadhaarFront && values.pan) {
-                let userForm = document.getElementById('createUserForm')
-                FormAxios.postForm('/api/admin/create/user', userForm).then((res) => {
-                    Toast({
-                        status: 'success',
-                        title: 'User Created',
-                    })
-                    console.log(res.data)
-                }).catch((err) => {
-                    Toast({
-                        status: 'error',
-                        description: err.response.data.message || err.response.data || err.message
-                    })
-                    console.log(err)
+            let userForm = document.getElementById('createUserForm')
+            FormAxios.postForm('/api/admin/create/user', userForm).then((res) => {
+                Toast({
+                    status: 'success',
+                    title: 'User Created',
                 })
-            }
-            else {
+                console.log(res.data)
+            }).catch((err) => {
                 Toast({
                     status: 'error',
-                    description: 'All images are required'
+                    description: err.response.data.message || err.response.data || err.message
                 })
-            }
+                console.log(err)
+            })
         }
     })
 
