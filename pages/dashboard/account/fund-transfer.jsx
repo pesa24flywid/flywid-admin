@@ -271,7 +271,7 @@ const FundTransfer = () => {
                         <AgGridReact
                             columnDefs={columnDefs}
                             rowData={rowData}
-                            onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
+
                         >
 
                         </AgGridReact>

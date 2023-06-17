@@ -306,7 +306,7 @@ const UserLedger = () => {
                                 floatingFilter: true,
                                 resizable: true,
                             }}
-                            onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
+
                             components={{
                                 'debitCellRenderer': debitCellRenderer,
                                 'creditCellRenderer': creditCellRenderer,

@@ -118,7 +118,7 @@ const FundRequests = () => {
                     })
                 })
             }
-            if (updateTo == "reversed" || updateTo == "deleted" && params.data.admin_remarks) {
+            if (updateTo == "declined" || updateTo == "deleted" && params.data.admin_remarks) {
                 BackendAxios.post(`/api/admin/update-fund-requests`, {
                     beneficiaryId: params.data.user_id,
                     id: params.data.id,
@@ -139,7 +139,7 @@ const FundRequests = () => {
                     })
                 })
             }
-            if (updateTo == "reversed" || updateTo == "deleted" && !params.data.admin_remarks) {
+            if (updateTo == "declined" || updateTo == "deleted" && !params.data.admin_remarks) {
                 Toast({
                     description: 'Please add remarks also'
                 })
@@ -162,7 +162,7 @@ const FundRequests = () => {
                     }
                     {
                         params.data.status == "pending" &&
-                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='orange' onClick={() => updateFundRequest("reversed")}>Reject</Button>
+                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='orange' onClick={() => updateFundRequest("declined")}>Reject</Button>
                     }
                     {
                         params.data.status == "pending" &&
@@ -243,7 +243,7 @@ const FundRequests = () => {
                                 floatingFilter: true,
                                 resizable: true,
                             }}
-                            onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
+
                             onFilterChanged={
                                 (params) => {
                                     setPrintableRow(params.api.getRenderedNodes().map((item) => {
