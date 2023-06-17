@@ -67,7 +67,12 @@ const Index = () => {
     ])
     const [columnDefs, setColumnDefs] = useState([
         {
-            headerName: "User ID",
+            headerName: "Created Timestamp",
+            field: 'created_at',
+            width: 160
+        },
+        {
+            headerName: "User Details",
             field: "transaction_by",
             cellRenderer: 'userCellRenderer'
         },
@@ -76,35 +81,38 @@ const Index = () => {
             field: 'transaction_id'
         },
         {
-            headerName: "Debit Amount",
+            headerName: "Debit",
             field: 'debit_amount',
-            cellRenderer: 'debitCellRenderer'
+            cellRenderer: 'debitCellRenderer',
+            width: 100
         },
         {
-            headerName: "Credit Amount",
+            headerName: "Credit",
             field: 'credit_amount',
-            cellRenderer: 'creditCellRenderer'
+            cellRenderer: 'creditCellRenderer',
+            width: 100
         },
         {
             headerName: "Opening Balance",
-            field: 'opening_balance'
+            field: 'opening_balance',
+            width: 100
         },
         {
             headerName: "Closing Balance",
-            field: 'closing_balance'
+            field: 'closing_balance',
+            width: 100
         },
         {
-            headerName: "Transaction Type",
-            field: 'service_type'
+            headerName: "Trnxn Type",
+            field: 'service_type',
+            width: 120,
+            hide: true
         },
         {
-            headerName: "Transaction Status",
+            headerName: "Trnxn Status",
             field: 'status',
-            cellRenderer: 'statusCellRenderer'
-        },
-        {
-            headerName: "Created Timestamp",
-            field: 'created_at'
+            cellRenderer: 'statusCellRenderer',
+            width: 120
         },
         {
             headerName: "Updated Timestamp",
@@ -113,13 +121,15 @@ const Index = () => {
         {
             headerName: "Additional Info",
             field: 'metadata',
-            defaultMinWidth: 300
+            defaultMinWidth: 300,
+            hide: true
         },
         {
             headerName: "Receipt",
             field: "receipt",
             pinned: 'right',
-            cellRenderer: 'receiptCellRenderer'
+            cellRenderer: 'receiptCellRenderer',
+            width: 80
         }
     ])
 
@@ -184,7 +194,7 @@ const Index = () => {
 
     const creditCellRenderer = (params) => {
         return (
-            <Text px={1} flex={'unset'} w={'fit-content'} bgColor={params.value > 0 && "green.400"} color={params.value > 0 && "#FFF"}>
+            <Text px={1} fontWeight={'semibold'} flex={'unset'} w={'fit-content'} color={params.value > 0 && "green.400"}>
                 {params.value}
             </Text>
         )
@@ -192,7 +202,7 @@ const Index = () => {
 
     const debitCellRenderer = (params) => {
         return (
-            <Text px={1} flex={'unset'} w={'fit-content'} bgColor={params.value > 0 && "red.400"} color={params.value > 0 && "#FFF"}>
+            <Text px={1} fontWeight={'semibold'} flex={'unset'} w={'fit-content'} color={params.value > 0 && "red.400"}>
                 {params.value}
             </Text>
         )

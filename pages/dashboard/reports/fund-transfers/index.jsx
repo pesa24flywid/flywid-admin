@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Layout from '../layout'
+import Layout from '../../layout'
 import {
     Stack,
     Text,
@@ -16,49 +16,62 @@ import { FaFileCsv, FaFilePdf, FaPrint } from 'react-icons/fa'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { BsCheck, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsX } from 'react-icons/bs';
+import { BsCheck, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsEye, BsX } from 'react-icons/bs';
 import BackendAxios from '@/lib/utils/axios'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
+import { useRouter } from 'next/router'
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
-
     doc.autoTable({ html: '#printable-table' })
     doc.output('dataurlnewwindow');
 }
 
 const FundRequests = () => {
+    const router = useRouter()
     const Toast = useToast({
         position: 'top-right'
     })
     const [rowData, setRowData] = useState([])
+
     const [columnDefs, setColumnDefs] = useState([
         {
-            field: "status",
-            headerName: "Status",
-            editable: true,
-            cellRenderer: 'statusCellRenderer'
+            headerName: "Datetime",
+            field: 'created_at'
         },
-        { headerName: "Request Timestamp", field: 'created_at' },
-        { headerName: "Trnxn ID", field: 'transaction_id' },
-        { headerName: "Amount", field: 'amount' },
-        { headerName: "Requested Bank", field: 'bank_name' },
-        { headerName: "Transaction Type", field: 'transaction_type' },
-        { headerName: "Transaction Receipt", field: 'receipt' },
-        { headerName: "User Name", field: 'name', cellRenderer: 'userCellRenderer' },
-        { headerName: "User Phone", field: 'phone_number' },
-        { headerName: "Updated By", field: 'user_id' },
-        { headerName: "Remarks", field: 'remarks' },
         {
-            headerName: "Admin Remarks",
-            field: 'admin_remarks',
-            editable: true,
-            singleClickEdit: true,
-            cellEditor: 'agTextCellEditor',
+            headerName: "Trnxn ID",
+            field: 'id',
+            width:80
         },
-        { headerName: "Update Timestamp", field: 'updated_at' },
+        {
+            headerName: "Beneficiary",
+            field: 'user_id',
+            cellRenderer: 'userCellRenderer'
+        },
+        {
+            headerName: "Phone",
+            field: 'phone_number',
+            width: 120
+        },
+        {
+            headerName: "Amount",
+            field: 'amount',
+            width: 100
+        },
+        {
+            headerName: "Type",
+            field: 'transaction_type',
+            width: 100
+        },
+        {
+            headerName: "Remarks",
+            field: 'remarks',
+            width: 300
+        },
     ])
+
     const [printableRow, setPrintableRow] = useState(rowData)
     const [pagination, setPagination] = useState({
         current_page: "1",
@@ -70,7 +83,7 @@ const FundRequests = () => {
     })
 
     function fetchRequests(pageLink) {
-        BackendAxios.get(pageLink || '/api/admin/fetch-fund-requests').then(res => {
+        BackendAxios.get(pageLink || '/api/admin/fetch-admin-funds').then(res => {
             setPagination({
                 current_page: res.data.current_page,
                 total_pages: parseInt(res.data.last_page),
@@ -193,18 +206,42 @@ const FundRequests = () => {
     const userCellRenderer = (params) => {
         return (
             <>
-                <Text>{params.data.name} {params.data.user_id}</Text>
+                <Text>{params.data.name} ({params.data.user_id})</Text>
             </>
+        )
+    }
+
+    const adminCellRenderer = (params) => {
+        return (
+            <>
+                <Text>{params.data.admin_name} ({params.data.admin_id})</Text>
+            </>
+        )
+    }
+
+    const receiptCellRenderer = (params) => {
+        function showReceipt() {
+            if (!params.data.receipt) {
+                Toast({
+                    description: 'No Receipt Available'
+                })
+                return
+            }
+            window.open(`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/receipts/${params.data.receipt}`, "_blank")
+        }
+        return (
+            <HStack height={'full'} w={'full'} gap={4}>
+                <Button rounded={'full'} colorScheme='twitter' size={'xs'} onClick={() => showReceipt()}><BsEye /></Button>
+            </HStack>
         )
     }
 
     return (
         <>
-            <Layout pageTitle={'Fund Request'}>
-                <Text fontWeight={'semibold'} fontSize={'lg'}>Fund Requests From Your Members</Text>
+            <Layout pageTitle={'Fund Transfers'}>
+                <Text fontWeight={'semibold'} fontSize={'lg'}>Fund Transfers</Text>
 
                 <Box py={6}>
-                    <Text fontWeight={'medium'} pb={4}>Search and manage fund requests</Text>
                     <HStack spacing={4} my={4}>
                         <Button size={['xs', 'sm']} colorScheme={'twitter'} leftIcon={<FaFileCsv />}>CSV</Button>
                         <Button size={['xs', 'sm']} colorScheme={'whatsapp'} leftIcon={<SiMicrosoftexcel />}>Excel</Button>
@@ -272,7 +309,9 @@ const FundRequests = () => {
                             }
                             components={{
                                 'statusCellRenderer': statusCellRenderer,
-                                'userCellRenderer': userCellRenderer
+                                'userCellRenderer': userCellRenderer,
+                                'adminCellRenderer': adminCellRenderer,
+                                'receiptCellRenderer': receiptCellRenderer
                             }}
                         >
 

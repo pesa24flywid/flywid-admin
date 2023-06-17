@@ -286,25 +286,25 @@ const menuOptions = [
         id: "report-aeps",
         title: "aeps",
         link: "/dashboard/reports/aeps?pageid=reports",
-        status: true,
+        status: false,
       },
       {
         id: "report-bbps",
         title: "bbps",
         link: "/dashboard/reports/bbps?pageid=reports",
-        status: true,
+        status: false,
       },
       {
         id: "report-dmt",
         title: "dmt",
         link: "/dashboard/reports/dmt?pageid=reports",
-        status: true,
+        status: false,
       },
       {
         id: "report-recharge",
         title: "recharge",
         link: "/dashboard/reports/recharge?pageid=reports",
-        status: true,
+        status: false,
       },
       // {
       //   id: "report-matm",
@@ -322,7 +322,7 @@ const menuOptions = [
         id: "report-cms",
         title: "cms",
         link: "/dashboard/reports/cms?pageid=reports",
-        status: true,
+        status: false,
       },
       // {
       //   title: "pg",
@@ -337,13 +337,13 @@ const menuOptions = [
       {
         id: "report-fund-request",
         title: "fund request",
-        link: "/dashboard",
+        link: "/dashboard/reports/fund-requests?pageid=reports",
         status: true,
       },
       {
         id: "report-fund-transfer",
         title: "fund transfer",
-        link: "/dashboard",
+        link: "/dashboard/reports/fund-transfers?pageid=reports",
         status: true,
       },
       // {

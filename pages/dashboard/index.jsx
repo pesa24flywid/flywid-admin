@@ -39,7 +39,8 @@ const Index = () => {
   const [columnDefs, setColumnDefs] = useState([
     {
       field: "user_id",
-      headerName: "User ID"
+      headerName: "User ID",
+      width: 100
     },
     {
       field: "name",
@@ -47,11 +48,13 @@ const Index = () => {
     },
     {
       field: "ip",
-      headerName: "Login IP"
+      headerName: "Login IP",
+      minWidth: 300
     },
     {
       field: "latlong",
-      headerName: "Latlong"
+      headerName: "Latlong",
+      minWidth: 300
     },
     {
       field: "created_at",
@@ -78,7 +81,7 @@ const Index = () => {
   const [pendingRequests, setPendingRequests] = useState({})
 
   useEffect(() => {
-    BackendAxios.get('/api/admin/logins').then(res => {
+    BackendAxios.get('/api/admin/logins/50').then(res => {
       setRowData(res.data)
     }).catch(err => {
       console.log(err)
@@ -117,7 +120,7 @@ const Index = () => {
     })
   }
 
-  function getPendingRequests(){
+  function getPendingRequests() {
     BackendAxios.get("/api/admin/pending-requests").then(res => {
       setPendingRequests(res.data)
     }).catch(err => {
@@ -197,6 +200,7 @@ const Index = () => {
                   color={'#FF7B54'}
                 />
               </Stack>
+
               <Stack direction={['row']}
                 w={'full'} py={2} spacing={[0, 4]}
                 justifyContent={'space-between'}
@@ -221,6 +225,7 @@ const Index = () => {
                   color={'#6C00FF'}
                 />
               </Stack>
+
               <Stack direction={['row']}
                 w={'full'} py={2} spacing={[0, 4]}
                 justifyContent={'flex-start'}
@@ -239,6 +244,32 @@ const Index = () => {
                   color={'#FFB100'}
                 />
               </Stack>
+
+              <Stack direction={['row']}
+                w={'full'} py={2} spacing={[0, 4]}
+                justifyContent={'space-between'}
+                flexWrap={'wrap'} alignItems={['flex-start']}
+              >
+                <DataCard
+                  title={'Retailers Wallet'}
+                  data={0}
+                  icon={<FaUserAlt color='#FFB100' size={'32'} />}
+                  color={'#FFB100'}
+                />
+                <DataCard
+                  title={'Distributors Wallet'}
+                  data={0}
+                  icon={<FaUserAlt color='#FFB100' size={'28'} />}
+                  color={'#FFB100'}
+                />
+                <DataCard
+                  title={'Super Distributors Wallet'}
+                  data={0}
+                  icon={<FaUserAlt color='#FFB100' size={'32'} />}
+                  color={'#FFB100'}
+                />
+              </Stack>
+
             </Box>
             <TableContainer w={['full', 'sm']}>
               <Table rounded={16} overflow={'hidden'}>
@@ -277,59 +308,6 @@ const Index = () => {
               </Table>
             </TableContainer>
           </Stack>
-          <Stack
-            direction={['column', 'row']}
-            py={2} spacing={4}
-          >
-
-            <TransactionCard
-              color={'#6C00FF'}
-              title={"AePS"}
-              quantity={aepsData?.count}
-              amount={aepsData?.credit - aepsData?.debit}
-            />
-
-            <TransactionCard
-              color={'#3C79F5'}
-              title={"BBPS"}
-              quantity={bbpsData?.count}
-              amount={bbpsData?.debit - bbpsData?.credit}
-            />
-
-            <TransactionCard
-              color={'#2DCDDF'}
-              title={"DMT"}
-              quantity={dmtData?.count}
-              amount={dmtData?.debit - dmtData?.credit}
-            />
-          </Stack>
-
-          <Stack
-            direction={['column', 'row']}
-            py={2} spacing={4}
-          >
-            <TransactionCard
-              color={'#F2DEBA'}
-              title={"PAN"}
-              quantity={panData?.count}
-              amount={panData?.debit - panData?.credit}
-            />
-
-            <TransactionCard
-              color={'#FF8B13'}
-              title={"LIC"}
-              quantity={licData?.count}
-              amount={licData?.debit - licData?.credit}
-            />
-
-            <TransactionCard
-              color={'#13005A'}
-              title={"CMS"}
-              quantity={cmsData?.count}
-              amount={cmsData?.debit - cmsData?.credit}
-            />
-
-          </Stack>
 
           <Stack
             direction={['column', 'row']}
@@ -338,14 +316,14 @@ const Index = () => {
 
             <TransactionCard
               color={'#13005A'}
-              title={"Fastag"}
+              title={"Pending Payouts"}
               quantity={fastagData?.count}
               amount={fastagData?.debit - fastagData?.credit}
             />
 
             <TransactionCard
               color={'#26845A'}
-              title={"Payout"}
+              title={"Processed Payouts"}
               quantity={payoutData?.count}
               amount={payoutData?.debit - payoutData?.credit}
             />
@@ -373,11 +351,11 @@ const Index = () => {
           </Stack>
 
           <Stack direction={['column', 'row']} justifyContent={'space-between'} py={6}>
-            <Box>
+            <Box w={'full'}>
               <Text pb={2} fontWeight={'semibold'}>Recent Login Activity</Text>
               <Box
                 className='ag-theme-alpine ag-theme-pesa24-blue'
-                w={['full', 'lg']} h={'xs'}
+                h={'xs'}
                 rounded={16} overflow={'hidden'}
               >
                 <AgGridReact
@@ -388,9 +366,6 @@ const Index = () => {
                 </AgGridReact>
               </Box>
             </Box>
-            <VStack w={['full', 'sm']}>
-              <Doughnut data={data} options={options} />
-            </VStack>
           </Stack>
         </Box>
       </Layout>

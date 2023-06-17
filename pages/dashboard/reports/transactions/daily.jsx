@@ -22,6 +22,13 @@ import { BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRigh
 import { useFormik } from 'formik';
 import { DownloadTableExcel } from 'react-export-table-to-excel';
 import { SiMicrosoftexcel } from 'react-icons/si';
+import { TableContainer } from '@chakra-ui/react';
+import { Table } from '@chakra-ui/react';
+import { Thead } from '@chakra-ui/react';
+import { Tr } from '@chakra-ui/react';
+import { Th } from '@chakra-ui/react';
+import { Tbody } from '@chakra-ui/react';
+import { Td } from '@chakra-ui/react';
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -90,6 +97,10 @@ const Ledger = () => {
         }
     })
 
+    function addTransactions(accumulator, a) {
+        return accumulator + a;
+    }
+
     function fetchLedger(pageLink) {
         BackendAxios.post(pageLink || `/api/admin/transactions-period?page=1`, {
             from: Formik.values.from,
@@ -103,8 +114,30 @@ const Ledger = () => {
                 next_page_url: res.data.next_page_url,
                 prev_page_url: res.data.prev_page_url,
             })
-            setRowData(res.data)
-            setPrintableRow(res.data)
+            // setRowData(res.data)
+            // console.log(Object.entries(res.data))
+
+            console.log(Object.entries(res.data).map((item) => {
+                return {
+                    userId: item[0],
+                    transactions: Object.entries(item[1]).map(transaction => ({
+                        category: transaction[0],
+                        total: transaction[1].map(data => (Math.abs(data?.credit_amount - data?.debit_amount)))?.reduce(addTransactions, 0)
+                    }))
+                }
+            }))
+
+            setRowData(Object.entries(res.data).map((item) => {
+                return {
+                    userId: item[0],
+                    transactions: Object.entries(item[1]).map(transaction => ({
+                        category: transaction[0],
+                        total: transaction[1].map(data => (Math.abs(data?.credit_amount - data?.debit_amount)))?.reduce(addTransactions, 0)
+                    }))
+                }
+            }))
+
+            // setPrintableRow(res.data)
         }).catch(err => {
             console.log(err)
         })
@@ -211,7 +244,9 @@ const Ledger = () => {
                     ><BsChevronDoubleRight />
                     </Button>
                 </HStack>
-                <Box
+
+
+                {/* <Box
                     rounded={16} overflow={'hidden'}
                     className='ag-theme-alpine ag-theme-pesa24-blue'
                     h={'2xl'}>
@@ -239,7 +274,35 @@ const Ledger = () => {
                     >
 
                     </AgGridReact>
-                </Box>
+                </Box> */}
+
+                <TableContainer rounded={16}>
+                    <Table colorScheme='twitter' variant={'striped'}>
+                        <Thead bgColor={'twitter.500'} color={'#FFF'}>
+                            <Tr>
+                                <Th color={'#FFF'} rowSpan={2}>User ID</Th>
+                                <Th color={'#FFF'} colSpan={4} textAlign={'center'}>Transactions</Th>
+                            </Tr>
+                            <Tr>
+                                <Th color={'#FFF'}>Payout</Th>
+                                <Th color={'#FFF'}>Commission</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {
+                                rowData.map((item, key) => (
+                                    <Tr key={key}>
+                                        <Td>{item?.userId}</Td>
+                                        <Td>{item?.transactions?.find(trnxn => (trnxn.category == "payout"))?.total || 0}</Td>
+                                        <Td>{item?.transactions?.find(trnxn => (trnxn.category == "payout-commission"))?.total || 0}</Td>
+                                    </Tr>
+                                ))
+                            }
+
+                        </Tbody>
+                    </Table>
+                </TableContainer>
+
                 <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
                     <Button
                         colorScheme={'twitter'}
@@ -276,7 +339,7 @@ const Ledger = () => {
                     </Button>
                 </HStack>
 
-                <VisuallyHidden>
+                {/* <VisuallyHidden>
                     <table id='printable-table' ref={tableRef}>
                         <thead>
                             <tr>
@@ -320,7 +383,7 @@ const Ledger = () => {
                             }
                         </tbody>
                     </table>
-                </VisuallyHidden>
+                </VisuallyHidden> */}
 
             </Layout>
         </>

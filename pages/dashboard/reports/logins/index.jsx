@@ -19,29 +19,34 @@ const Index = () => {
 
     const [columnDefs, setColumnDefs] = useState([
         {
-            field: "user_id",
-            headerName: "User ID"
+          field: "user_id",
+          headerName: "User ID",
+          width: 100
         },
         {
-            field: "name",
-            headerName: "Name"
+          field: "name",
+          headerName: "Name"
         },
         {
-            field: "ip",
-            headerName: "Login IP"
+          field: "ip",
+          headerName: "Login IP",
+          minWidth: 300
         },
         {
-            field: "latlong",
-            headerName: "Latlong"
+          field: "latlong",
+          headerName: "Latlong",
+          minWidth: 300
         },
         {
-            field: "created_at",
-            headerName: "Timestamp"
+          field: "created_at",
+          headerName: "Timestamp",
+          width: 240
         },
-    ])
+      ])
+
     useEffect(() => {
         BackendAxios.get('/api/admin/logins/200').then(res => {
-            setRowData(res.data.data)
+            setRowData(res.data)
         }).catch(err => {
             console.log(err)
         })
