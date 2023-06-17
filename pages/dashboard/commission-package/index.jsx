@@ -446,6 +446,7 @@ const CommissionSetup = () => {
                 status: 'success',
                 description: "Package was deleted successfully"
             })
+            fetchAllPackages()
         }).catch(err => {
             Toast({
                 status: 'error',
