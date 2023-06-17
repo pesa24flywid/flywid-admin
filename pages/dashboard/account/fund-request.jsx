@@ -118,7 +118,7 @@ const FundRequests = () => {
                     })
                 })
             }
-            if (updateTo == "declined" || updateTo == "deleted" && params.data.admin_remarks) {
+            if (updateTo == "reversed" && params.data.admin_remarks) {
                 BackendAxios.post(`/api/admin/update-fund-requests`, {
                     beneficiaryId: params.data.user_id,
                     id: params.data.id,
@@ -139,9 +139,26 @@ const FundRequests = () => {
                     })
                 })
             }
-            if (updateTo == "declined" || updateTo == "deleted" && !params.data.admin_remarks) {
+            if (updateTo == "declined" && !params.data.admin_remarks) {
                 Toast({
                     description: 'Please add remarks also'
+                })
+            }
+            if (updateTo == "deleted") {
+                BackendAxios.post("/api/admin/delete-fund", {
+                    fundId: params.data.id
+                }).then(res => {
+                    Toast({
+                        status: 'success',
+                        description: 'Request Deleted'
+                    })
+                    fetchRequests()
+                }).catch(err => {
+                    console.log(err)
+                    Toast({
+                        status: 'error',
+                        description: err.response.data.message || err.response.data || err.message
+                    })
                 })
             }
         }
