@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Layout from '../../layout'
 import {
     Stack,
     Text,
@@ -12,24 +11,32 @@ import {
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import { SiMicrosoftexcel } from 'react-icons/si'
-import { FaFileCsv, FaFilePdf, FaPrint } from 'react-icons/fa'
+import { FaBan, FaFileCsv, FaFilePdf, FaPrint } from 'react-icons/fa'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { BsCheck, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsEye, BsX } from 'react-icons/bs';
+import { BsCheck, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsEye, BsTrash2Fill, BsX } from 'react-icons/bs';
 import BackendAxios from '@/lib/utils/axios'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
-import { useRouter } from 'next/router'
+import { useDisclosure } from '@chakra-ui/react'
+import { Modal } from '@chakra-ui/react'
+import { ModalOverlay } from '@chakra-ui/react'
+import { ModalContent } from '@chakra-ui/react'
+import { ModalHeader } from '@chakra-ui/react'
+import { ModalBody } from '@chakra-ui/react'
+import { ModalFooter } from '@chakra-ui/react'
+import { Input } from '@chakra-ui/react'
+import Layout from '../../layout'
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
+
     doc.autoTable({ html: '#printable-table' })
     doc.output('dataurlnewwindow');
 }
 
 const FundRequests = () => {
-    const router = useRouter()
     const Toast = useToast({
         position: 'top-right'
     })
@@ -67,7 +74,8 @@ const FundRequests = () => {
         {
             headerName: "Trnxn Type",
             field: 'transaction_type',
-            width: 100
+            width: 100,
+            hide: true
         },
         {
             headerName: "Receipt",
@@ -78,7 +86,7 @@ const FundRequests = () => {
         },
         {
             headerName: "User Name",
-            field: 'name', 
+            field: 'name',
             cellRenderer: 'userCellRenderer'
         },
         {
@@ -106,6 +114,15 @@ const FundRequests = () => {
         },
         { headerName: "Update Timestamp", field: 'updated_at' },
     ])
+
+    const { onToggle, isOpen } = useDisclosure()
+    const [selectedFundReq, setSelectedFundReq] = useState({
+        id: "",
+        beneficiaryId: "",
+        amount: "",
+        action: "",
+        remarks: ""
+    })
 
     const [printableRow, setPrintableRow] = useState(rowData)
     const [pagination, setPagination] = useState({
@@ -143,81 +160,99 @@ const FundRequests = () => {
         fetchRequests()
     }, [])
 
+    function updateFundRequest() {
+        if (selectedFundReq.action == "approved") {
+            BackendAxios.post(`/api/admin/update-fund-requests`, {
+                id: selectedFundReq.id,
+                beneficiaryId: selectedFundReq.beneficiaryId,
+                status: selectedFundReq.action,
+                approved: 1,
+                amount: selectedFundReq.amount
+            }).then(res => {
+                Toast({
+                    status: 'success',
+                    description: 'Status Updated'
+                })
+                onToggle()
+                fetchRequests()
+            }).catch(err => {
+                Toast({
+                    status: 'error',
+                    description: err.response.data.message || err.response.data || err.message
+                })
+                onToggle()
+            })
+            return
+        }
+        if (selectedFundReq.action == "declined" && selectedFundReq.remarks) {
+            BackendAxios.post(`/api/admin/update-fund-requests`, {
+                beneficiaryId: params.data.user_id,
+                id: selectedFundReq.id,
+                status: selectedFundReq.action,
+                amount: 0,
+                declined: 1,
+                remarks: selectedFundReq.remarks
+            }).then(res => {
+                onToggle()
+                Toast({
+                    status: 'success',
+                    description: 'Status Updated'
+                })
+                fetchRequests()
+            }).catch(err => {
+                onToggle()
+                console.log(err)
+                Toast({
+                    status: 'error',
+                    description: err.response.data.message || err.response.data || err.message
+                })
+            })
+            return
+        }
+        if (selectedFundReq.action == "declined" && !selectedFundReq.remarks) {
+            Toast({
+                description: 'Please add remarks also'
+            })
+            return
+        }
+        if (selectedFundReq.action == "deleted") {
+            BackendAxios.post("/api/admin/delete-fund", {
+                fundId: selectedFundReq.id
+            }).then(res => {
+                onToggle()
+                Toast({
+                    status: 'success',
+                    description: 'Request Deleted'
+                })
+                fetchRequests()
+            }).catch(err => {
+                onToggle()
+                console.log(err)
+                Toast({
+                    status: 'error',
+                    description: err.response.data.message || err.response.data || err.message
+                })
+            })
+            return
+        }
+    }
 
     const statusCellRenderer = (params) => {
-        function updateFundRequest(updateTo) {
-            console.log(params)
-            if (updateTo == "approved") {
-                BackendAxios.post(`/api/admin/update-fund-requests`, {
-                    id: params.data.id,
-                    beneficiaryId: params.data.user_id,
-                    status: updateTo,
-                    amount: params.data.amount
-                }).then(res => {
-                    Toast({
-                        status: 'success',
-                        description: 'Status Updated'
-                    })
-                    fetchRequests()
-                }).catch(err => {
-                    Toast({
-                        status: 'error',
-                        description: err.response.data.message || err.response.data || err.message
-                    })
-                })
-            }
-            if (updateTo == "declined" && params.data.admin_remarks) {
-                BackendAxios.post(`/api/admin/update-fund-requests`, {
-                    beneficiaryId: params.data.user_id,
-                    id: params.data.id,
-                    status: updateTo,
-                    amount: 0,
-                    remarks: params.data.admin_remarks
-                }).then(res => {
-                    Toast({
-                        status: 'success',
-                        description: 'Status Updated'
-                    })
-                    fetchRequests()
-                }).catch(err => {
-                    console.log(err)
-                    Toast({
-                        status: 'error',
-                        description: err.response.data.message || err.response.data || err.message
-                    })
-                })
-            }
-            if (updateTo == "declined" && !params.data.admin_remarks) {
-                Toast({
-                    description: 'Please add remarks also'
-                })
-            }
-            if (updateTo == "deleted") {
-                BackendAxios.post("/api/admin/delete-fund", {
-                    fundId: params.data.id
-                }).then(res => {
-                    Toast({
-                        status: 'success',
-                        description: 'Request Deleted'
-                    })
-                    fetchRequests()
-                }).catch(err => {
-                    console.log(err)
-                    Toast({
-                        status: 'error',
-                        description: err.response.data.message || err.response.data || err.message
-                    })
-                })
-            }
+        function handleClick() {
+            setSelectedFundReq({
+                id: params.data.id,
+                beneficiaryId: params.data.user_id,
+                amount: params.data.amount,
+            })
+            onToggle()
         }
 
         return (
             <>
-                <HStack h={'full'}>
-                    {params.data.status == "pending" &&
-                        <Button size={'xs'} leftIcon={<BsCheck />} colorScheme='whatsapp' onClick={() => updateFundRequest("approved")}>Approve</Button>
-                    }
-                    {params.data.status != "pending" &&
+                <HStack alignItems={'center'} justifyContent={'center'}
+                >
+                    {
+                        params.data.status != "pending" &&
                         <Button
                             size={'xs'}
                             colorScheme={params.data.status == "approved" ? 'whatsapp' : params.data.status == "deleted" ? 'red' : 'orange'}
@@ -225,34 +260,16 @@ const FundRequests = () => {
                         >{params.data.status}
                         </Button>
                     }
+
                     {
                         params.data.status == "pending" &&
-                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='orange' onClick={() => updateFundRequest("declined")}>Reject</Button>
+                        <Button
+                            size={'xs'} colorScheme='twitter'
+                            onClick={handleClick}
+                        >Actions</Button>
                     }
-                    {
-                        params.data.status == "pending" &&
-                        <Button size={'xs'} leftIcon={<BsX />} colorScheme='red' onClick={() => updateFundRequest("deleted")}>Delete</Button>
-                    }
+
                 </HStack>
-            </>
-        )
-    }
-
-    const userCellRenderer = (params) => {
-        return (
-            <>
-                <Text>{params.data.name} ({params.data.user_id})</Text>
-            </>
-        )
-    }
-
-    const adminCellRenderer = (params) => {
-        return (
-            <>
-                {
-                    params.data?.approved || params.data?.declined ?
-                        <Text>{params.data.admin_name} ({params.data.admin_id})</Text> : null
-                }
             </>
         )
     }
@@ -265,12 +282,31 @@ const FundRequests = () => {
                 })
                 return
             }
-            window.open(`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/receipts/${params.data.receipt}`, "_blank")
+            window.open(`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${params.data.receipt}`, "_blank")
         }
         return (
             <HStack height={'full'} w={'full'} gap={4}>
                 <Button rounded={'full'} colorScheme='twitter' size={'xs'} onClick={() => showReceipt()}><BsEye /></Button>
             </HStack>
+        )
+    }
+
+    const userCellRenderer = (params) => {
+        return (
+            <>
+                <Text>{params.data.name} {params.data.user_id}</Text>
+            </>
+        )
+    }
+
+    const adminCellRenderer = (params) => {
+        return (
+            <>
+                {
+                    params.data?.approved || params.data?.declined ?
+                        <Text>{params.data.admin_name} ({params.data.admin_id})</Text> : null
+                }
+            </>
         )
     }
 
@@ -334,9 +370,8 @@ const FundRequests = () => {
                             defaultColDef={{
                                 filter: true,
                                 floatingFilter: true,
-                                resizable: true,
+                                resizable: true
                             }}
-
                             onFilterChanged={
                                 (params) => {
                                     setPrintableRow(params.api.getRenderedNodes().map((item) => {
@@ -349,11 +384,10 @@ const FundRequests = () => {
                             components={{
                                 'statusCellRenderer': statusCellRenderer,
                                 'userCellRenderer': userCellRenderer,
-                                'adminCellRenderer': adminCellRenderer,
-                                'receiptCellRenderer': receiptCellRenderer
+                                'receiptCellRenderer': receiptCellRenderer,
+                                'adminCellRenderer': adminCellRenderer
                             }}
                         >
-
                         </AgGridReact>
                     </Box>
                     <HStack spacing={2} py={4} bg={'white'} justifyContent={'center'}>
@@ -437,6 +471,47 @@ const FundRequests = () => {
 
                 </Box>
             </Layout>
+
+
+            <Modal
+                isOpen={isOpen}
+                onClose={onToggle}
+                isCentered
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Update Fund Request</ModalHeader>
+                    <ModalBody>
+                        <HStack w={'full'} gap={4} py={4}>
+                            <Button
+                                colorScheme='whatsapp'
+                                leftIcon={<BsCheck />}
+                                variant={selectedFundReq.action == "approved" ? "solid" : "outline"}
+                                onClick={() => setSelectedFundReq({ ...selectedFundReq, action: "approved" })}
+                            >Approve</Button>
+                            <Button
+                                colorScheme='orange'
+                                leftIcon={<FaBan />}
+                                variant={selectedFundReq.action == "declined" ? "solid" : "outline"}
+                                onClick={() => setSelectedFundReq({ ...selectedFundReq, action: "declined" })}
+                            >Decline</Button>
+                            <Button
+                                colorScheme='orange'
+                                leftIcon={<BsX />}
+                                variant={selectedFundReq.action == "delete" ? "solid" : "outline"}
+                                onClick={() => setSelectedFundReq({ ...selectedFundReq, action: "delete" })}
+                            >Delete</Button>
+                        </HStack>
+                        <Text>Remarks</Text>
+                        <Input onChange={e => setSelectedFundReq({ ...selectedFundReq, remarks: e.target.value })} />
+                    </ModalBody>
+                    <ModalFooter>
+                        <HStack justifyContent={'flex-end'}>
+                            <Button colorScheme='twitter' onClick={updateFundRequest}>Confirm</Button>
+                        </HStack>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </>
     )
 }
