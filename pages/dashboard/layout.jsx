@@ -140,44 +140,44 @@ const menuOptions = [
       }
     ]
   },
-  {
-    type: "accordion",
-    name: "manage services",
-    id: "services",
-    icon: <BsBriefcaseFill />,
-    children: [
-      {
-        id: "manage-global-services",
-        title: "manage global services",
-        link: "/dashboard/services/manage-services?pageid=services",
-        status: true,
-      },
-      {
-        id: "manage-portal-services",
-        title: "manage portal services",
-        link: "/dashboard/services/services-status?pageid=services",
-        status: false,
-      },
-      {
-        id: "manage-operator-categories",
-        title: "manage operator categories",
-        link: "/dashboard/services/manage-categories?pageid=services",
-        status: true,
-      },
-      {
-        id: "manage-operators",
-        title: "manage operators",
-        link: "/dashboard/services/manage-operators?pageid=services",
-        status: true,
-      },
-      {
-        id: "manage-cms-billers",
-        title: "manage CMS billers",
-        link: "/dashboard/services/manage-cms-billers?pageid=services",
-        status: true,
-      },
-    ]
-  },
+  // {
+  //   type: "accordion",
+  //   name: "manage services",
+  //   id: "services",
+  //   icon: <BsBriefcaseFill />,
+  //   children: [
+  //     {
+  //       id: "manage-global-services",
+  //       title: "manage global services",
+  //       link: "/dashboard/services/manage-services?pageid=services",
+  //       status: true,
+  //     },
+  //     {
+  //       id: "manage-portal-services",
+  //       title: "manage portal services",
+  //       link: "/dashboard/services/services-status?pageid=services",
+  //       status: false,
+  //     },
+  //     {
+  //       id: "manage-operator-categories",
+  //       title: "manage operator categories",
+  //       link: "/dashboard/services/manage-categories?pageid=services",
+  //       status: true,
+  //     },
+  //     {
+  //       id: "manage-operators",
+  //       title: "manage operators",
+  //       link: "/dashboard/services/manage-operators?pageid=services",
+  //       status: true,
+  //     },
+  //     {
+  //       id: "manage-cms-billers",
+  //       title: "manage CMS billers",
+  //       link: "/dashboard/services/manage-cms-billers?pageid=services",
+  //       status: true,
+  //     },
+  //   ]
+  // },
   {
     type: "accordion",
     name: "account",
@@ -256,26 +256,26 @@ const menuOptions = [
       // },
     ]
   },
-  {
-    type: "accordion",
-    name: "whitelabel",
-    id: "whitelabel",
-    icon: <IoIosFlash />,
-    children: [
-      {
-        id: "all-organizations",
-        title: "all organisations",
-        link: "/dashboard/organisation?pageid=whitelabel",
-        status: true,
-      },
-      {
-        id: "create-whitelabel",
-        title: "create whitelabel",
-        link: "/dashboard/organisation/create?pageid=whitelabel",
-        status: true,
-      }
-    ]
-  },
+  // {
+  //   type: "accordion",
+  //   name: "whitelabel",
+  //   id: "whitelabel",
+  //   icon: <IoIosFlash />,
+  //   children: [
+  //     {
+  //       id: "all-organizations",
+  //       title: "all organisations",
+  //       link: "/dashboard/organisation?pageid=whitelabel",
+  //       status: true,
+  //     },
+  //     {
+  //       id: "create-whitelabel",
+  //       title: "create whitelabel",
+  //       link: "/dashboard/organisation/create?pageid=whitelabel",
+  //       status: true,
+  //     }
+  //   ]
+  // },
   {
     type: "accordion",
     name: "reports",

@@ -115,14 +115,19 @@ const Ledger = () => {
                 prev_page_url: res.data.prev_page_url,
             })
             // setRowData(res.data)
-            // console.log(Object.entries(res.data))
 
             console.log(Object.entries(res.data).map((item) => {
                 return {
                     userId: item[0],
+                    userName: Object.entries(item[1]).map(transaction => (
+                        transaction[1][0]?.trigered_by_name
+                    ))[0],
+                    userPhone: Object.entries(item[1]).map(transaction => (
+                        transaction[1][0]?.trigered_by_phone
+                    ))[0],
                     transactions: Object.entries(item[1]).map(transaction => ({
                         category: transaction[0],
-                        total: transaction[1].map(data => (Math.abs(data?.credit_amount - data?.debit_amount)))?.reduce(addTransactions, 0)
+                        total: transaction[1]?.map(data => (Math.abs(data?.credit_amount - data?.debit_amount)))?.reduce(addTransactions, 0)
                     }))
                 }
             }))
@@ -130,9 +135,15 @@ const Ledger = () => {
             setRowData(Object.entries(res.data).map((item) => {
                 return {
                     userId: item[0],
+                    userName: Object.entries(item[1]).map(transaction => (
+                        transaction[1][0]?.trigered_by_name
+                    ))[0] || "NA",
+                    userPhone: Object.entries(item[1]).map(transaction => (
+                        transaction[1][0]?.trigered_by_phone
+                    ))[0] || "NA",
                     transactions: Object.entries(item[1]).map(transaction => ({
                         category: transaction[0],
-                        total: transaction[1].map(data => (Math.abs(data?.credit_amount - data?.debit_amount)))?.reduce(addTransactions, 0)
+                        total: transaction[1]?.map(data => (Math.abs(data?.credit_amount - data?.debit_amount)))?.reduce(addTransactions, 0)
                     }))
                 }
             }))
@@ -285,14 +296,19 @@ const Ledger = () => {
                             </Tr>
                             <Tr>
                                 <Th color={'#FFF'}>Payout</Th>
-                                <Th color={'#FFF'}>Commission</Th>
+                                <Th color={'#FFF'}>Charge</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             {
                                 rowData.map((item, key) => (
                                     <Tr key={key}>
-                                        <Td>{item?.userId}</Td>
+                                        <Td>
+                                            <Box>
+                                                <Text fontSize={'lg'} fontWeight={'semibold'} >{item?.userName}</Text>
+                                                <Text>({item?.userId}) - {item?.userPhone}</Text>
+                                            </Box>
+                                        </Td>
                                         <Td>{item?.transactions?.find(trnxn => (trnxn.category == "payout"))?.total || 0}</Td>
                                         <Td>{item?.transactions?.find(trnxn => (trnxn.category == "payout-commission"))?.total || 0}</Td>
                                     </Tr>
