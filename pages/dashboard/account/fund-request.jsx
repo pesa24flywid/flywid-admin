@@ -16,7 +16,7 @@ import { FaFileCsv, FaFilePdf, FaPrint } from 'react-icons/fa'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { BsCheck, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsX } from 'react-icons/bs';
+import { BsCheck, BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsEye, BsX } from 'react-icons/bs';
 import BackendAxios from '@/lib/utils/axios'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
@@ -35,30 +35,78 @@ const FundRequests = () => {
     const [rowData, setRowData] = useState([])
     const [columnDefs, setColumnDefs] = useState([
         {
+            field: "id",
+            headerName: "Req ID",
+            width: 100
+        },
+        {
             field: "status",
             headerName: "Status",
-            editable: true,
             cellRenderer: 'statusCellRenderer'
         },
-        { headerName: "Request Timestamp", field: 'created_at' },
-        { headerName: "Trnxn ID", field: 'transaction_id' },
-        { headerName: "Amount", field: 'amount' },
-        { headerName: "Requested Bank", field: 'bank_name' },
-        { headerName: "Transaction Type", field: 'transaction_type' },
-        { headerName: "Transaction Receipt", field: 'receipt' },
-        { headerName: "User Name", field: 'name', cellRenderer: 'userCellRenderer' },
-        { headerName: "User Phone", field: 'phone_number' },
-        { headerName: "Updated By", field: 'user_id' },
-        { headerName: "Remarks", field: 'remarks' },
+        {
+            headerName: "Request Timestamp",
+            field: 'created_at',
+            width: 160
+        },
+        {
+            headerName: "Trnxn ID",
+            field: 'transaction_id',
+            width: 160
+        },
+        {
+            headerName: "Amount",
+            field: 'amount',
+            width: 100
+        },
+        {
+            headerName: "Requested Bank",
+            field: 'bank_name'
+        },
+        {
+            headerName: "Trnxn Type",
+            field: 'transaction_type',
+            width: 100,
+            hide: true
+        },
+        {
+            headerName: "Receipt",
+            field: 'receipt',
+            cellRenderer: 'receiptCellRenderer',
+            pinned: 'right',
+            width: 80
+        },
+        {
+            headerName: "User Name",
+            field: 'name',
+            cellRenderer: 'userCellRenderer'
+        },
+        {
+            headerName: "User Phone",
+            field: 'phone_number',
+            width: 120
+        },
+        {
+            headerName: "Updated By",
+            field: 'admin_name',
+            cellRenderer: 'adminCellRenderer'
+        },
+        {
+            headerName: "Remarks",
+            field: 'remarks',
+            width: 100
+        },
         {
             headerName: "Admin Remarks",
             field: 'admin_remarks',
             editable: true,
             singleClickEdit: true,
             cellEditor: 'agTextCellEditor',
+            width: 100
         },
         { headerName: "Update Timestamp", field: 'updated_at' },
     ])
+
     const [printableRow, setPrintableRow] = useState(rowData)
     const [pagination, setPagination] = useState({
         current_page: "1",
@@ -190,10 +238,38 @@ const FundRequests = () => {
         )
     }
 
+    const receiptCellRenderer = (params) => {
+        function showReceipt() {
+            if (!params.data.receipt) {
+                Toast({
+                    description: 'No Receipt Available'
+                })
+                return
+            }
+            window.open(`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/receipts/${params.data.receipt}`, "_blank")
+        }
+        return (
+            <HStack height={'full'} w={'full'} gap={4}>
+                <Button rounded={'full'} colorScheme='twitter' size={'xs'} onClick={() => showReceipt()}><BsEye /></Button>
+            </HStack>
+        )
+    }
+
     const userCellRenderer = (params) => {
         return (
             <>
                 <Text>{params.data.name} {params.data.user_id}</Text>
+            </>
+        )
+    }
+
+    const adminCellRenderer = (params) => {
+        return (
+            <>
+                {
+                    params.data?.approved || params.data?.declined ?
+                        <Text>{params.data.admin_name} ({params.data.admin_id})</Text> : null
+                }
             </>
         )
     }
@@ -272,7 +348,9 @@ const FundRequests = () => {
                             }
                             components={{
                                 'statusCellRenderer': statusCellRenderer,
-                                'userCellRenderer': userCellRenderer
+                                'userCellRenderer': userCellRenderer,
+                                'receiptCellRenderer': receiptCellRenderer,
+                                'adminCellRenderer': adminCellRenderer
                             }}
                         >
 

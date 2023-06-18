@@ -88,7 +88,7 @@ const FundRequests = () => {
         },
         {
             headerName: "Updated By",
-            field: 'user_id',
+            field: 'admin_name',
             cellRenderer: 'adminCellRenderer'
         },
         {
@@ -106,6 +106,7 @@ const FundRequests = () => {
         },
         { headerName: "Update Timestamp", field: 'updated_at' },
     ])
+
     const [printableRow, setPrintableRow] = useState(rowData)
     const [pagination, setPagination] = useState({
         current_page: "1",
@@ -248,7 +249,10 @@ const FundRequests = () => {
     const adminCellRenderer = (params) => {
         return (
             <>
-                <Text>{params.data.admin_name} ({params.data.admin_id})</Text>
+                {
+                    params.data?.approved || params.data?.declined ?
+                        <Text>{params.data.admin_name} ({params.data.admin_id})</Text> : null
+                }
             </>
         )
     }
