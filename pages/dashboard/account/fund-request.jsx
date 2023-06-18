@@ -246,7 +246,7 @@ const FundRequests = () => {
                 })
                 return
             }
-            window.open(`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/receipts/${params.data.receipt}`, "_blank")
+            window.open(`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${params.data.receipt}`, "_blank")
         }
         return (
             <HStack height={'full'} w={'full'} gap={4}>
