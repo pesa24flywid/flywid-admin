@@ -116,21 +116,8 @@ const Ledger = () => {
             })
             // setRowData(res.data)
 
-            console.log(Object.entries(res.data).map((item) => {
-                return {
-                    userId: item[0],
-                    userName: Object.entries(item[1]).map(transaction => (
-                        transaction[1][0]?.trigered_by_name
-                    ))[0],
-                    userPhone: Object.entries(item[1]).map(transaction => (
-                        transaction[1][0]?.trigered_by_phone
-                    ))[0],
-                    transactions: Object.entries(item[1]).map(transaction => ({
-                        category: transaction[0],
-                        total: transaction[1]?.map(data => (Math.abs(data?.credit_amount - data?.debit_amount)))?.reduce(addTransactions, 0)
-                    }))
-                }
-            }))
+            console.log("Total Payout ")
+            console.log(Object.values(res.data))
 
             setRowData(Object.entries(res.data).map((item) => {
                 return {
@@ -140,6 +127,9 @@ const Ledger = () => {
                     ))[0] || "NA",
                     userPhone: Object.entries(item[1]).map(transaction => (
                         transaction[1][0]?.trigered_by_phone
+                    ))[0] || "NA",
+                    userWallet: Object.entries(item[1]).map(transaction => (
+                        transaction[1][0]?.wallet_amount
                     ))[0] || "NA",
                     transactions: Object.entries(item[1]).map(transaction => ({
                         category: transaction[0],
@@ -292,6 +282,7 @@ const Ledger = () => {
                         <Thead bgColor={'twitter.500'} color={'#FFF'}>
                             <Tr>
                                 <Th color={'#FFF'} rowSpan={2}>User ID</Th>
+                                <Th color={'#FFF'} rowSpan={2}>Wallet Balance</Th>
                                 <Th color={'#FFF'} colSpan={4} textAlign={'center'}>Transactions</Th>
                             </Tr>
                             <Tr>
@@ -309,12 +300,20 @@ const Ledger = () => {
                                                 <Text>({item?.userId}) - {item?.userPhone}</Text>
                                             </Box>
                                         </Td>
+                                        <Td>₹ {item?.userWallet || 0}</Td>
                                         <Td>{item?.transactions?.find(trnxn => (trnxn.category == "payout"))?.total || 0}</Td>
                                         <Td>{item?.transactions?.find(trnxn => (trnxn.category == "payout-commission"))?.total || 0}</Td>
                                     </Tr>
                                 ))
                             }
+                            <Tr>
+                                <Td colSpan={2}>
+                                    <Text textAlign={'right'} fontWeight={'semibold'} fontSize={'lg'}>TOTAL</Text>
+                                </Td>
+                                <Td>
 
+                                </Td>
+                            </Tr>
                         </Tbody>
                     </Table>
                 </TableContainer>
