@@ -37,7 +37,7 @@ const Index = () => {
             lastName: "",
             userEmail: "",
             userPhone: "",
-            userRole: "3",
+            userRole: "retailer",
             userPlan: "",
             hasParent: "0",
             parent: "",
@@ -99,10 +99,10 @@ const Index = () => {
     useEffect(() => {
         // Fetching all users
         let parentRole = "distributor"
-        if (Formik.values.userRole == "3") {
+        if (Formik.values.userRole == "retailer") {
             parentRole = "distributor"
         }
-        if (Formik.values.userRole == "2") {
+        if (Formik.values.userRole == "distributor") {
             parentRole = "super_distributor"
         }
         BackendAxios.get(`/api/admin/all-users-list/${parentRole}`).then(res => {
@@ -132,10 +132,10 @@ const Index = () => {
                                 value={Formik.values.userRole}
                                 onChange={Formik.handleChange}
                             >
-                                <option value="3">Retailer</option>
-                                <option value="2">Distributor</option>
-                                <option value="4">Super Distributor</option>
-                                <option value="1">Admin Employee</option>
+                                <option value="retailer">Retailer</option>
+                                <option value="distributor">Distributor</option>
+                                <option value="super_distributor">Super Distributor</option>
+                                <option value="admin">Admin Employee</option>
                             </Select>
                         </FormControl>
                         <input type="hidden" name="hasParent" value={Formik.values.parent ? "1" : "0"} />
