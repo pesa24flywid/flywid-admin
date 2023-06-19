@@ -188,7 +188,7 @@ const FundRequests = () => {
         }
         if (selectedFundReq.action == "declined" && remarks) {
             BackendAxios.post(`/api/admin/update-fund-requests`, {
-                beneficiaryId: params.data.user_id,
+                beneficiaryId: selectedFundReq.beneficiaryId,
                 id: selectedFundReq.id,
                 status: selectedFundReq.action,
                 amount: 0,
