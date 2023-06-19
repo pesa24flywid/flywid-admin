@@ -28,6 +28,7 @@ import axios from "axios";
 import Cookies from 'js-cookie'
 var bcrypt = require('bcryptjs')
 import { useRouter } from 'next/router'
+import BackendAxios from "@/lib/utils/axios";
 
 const Auth = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
