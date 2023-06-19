@@ -19,6 +19,7 @@ const ResetPassword = () => {
     position: 'top-right'
   })
   const [lastRemarks, setLastRemarks] = useState("")
+  
   const PasswordFormik = useFormik({
     initialValues: {
       old_password: "",
@@ -26,21 +27,6 @@ const ResetPassword = () => {
       new_password_confirmation: ""
     }
   })
-
-  function getRemarks() {
-    BackendAxios.get('/api/admin/credential-remarks').then(res => {
-        setLastRemarks(res.data)
-    }).catch(err => {
-        Toast({
-            status: 'error',
-            title: 'Error Occured',
-            description: err.message
-        })
-    })
-}
-useEffect(() => {
-    getRemarks()
-}, [])
 
   function handlePasswordReset() {
     BackendAxios.post('/api/user/new-password', {
@@ -53,7 +39,6 @@ useEffect(() => {
         title: 'Success',
         description: 'Your password was changed succesfully.'
       })
-      getRemarks()
     }).catch((err) => {
       Toast({
         status: 'error',

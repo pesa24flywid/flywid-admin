@@ -463,8 +463,11 @@ const Layout = (props) => {
     if (authentic != true) {
       BackendAxios.post("/logout").then(() => {
         Cookies.remove("verified")
+        setTimeout(() => Router.push("/"), 2000)
+      }).catch(err => {
+        Cookies.remove("verified")
+        setTimeout(() => Router.push("/"), 2000)
       })
-      setTimeout(() => Router.push("/"), 2000)
     }
   }, [])
 
