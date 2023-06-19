@@ -463,7 +463,7 @@ const CommissionSetup = () => {
             return
         }
         BackendAxios.post("/api/admin/assign-package", {
-            user_id: VerificationFormik.values.beneficiaryId,
+            user_id: fetchedUser?.id,
             package_id: isAssignModalOpen.selectedPackageId
         }).then(res => {
             if (res.data) {
