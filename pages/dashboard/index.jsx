@@ -79,6 +79,15 @@ const Index = () => {
   const [superDistributors, setSuperDistributors] = useState("")
 
   const [pendingRequests, setPendingRequests] = useState({})
+  const [wallets, setWallets] = useState({
+    retailer: "",
+    distributor: "",
+    superDistributor: ""
+  })
+  const [balance, setBalance] = useState({
+    marketBalance: "",
+    capBalance: ""
+  })
 
   useEffect(() => {
     BackendAxios.get('/api/admin/logins/50').then(res => {
@@ -88,21 +97,20 @@ const Index = () => {
     })
     getOverview()
     getPendingRequests()
+    getMarketBalance()
   }, [])
 
   function getOverview(tenure) {
     BackendAxios.get(`/api/admin/overview?tenure=${tenure || "today"}`).then(res => {
-      setAepsData(res.data[0].aeps)
-      setBbpsData(res.data[1].bbps)
-      setDmtData(res.data[2].dmt)
-      setPanData(res.data[3].pan)
-      setPayoutData(res.data[4].payout)
-      setLicData(res.data[5].lic)
-      setFastagData(res.data[6].fastag)
-      setCmsData(res.data[7].cms)
-      setRechargeData(res.data[8].recharge)
-      setFundRequestsData(res.data[9].funds)
-      setUsersData(res.data[10].users)
+      setPayoutData(res.data[0].payout)
+      setWallets({
+        ...wallets,
+        retailer: res.data[1].retailer,
+        distributor: res.data[1].distributor,
+        superDistributor: res.data[1].super_distributor,
+      })
+      setFundRequestsData(res.data[2].funds)
+      setUsersData(res.data[3].users)
     }).then(() => {
       BackendAxios.get(`/api/admin/role-count/retailer`).then(res => {
         setRetailers(res.data)
@@ -123,6 +131,17 @@ const Index = () => {
   function getPendingRequests() {
     BackendAxios.get("/api/admin/pending-requests").then(res => {
       setPendingRequests(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  function getMarketBalance() {
+    BackendAxios.get("/api/admin/sum-amounts").then(res => {
+      setBalance({
+        marketBalance: res?.data?.wallet_sum,
+        capBalance: res.data?.capping_sum
+      })
     }).catch(err => {
       console.log(err)
     })
@@ -233,13 +252,13 @@ const Index = () => {
               >
                 <DataCard
                   title={'Market Balance'}
-                  data={0}
+                  data={balance?.marketBalance}
                   icon={<BiRupee color='#FFB100' size={'28'} />}
                   color={'#FFB100'}
                 />
                 <DataCard
                   title={'Reserved Balance'}
-                  data={0}
+                  data={balance?.capBalance}
                   icon={<BiRupee color='#FFB100' size={'32'} />}
                   color={'#FFB100'}
                 />
@@ -252,19 +271,19 @@ const Index = () => {
               >
                 <DataCard
                   title={'Retailers Wallet'}
-                  data={0}
+                  data={wallets?.retailer}
                   icon={<FaUserAlt color='#FFB100' size={'32'} />}
                   color={'#FFB100'}
                 />
                 <DataCard
                   title={'Distributors Wallet'}
-                  data={0}
+                  data={wallets?.distributor}
                   icon={<FaUserAlt color='#FFB100' size={'28'} />}
                   color={'#FFB100'}
                 />
                 <DataCard
                   title={'Super Distributors Wallet'}
-                  data={0}
+                  data={wallets?.superDistributor}
                   icon={<FaUserAlt color='#FFB100' size={'32'} />}
                   color={'#FFB100'}
                 />
@@ -317,8 +336,8 @@ const Index = () => {
             <TransactionCard
               color={'#13005A'}
               title={"Pending Payouts"}
-              quantity={fastagData?.count}
-              amount={fastagData?.debit - fastagData?.credit}
+              quantity={payoutData?.count}
+              amount={payoutData?.debit - payoutData?.credit}
             />
 
             <TransactionCard
