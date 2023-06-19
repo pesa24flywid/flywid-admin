@@ -282,7 +282,7 @@ const FundRequests = () => {
                 })
                 return
             }
-            window.open(`${process.env.NEXT_PUBLIC_BACKEND_URL}/${params.data.receipt}`, "_blank")
+            window.open(`https://janpay.online/${params.data.receipt}`, "_blank")
         }
         return (
             <HStack height={'full'} w={'full'} gap={4}>
