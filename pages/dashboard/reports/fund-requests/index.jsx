@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Layout from '../layout'
 import {
     Stack,
     Text,
@@ -27,7 +28,6 @@ import { ModalHeader } from '@chakra-ui/react'
 import { ModalBody } from '@chakra-ui/react'
 import { ModalFooter } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
-import Layout from '../../layout'
 
 const ExportPDF = () => {
     const doc = new jsPDF('landscape')
@@ -120,9 +120,9 @@ const FundRequests = () => {
         id: "",
         beneficiaryId: "",
         amount: "",
-        action: "",
-        remarks: ""
+        action: ""
     })
+    const [remarks, setRemarks] = useState("")
 
     const [printableRow, setPrintableRow] = useState(rowData)
     const [pagination, setPagination] = useState({
@@ -161,6 +161,8 @@ const FundRequests = () => {
     }, [])
 
     function updateFundRequest() {
+        console.log(selectedFundReq)
+        console.log(remarks)
         if (selectedFundReq.action == "approved") {
             BackendAxios.post(`/api/admin/update-fund-requests`, {
                 id: selectedFundReq.id,
@@ -184,14 +186,14 @@ const FundRequests = () => {
             })
             return
         }
-        if (selectedFundReq.action == "declined" && selectedFundReq.remarks) {
+        if (selectedFundReq.action == "declined" && remarks) {
             BackendAxios.post(`/api/admin/update-fund-requests`, {
                 beneficiaryId: params.data.user_id,
                 id: selectedFundReq.id,
                 status: selectedFundReq.action,
                 amount: 0,
                 declined: 1,
-                remarks: selectedFundReq.remarks
+                remarks: remarks
             }).then(res => {
                 onToggle()
                 Toast({
@@ -209,7 +211,7 @@ const FundRequests = () => {
             })
             return
         }
-        if (selectedFundReq.action == "declined" && !selectedFundReq.remarks) {
+        if (selectedFundReq.action == "declined" && !remarks) {
             Toast({
                 description: 'Please add remarks also'
             })
@@ -503,7 +505,7 @@ const FundRequests = () => {
                             >Delete</Button>
                         </HStack>
                         <Text>Remarks</Text>
-                        <Input onChange={e => setSelectedFundReq({ ...selectedFundReq, remarks: e.target.value })} />
+                        <Input onChange={e => setRemarks(e.target.value)} />
                     </ModalBody>
                     <ModalFooter>
                         <HStack justifyContent={'flex-end'}>
