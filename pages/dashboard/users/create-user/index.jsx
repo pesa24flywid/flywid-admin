@@ -154,7 +154,7 @@ const Index = () => {
                             </Select>
                         </FormControl>
                         {
-                            Formik.values.userRole == "3" ?
+                            Formik.values.userRole == "retailer" ?
                                 <FormControl w={['full', 'xs']} bg={'white'}>
                                     <FormLabel>Parent Distributor</FormLabel>
                                     <Select
@@ -169,7 +169,7 @@ const Index = () => {
                                         }
                                     </Select>
                                 </FormControl> :
-                                Formik.values.userRole == "2" ?
+                                Formik.values.userRole == "distributor" ?
                                     <FormControl w={['full', 'xs']} bg={'white'}>
                                         <FormLabel>Parent Super Distributor</FormLabel>
                                         <Select
