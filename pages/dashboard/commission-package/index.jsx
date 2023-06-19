@@ -125,7 +125,7 @@ const CommissionSetup = () => {
 
     const VerificationFormik = useFormik({
         initialValues: {
-            beneficiaryId: fetchedUser.id || "",
+            beneficiaryId: "",
             packageId: ""
         },
         onSubmit: values => {
