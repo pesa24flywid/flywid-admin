@@ -159,7 +159,7 @@ const Auth = () => {
         localStorage.setItem("userType", res.data.role[0].name)
 
         localStorage.setItem("profilePic", `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${res.data.profile_pic}`)
-
+        BackendAxios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token.original.access_token}`
         Cookies.set('access-token', res.data.token.original.access_token)
         if (res.data.profile_complete == 0) localStorage.setItem("isProfileComplete", false)
         if (res.data.profile_complete == 1) localStorage.setItem("isProfileComplete", true)

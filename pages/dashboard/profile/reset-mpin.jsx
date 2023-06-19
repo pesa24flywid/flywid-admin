@@ -26,8 +26,7 @@ const ResetMpin = () => {
         initialValues: {
             old_mpin: "",
             new_mpin: "",
-            new_mpin_confirmation: "",
-            credential_remarks: ""
+            new_mpin_confirmation: ""
         }
     })
 
@@ -50,8 +49,7 @@ const ResetMpin = () => {
         BackendAxios.post('/api/user/new-mpin', JSON.stringify({
             old_mpin: MpinFormik.values.old_mpin,
             new_mpin: MpinFormik.values.new_mpin,
-            new_mpin_confirmation: MpinFormik.values.new_mpin_confirmation,
-            credential_remarks: MpinFormik.values.credential_remarks
+            new_mpin_confirmation: MpinFormik.values.new_mpin_confirmation
         })).then((res) => {
             getRemarks()
             Toast({
@@ -117,25 +115,8 @@ const ResetMpin = () => {
                                     </PinInput>
                                 </HStack>
                             </FormControl>
-                            <FormControl >
-                                <FormLabel textAlign={'center'} fontSize={12}>Remarks</FormLabel>
-                                <HStack spacing={6} justifyContent={'center'}>
-                                    <Input
-                                        name='credential_remarks'
-                                        onChange={MpinFormik.handleChange}
-                                        bg={'aqua'}
-                                    />
-                                </HStack>
-                            </FormControl>
                             <Button colorScheme={'twitter'} onClick={handleMpinReset}>Done</Button>
                         </VStack>
-                    </Box>
-                    <Box p={4} bg={'orange.400'} mt={16} w={['full', 'sm']}>
-                        <Text
-                            fontWeight={'semibold'}
-                            color={'#FFF'}
-                        >Last Remarks</Text>
-                        <Text color={'#FFF'}>{lastRemarks}</Text>
                     </Box>
                 </VStack>
             </Layout>
