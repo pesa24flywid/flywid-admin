@@ -266,7 +266,7 @@ const Index = () => {
 
               <Stack direction={['row']}
                 w={'full'} py={2} spacing={[0, 4]}
-                justifyContent={'space-between'}
+                justifyContent={'flex-start'}
                 flexWrap={'wrap'} alignItems={['flex-start']}
               >
                 <DataCard
@@ -281,6 +281,12 @@ const Index = () => {
                   icon={<FaUserAlt color='#FFB100' size={'28'} />}
                   color={'#FFB100'}
                 />
+              </Stack>
+              <Stack direction={['row']}
+                w={'full'} py={2} spacing={[0, 4]}
+                justifyContent={'space-between'}
+                flexWrap={'wrap'} alignItems={['flex-start']}
+              >
                 <DataCard
                   title={'Super Distributors Wallet'}
                   data={wallets?.superDistributor}
