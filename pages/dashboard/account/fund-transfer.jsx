@@ -68,11 +68,13 @@ const FundTransfer = () => {
                         status: 'success',
                         description: 'Transaction successful!'
                     })
+                    onClose()
                 }).catch(err => {
                     Toast({
                         status: 'error',
                         description: err.response.data.message || err.response.data || err.message
                     })
+                    onClose()
                 })
             }
         }
@@ -271,7 +273,7 @@ const FundTransfer = () => {
                         <AgGridReact
                             columnDefs={columnDefs}
                             rowData={rowData}
-                            onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
+
                         >
 
                         </AgGridReact>

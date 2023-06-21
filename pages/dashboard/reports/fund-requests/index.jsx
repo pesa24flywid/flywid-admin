@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../layout";
+import Layout from "../../layout";
 import {
   Stack,
   Text,
@@ -372,6 +372,7 @@ const FundRequests = () => {
                 Excel
               </Button>
             </DownloadTableExcel>
+
             <Button
               size={["xs", "sm"]}
               colorScheme={"red"}
@@ -514,7 +515,7 @@ const FundRequests = () => {
           </HStack>
 
           <VisuallyHidden>
-            <table id="printable-table">
+            <table id="printable-table" ref={tableRef}>
               <thead>
                 <tr>
                   <th>#</th>

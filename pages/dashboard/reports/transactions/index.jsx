@@ -38,39 +38,55 @@ const Ledger = () => {
         },
         {
             headerName: "Done By",
-            field: "trigered_by"
+            field: "trigered_by",
+            cellRenderer: 'userCellRenderer',
+            width: 150
         },
         {
-            headerName: "Beneficiary",
-            field: "name"
+            headerName: "Phone",
+            field: "transaction_by_phone",
+            width: 150
         },
         {
             headerName: "Description",
-            field: "transaction_for"
+            field: "description"
         },
         {
             headerName: "Type",
-            field: "service_type"
+            field: "service_type",
+            width: 120
         },
         {
-            headerName: "Credit Amount",
-            field: "credit_amount"
+            headerName: "Credit",
+            field: "credit_amount",
+            cellRenderer: 'creditCellRenderer',
+            width: 120
         },
         {
-            headerName: "Debit Amount",
-            field: "debit_amount"
+            headerName: "Debit",
+            field: "debit_amount",
+            cellRenderer: 'debitCellRenderer',
+            width: 120
         },
         {
             headerName: "Opening Balance",
-            field: "opening_balance"
+            field: "opening_balance",
+            width: 120
         },
         {
             headerName: "Closing Balance",
-            field: "closing_balance"
+            field: "closing_balance",
+            width: 120
         },
         {
-            headerName: "Timestamp",
-            field: "created_at"
+            headerName: "Created At",
+            field: "created_at",
+            width: 150
+        },
+        {
+            headerName: "Updated At",
+            field: "updated_at",
+            width: 150
         },
     ])
     const [printableRow, setPrintableRow] = useState(rowData)
@@ -109,6 +125,30 @@ const Ledger = () => {
     useEffect(() => {
         fetchLedger()
     }, [])
+
+    const creditCellRenderer = (params) => {
+        return (
+            <Text px={1} fontWeight={'semibold'} flex={'unset'} w={'fit-content'} color={params.value > 0 && "green.400"}>
+                {params.value}
+            </Text>
+        )
+    }
+
+    const debitCellRenderer = (params) => {
+        return (
+            <Text px={1} fontWeight={'semibold'} flex={'unset'} w={'fit-content'} color={params.value > 0 && "red.400"}>
+                {params.value}
+            </Text>
+        )
+    }
+
+    const userCellRenderer = (params) => {
+        return (
+            <Text>
+                ({params.data.trigered_by}) {params.data.transaction_by}
+            </Text>
+        )
+    }
 
     const tableRef = useRef(null)
     return (
@@ -198,7 +238,7 @@ const Ledger = () => {
                 <Box
                     rounded={16} overflow={'hidden'}
                     className='ag-theme-alpine ag-theme-pesa24-blue'
-                    h={'sm'}>
+                    h={'xl'}>
                     <AgGridReact
                         columnDefs={columnDefs}
                         rowData={rowData}
@@ -207,7 +247,7 @@ const Ledger = () => {
                             floatingFilter: true,
                             resizable: true,
                         }}
-                        onFirstDataRendered={(params) => params.api.sizeColumnsToFit()}
+
                         onFilterChanged={
                             (params) => {
                                 setPrintableRow(params.api.getRenderedNodes().map((item) => {
@@ -217,6 +257,11 @@ const Ledger = () => {
                                 }))
                             }
                         }
+                        components={{
+                            'creditCellRenderer': creditCellRenderer,
+                            'debitCellRenderer': debitCellRenderer,
+                            'userCellRenderer': userCellRenderer,
+                        }}
                     >
 
                     </AgGridReact>

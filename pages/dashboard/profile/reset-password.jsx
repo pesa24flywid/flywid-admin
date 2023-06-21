@@ -19,43 +19,26 @@ const ResetPassword = () => {
     position: 'top-right'
   })
   const [lastRemarks, setLastRemarks] = useState("")
+  
   const PasswordFormik = useFormik({
     initialValues: {
       old_password: "",
       new_password: "",
-      new_password_confirmation: "",
-      credential_remarks: ""
+      new_password_confirmation: ""
     }
   })
 
-  function getRemarks() {
-    BackendAxios.get('/api/admin/credential-remarks').then(res => {
-        setLastRemarks(res.data)
-    }).catch(err => {
-        Toast({
-            status: 'error',
-            title: 'Error Occured',
-            description: err.message
-        })
-    })
-}
-useEffect(() => {
-    getRemarks()
-}, [])
-
   function handlePasswordReset() {
-    BackendAxios.post('/api/user/new-password', JSON.stringify({
+    BackendAxios.post('/api/user/new-password', {
       old_password: PasswordFormik.values.old_password,
       new_password: PasswordFormik.values.new_password,
-      new_password_confirmation: PasswordFormik.values.new_password_confirmation,
-      credential_remarks: MpinFormik.values.credential_remarks
-    })).then((res) => {
+      new_password_confirmation: PasswordFormik.values.new_password_confirmation
+    }).then((res) => {
       Toast({
         status: 'success',
         title: 'Success',
         description: 'Your password was changed succesfully.'
       })
-      getRemarks()
     }).catch((err) => {
       Toast({
         status: 'error',
@@ -108,23 +91,8 @@ useEffect(() => {
                 bg={'aqua'}
               />
             </FormControl>
-            <FormControl >
-              <FormLabel textAlign={'center'} fontSize={12}>Remarks</FormLabel>
-              <Input
-                name='credential_remarks'
-                onChange={PasswordFormik.handleChange}
-                bg={'aqua'}
-              />
-            </FormControl>
             <Button colorScheme={'twitter'} onClick={handlePasswordReset}>Done</Button>
           </VStack>
-        </Box>
-        <Box p={4} bg={'orange.400'} mt={16} w={['full', 'sm']}>
-          <Text
-            fontWeight={'semibold'}
-            color={'#FFF'}
-          >Last Remarks</Text>
-          <Text color={'#FFF'}>{lastRemarks}</Text>
         </Box>
       </Layout>
     </>

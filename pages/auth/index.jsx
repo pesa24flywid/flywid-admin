@@ -28,6 +28,7 @@ import axios from "axios";
 import Cookies from 'js-cookie'
 var bcrypt = require('bcryptjs')
 import { useRouter } from 'next/router'
+import BackendAxios from "@/lib/utils/axios";
 
 const Auth = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
@@ -159,7 +160,7 @@ const Auth = () => {
         localStorage.setItem("userType", res.data.role[0].name)
 
         localStorage.setItem("profilePic", `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${res.data.profile_pic}`)
-
+        BackendAxios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token.original.access_token}`
         Cookies.set('access-token', res.data.token.original.access_token)
         if (res.data.profile_complete == 0) localStorage.setItem("isProfileComplete", false)
         if (res.data.profile_complete == 1) localStorage.setItem("isProfileComplete", true)
@@ -181,9 +182,9 @@ const Auth = () => {
 
   return (
     <>
-      <Head><title>Pesa24 - Admin Panel</title></Head>
+      <Head><title>Janpay - Admin Panel</title></Head>
       <VStack p={4}>
-        <Text fontSize={'2xl'} fontWeight={'semibold'} mb={6}>Pesa24 Admin Login</Text>
+        <Text fontSize={'2xl'} fontWeight={'semibold'} mb={6}>Janpay Admin Login</Text>
         <VStack
           p={4} bg={'blue.50'}
           border={'1px'}

@@ -306,7 +306,7 @@ const UserLedger = () => {
                                 floatingFilter: true,
                                 resizable: true,
                             }}
-                            onFirstDataRendered={(params)=>params.api.sizeColumnsToFit()}
+
                             components={{
                                 'debitCellRenderer': debitCellRenderer,
                                 'creditCellRenderer': creditCellRenderer,
@@ -461,18 +461,7 @@ const UserLedger = () => {
                                         ) : null
                                 }
                                 <VStack pt={8} w={'full'}>
-                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
-                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant:</Text>
-                                        <Text fontSize={'xs'}>{receipt.data.user}</Text>
-                                    </HStack>
-                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
-                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant ID:</Text>
-                                        <Text fontSize={'xs'}>{receipt.data.user_id}</Text>
-                                    </HStack>
-                                    <HStack pb={1} justifyContent={'space-between'} w={'full'}>
-                                        <Text fontSize={'xs'} fontWeight={'semibold'}>Merchant Mobile:</Text>
-                                        <Text fontSize={'xs'}>{receipt.data.user_phone}</Text>
-                                    </HStack>
+
                                     <Image src='/logo_long.png' w={'20'} />
                                     <Text fontSize={'xs'}>{process.env.NEXT_PUBLIC_ORGANISATION_NAME}</Text>
                                 </VStack>
