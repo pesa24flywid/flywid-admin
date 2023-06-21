@@ -352,10 +352,10 @@ const Index = () => {
                       <Td py={2}>{pendingRequests?.profile || 0}</Td>
                     </Link>
                   </Tr>
-                  {/* <Tr>
+                  <Tr>
                     <Td py={2}>Settlement Account Verification</Td>
                     <Td py={2}>{pendingRequests?.accounts || 0}</Td>
-                  </Tr> */}
+                  </Tr>
                   <Tr>
                     <Td py={2}>Pending Support Tickets</Td>
                     <Link href={"/dashboard/support-tickets?pageid=support"}>
@@ -368,12 +368,12 @@ const Index = () => {
                       <Td py={2}>{pendingRequests?.recharge || 0}</Td>
                     </Link>
                   </Tr>
-                  {/* <Tr>
+                  <Tr>
                     <Td py={2}>Pending DMT</Td>
                     <Link href={"/dashboard/reports/dmt?pageid=reports"}>
                       <Td py={2}>{pendingRequests?.dmt || 0}</Td>
                     </Link>
-                  </Tr> */}
+                  </Tr>
                 </Tbody>
               </Table>
             </TableContainer>

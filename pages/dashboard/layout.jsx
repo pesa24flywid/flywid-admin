@@ -147,7 +147,7 @@ const menuOptions = [
   //       id: "manage-portal-services",
   //       title: "manage portal services",
   //       link: "/dashboard/services/services-status?pageid=services",
-  //       status: false,
+  //       status: true,
   //     },
   //     {
   //       id: "manage-operator-categories",
@@ -196,17 +196,17 @@ const menuOptions = [
       // {
       //   title: "wallet balance",
       //   link: "/dashboard/account/wallet-balance?pageid=account",
-      //   status: false,
+      //   status: true,
       // },
       // {
       //   title: "wallet transactions",
       //   link: "/dashboard/account/wallet-transactions?pageid=account",
-      //   status: false,
+      //   status: true,
       // },
       // {
       //   title: "add bank",
       //   link: "/dashboard/account/add-bank?pageid=account",
-      //   status: false,
+      //   status: true,
       // },
       {
         // id: "settlement-requests-view",
@@ -226,7 +226,7 @@ const menuOptions = [
       // {
       //   title: "add new operator",
       //   link: "/dashboard/controls/add-operator?pageid=controls",
-      //   status: false,
+      //   status: true,
       // },
       {
         id: "manage-banks",
@@ -243,7 +243,7 @@ const menuOptions = [
       // {
       //   title: "manage notifications",
       //   link: "/dashboard/controls/notifications?pageid=controls",
-      //   status: false,
+      //   status: true,
       // },
     ],
   },
@@ -277,31 +277,31 @@ const menuOptions = [
         id: "report-aeps",
         title: "aeps",
         link: "/dashboard/reports/aeps?pageid=reports",
-        status: false,
+        status: true,
       },
       {
         id: "report-bbps",
         title: "bbps",
         link: "/dashboard/reports/bbps?pageid=reports",
-        status: false,
+        status: true,
       },
       {
         id: "report-dmt",
         title: "dmt",
         link: "/dashboard/reports/dmt?pageid=reports",
-        status: false,
+        status: true,
       },
       {
         id: "report-recharge",
         title: "recharge",
         link: "/dashboard/reports/recharge?pageid=reports",
-        status: false,
+        status: true,
       },
       // {
       //   id: "report-matm",
       //   title: "matm",
       //   link: "/dashboard",
-      //   status: false,
+      //   status: true,
       // },
       {
         id: "report-payout",
@@ -313,17 +313,17 @@ const menuOptions = [
         id: "report-cms",
         title: "cms",
         link: "/dashboard/reports/cms?pageid=reports",
-        status: false,
+        status: true,
       },
       // {
       //   title: "pg",
       //   link: "/dashboard",
-      //   status: false,
+      //   status: true,
       // },
       // {
       //   title: "qr code",
       //   link: "/dashboard",
-      //   status: false,
+      //   status: true,
       // },
       {
         id: "report-fund-request",
@@ -340,19 +340,19 @@ const menuOptions = [
       // {
       //   title: "wallet transfer",
       //   link: "/dashboard",
-      //   status: false,
+      //   status: true,
       // },
       {
         title: "report-lic",
         title: "lic report",
         link: "/dashboard",
-        status: false,
+        status: true,
       },
       {
         id: "report-fastag",
         title: "fastag",
         link: "/dashboard",
-        status: false,
+        status: true,
       },
       {
         id: "report-axis-account",
@@ -548,7 +548,7 @@ const Layout = (props) => {
   return (
     <>
       <Head>
-        <title>{`Janpay Admin | ${props.pageTitle || "No Title"}`}</title>
+        <title>{`PESA24 Admin | ${props.pageTitle || "No Title"}`}</title>
       </Head>
       <HStack spacing={0} alignItems={"flex-start"}>
         {/* Sidebar */}
@@ -580,7 +580,7 @@ const Layout = (props) => {
                 color={"#FAFAFA"}
                 textTransform={"capitalize"}
               >
-                JANPAY - {userType}
+                PESA24 - {userType}
               </Text>
             </VStack>
             <VStack spacing={2} w={"full"}>
@@ -715,7 +715,7 @@ const Layout = (props) => {
               </Show>
               {/* <Image src='/logo_long.png' w={16} /> */}
               <Text fontSize={"lg"} fontWeight={"bold"}>
-                JANPAY
+                PESA24
               </Text>
             </HStack>
             <HStack

@@ -182,9 +182,9 @@ const Auth = () => {
 
   return (
     <>
-      <Head><title>Janpay - Admin Panel</title></Head>
+      <Head><title>PESA24 - Admin Panel</title></Head>
       <VStack p={4}>
-        <Text fontSize={'2xl'} fontWeight={'semibold'} mb={6}>Janpay Admin Login</Text>
+        <Text fontSize={'2xl'} fontWeight={'semibold'} mb={6}>PESA24 Admin Login</Text>
         <VStack
           p={4} bg={'blue.50'}
           border={'1px'}

@@ -287,7 +287,7 @@ const Preferences = () => {
                                 </Tr>
                             </Thead>
                             <Tbody textTransform={'capitalize'}>
-                                {/* <Tr>
+                                <Tr>
                                     <Td>AePS Services</Td>
                                     <Td>{globalInfo.aeps_provider || "paysprint"}</Td>
                                     <Td>
@@ -322,7 +322,7 @@ const Preferences = () => {
                                             id={'rechargeStatus'} isChecked={rechargeStatus}
                                             onChange={(e) => updateOrganisation({ recharge_status: e.target.checked })} />
                                     </Td>
-                                </Tr> */}
+                                </Tr>
                                 <Tr>
                                     <Td>Payout Services</Td>
                                     <Td>{globalInfo.payout_provider || "paysprint"}</Td>
@@ -332,7 +332,7 @@ const Preferences = () => {
                                             onChange={(e) => updateOrganisation({ payout_status: e.target.checked })} />
                                     </Td>
                                 </Tr>
-                                {/* <Tr>
+                                <Tr>
                                     <Td>PAN Services</Td>
                                     <Td>{globalInfo.pan_provider || "paysprint"}</Td>
                                     <Td>
@@ -376,7 +376,7 @@ const Preferences = () => {
                                             id={'fastagStatus'} isChecked={fastagStatus}
                                             onChange={(e) => updateOrganisation({ fastag_status: e.target.checked })} />
                                     </Td>
-                                </Tr> */}
+                                </Tr>
                             </Tbody>
                         </Table>
                     </TableContainer>
