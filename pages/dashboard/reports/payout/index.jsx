@@ -168,7 +168,7 @@ const Index = () => {
 
   function fetchTransactions(pageLink) {
     BackendAxios.get(
-      pageLink ||
+      pageLink ? pageLink :
         `/api/admin/payouts?from=${Formik.values.from}&to=${Formik.values.to}&page=1`
     )
       .then((res) => {
@@ -307,7 +307,8 @@ const Index = () => {
             status: 'success',
             description: `Payout ${params.data.payout_id} updated!`
           })
-          fetchTransactions(`/api/admin/payouts?from=${Formik.values.from}&to=${Formik.values.to}&page=${pagination.current_page}`);
+          let pageUrl = `/api/admin/payouts?from=${Formik.values.from}&to=${Formik.values.to}&page=${pagination.current_page}`
+          fetchTransactions(pageUrl);
         })
         .catch((err) => {
           Toast({
