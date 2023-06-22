@@ -84,6 +84,7 @@ const Ledger = () => {
     },
   ]);
   const [printableRow, setPrintableRow] = useState(rowData);
+  const [overviewData, setOverviewData] = useState([])
   const [pagination, setPagination] = useState({
     current_page: "1",
     total_pages: "1",
@@ -108,6 +109,14 @@ const Ledger = () => {
     return accumulator + a;
   }
 
+  function fetchSum(){
+    BackendAxios.get(`/api/admin/overview?from=${Formik.values.from}&to=${Formik.values.to}`).then(res => {
+      setOverviewData(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
   function fetchLedger(pageLink) {
     BackendAxios.post(pageLink || `/api/admin/transactions-period?page=1`, {
       from: Formik.values.from,
@@ -122,23 +131,6 @@ const Ledger = () => {
           next_page_url: res.data.next_page_url,
           prev_page_url: res.data.prev_page_url,
         });
-        // setRowData(res.data)
-
-        console.log("Total Payout ");
-        console.log(
-          Object.values(res.data)
-            .map((item) => Object.entries(item))
-            // .filter((data) => data[0][0] === "payout")
-            // .map((record) => record[0][1])
-            // .map((trnxn) =>
-            //   trnxn
-            //     ?.map((amount) =>
-            //       Math.abs(amount?.credit_amount - amount?.debit_amount)
-            //     )
-            //     ?.reduce(addTransactions, 0)
-            // )
-            // ?.reduce(addTransactions, 0)
-        );
 
         setRowData(
           Object.entries(res.data).map((item) => {
@@ -173,6 +165,8 @@ const Ledger = () => {
       .catch((err) => {
         console.log(err);
       });
+
+    fetchSum()
   }
 
   useEffect(() => {
@@ -385,7 +379,16 @@ const Ledger = () => {
                     TOTAL
                   </Text>
                 </Td>
-                <Td></Td>
+                <Td>
+                  <Text textAlign={"left"} fontWeight={"semibold"} fontSize={"lg"}>
+                    {Math.abs(overviewData[0]?.payout?.debit - overviewData[0]?.payout?.credit) || 0}
+                  </Text>
+                </Td>
+                <Td>
+                  <Text textAlign={"left"} fontWeight={"semibold"} fontSize={"lg"}>
+                    {Math.abs(overviewData[4]?.["payout-commission"]?.debit - overviewData[4]?.["payout-commission"]?.credit) || 0}
+                  </Text>
+                </Td>
               </Tr>
             </Tbody>
           </Table>

@@ -108,6 +108,7 @@ const Ledger = () => {
         setInterval(() => {
             fetchLedger()
         }, 3000);
+        return true
     }, [])
 
     const userCellRenderer = (params) => {
