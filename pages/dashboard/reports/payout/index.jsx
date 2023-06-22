@@ -437,7 +437,7 @@ const Index = () => {
             overflow={"hidden"}
             className="ag-theme-alpine ag-theme-pesa24-blue"
             w={"full"}
-            h={["sm", "md"]}
+            h={["sm", "xl"]}
           >
             <AgGridReact
               columnDefs={columnDefs}
