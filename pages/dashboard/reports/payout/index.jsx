@@ -398,6 +398,7 @@ const Index = () => {
         </HStack>
 
         {/* Pending Payouts */}
+        <Text pb={4}>Pending Payouts</Text>
         <Box
             rounded={16}
             overflow={"hidden"}
