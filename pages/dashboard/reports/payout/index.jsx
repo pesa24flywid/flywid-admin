@@ -64,6 +64,7 @@ const Index = () => {
     prev_page_url: "",
   });
   const [rowData, setRowData] = useState([]);
+  const [pendingRowData, setPendingRowData] = useState([]);
   const [columnDefs, setColumnDefs] = useState([
     {
       headerName: "Action",
@@ -166,6 +167,21 @@ const Index = () => {
     },
   });
 
+  function fetchPendingTransactions(){
+    BackendAxios.get(`/api/admin/payouts/processing`)
+      .then((res) => {
+        setPendingRowData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        Toast({
+          status: "error",
+          description:
+            err?.response?.data?.message || err?.response?.data || err?.message,
+        });
+      });
+  }
+
   function fetchTransactions(pageLink) {
     BackendAxios.get(
       pageLink ? pageLink :
@@ -182,13 +198,14 @@ const Index = () => {
         });
         setRowData(res.data.data);
         setPrintableRow(res.data.data);
+        fetchPendingTransactions()
       })
       .catch((err) => {
         console.log(err);
         Toast({
           status: "error",
           description:
-            err.response.data.message || err.response.data || err.message,
+            err?.response?.data?.message || err?.response?.data || err?.message,
         });
       });
   }
@@ -379,6 +396,42 @@ const Index = () => {
             Search
           </Button>
         </HStack>
+
+        {/* Pending Payouts */}
+        <Box
+            rounded={16}
+            overflow={"hidden"}
+            className="ag-theme-alpine ag-theme-pesa24-blue"
+            w={"full"}
+            h={["sm", "md"]}
+          >
+            <AgGridReact
+              columnDefs={columnDefs}
+              rowData={pendingRowData}
+              defaultColDef={{
+                filter: true,
+                floatingFilter: true,
+                resizable: true,
+                sortable: true,
+              }}
+              components={{
+                receiptCellRenderer: receiptCellRenderer,
+                creditCellRenderer: creditCellRenderer,
+                debitCellRenderer: debitCellRenderer,
+                userCellRenderer: userCellRenderer,
+                statusCellRenderer: statusCellRenderer,
+                actionCellRenderer: actionCellRenderer,
+              }}
+              onFilterChanged={(params) => {
+                setPrintableRow(
+                  params.api.getRenderedNodes().map((item) => {
+                    return item.data;
+                  })
+                );
+              }}
+            ></AgGridReact>
+          </Box>
+
         <HStack
           spacing={2}
           py={4}
@@ -431,7 +484,6 @@ const Index = () => {
             <BsChevronDoubleRight />
           </Button>
         </HStack>
-        <Box py={6}>
           <Box
             rounded={16}
             overflow={"hidden"}
@@ -465,7 +517,6 @@ const Index = () => {
               }}
             ></AgGridReact>
           </Box>
-        </Box>
       </Layout>
 
       {/* Receipt */}
