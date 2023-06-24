@@ -381,12 +381,12 @@ const Ledger = () => {
                 </Td>
                 <Td>
                   <Text textAlign={"left"} fontWeight={"semibold"} fontSize={"lg"}>
-                    {Math.abs(overviewData[0]?.payout?.debit - overviewData[0]?.payout?.credit) || 0}
+                    {Number(overviewData[0]?.payout?.debit - overviewData[0]?.payout?.credit) || 0}
                   </Text>
                 </Td>
                 <Td>
                   <Text textAlign={"left"} fontWeight={"semibold"} fontSize={"lg"}>
-                    {Math.abs(overviewData[4]?.["payout-commission"]?.debit - overviewData[4]?.["payout-commission"]?.credit) || 0}
+                    {Number(overviewData[4]?.["payout-commission"]?.debit - overviewData[4]?.["payout-commission"]?.credit) || 0}
                   </Text>
                 </Td>
               </Tr>
