@@ -106,7 +106,7 @@ const Ledger = () => {
     })
 
     function fetchLedger(pageLink) {
-        BackendAxios.get(pageLink || `/api/admin/transactions?from=${Formik.values.from}&to=${Formik.values.to}page=1`).then((res) => {
+        BackendAxios.get(pageLink || `/api/admin/transactions-period?from=${Formik.values.from}&to=${Formik.values.to}page=1`).then((res) => {
             setPagination({
                 current_page: res.data.current_page,
                 total_pages: parseInt(res.data.last_page),
