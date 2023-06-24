@@ -152,7 +152,7 @@ const Ledger = () => {
                 category: transaction[0],
                 total: transaction[1]
                   ?.map((data) =>
-                    Math.abs(data?.credit_amount - data?.debit_amount)
+                    Number(data?.debit_amount)
                   )
                   ?.reduce(addTransactions, 0),
               })),
