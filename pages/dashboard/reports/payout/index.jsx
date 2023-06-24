@@ -164,6 +164,7 @@ const Index = () => {
     initialValues: {
       from: "",
       to: "",
+      query: ""
     },
   });
 
@@ -185,7 +186,7 @@ const Index = () => {
   function fetchTransactions(pageLink) {
     BackendAxios.get(
       pageLink ? pageLink :
-        `/api/admin/payouts?from=${Formik.values.from}&to=${Formik.values.to}&page=1`
+        `/api/admin/payouts?from=${Formik.values.from}&to=${Formik.values.to}&search=${Formik.values.query}&page=1`
     )
       .then((res) => {
         setPagination({
@@ -229,18 +230,18 @@ const Index = () => {
       //     return
       // }
       setReceipt({
-        status: params.data.status,
+        status: params?.data?.status,
         show: true,
         data: {
-          reference_ID: params.data.reference_id,
-          payout_ID: params.data.payout_id,
-          beneficiary_name: params.data.beneficiary_name,
-          account_no: params.data.account_number,
-          created_at: params.data.created_at,
-          updated_at: params.data.updated_at,
-          UTR: params.data.utr,
-          amount: params.data.amount,
-          status: params.data.status,
+          reference_ID: params?.data?.reference_id,
+          payout_ID: params?.data?.payout_id,
+          beneficiary_name: params?.data?.beneficiary_name,
+          account_no: params?.data?.account_number,
+          created_at: params?.data?.created_at,
+          updated_at: params?.data?.updated_at,
+          UTR: params?.data?.utr,
+          amount: params?.data?.amount,
+          status: params?.data?.status,
         },
       });
     }
@@ -387,6 +388,14 @@ const Index = () => {
               name="to"
               onChange={Formik.handleChange}
               type="date"
+              bg={"white"}
+            />
+          </FormControl>
+          <FormControl w={["full", "xs"]}>
+            <FormLabel>Ref ID or Acc No.</FormLabel>
+            <Input
+              name="query"
+              onChange={Formik.handleChange}
               bg={"white"}
             />
           </FormControl>

@@ -66,7 +66,7 @@ const UserLedger = () => {
         },
         {
             headerName: "Description",
-            field: "transaction_for"
+            field: "description"
         },
         {
             headerName: "Type",
@@ -105,7 +105,8 @@ const UserLedger = () => {
             headerName: "Receipt",
             field: "receipt",
             pinned: 'right',
-            cellRenderer: 'receiptCellRenderer'
+            cellRenderer: 'receiptCellRenderer',
+            width: 80
         }
     ])
     const [printableRow, setPrintableRow] = useState(rowData)

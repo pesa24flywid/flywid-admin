@@ -61,6 +61,7 @@ const Index = () => {
   const [dmtData, setDmtData] = useState({});
   const [panData, setPanData] = useState({});
   const [payoutData, setPayoutData] = useState({});
+  const [payoutDetails, setPayoutDetails] = useState({});
   const [licData, setLicData] = useState({});
   const [fastagData, setFastagData] = useState({});
   const [cmsData, setCmsData] = useState({});
@@ -99,6 +100,7 @@ const Index = () => {
   function getOverview(tenure) {
     BackendAxios.get(`/api/admin/overview?tenure=${tenure || "today"}`)
       .then((res) => {
+        setPayoutDetails(res.data[5]);
         setPayoutData(res.data[0].payout);
         setWallets({
           ...wallets,
@@ -340,17 +342,21 @@ const Index = () => {
                 <Tbody fontSize={"xs"}>
                   <Tr>
                     <Td py={2}>Fund Requests</Td>
-                    <Link
-                      href={"/dashboard/account/fund-request?pageid=account"}
-                    >
-                      <Td py={2}>{pendingRequests?.funds || 0}</Td>
-                    </Link>
+                    <Td py={2}>
+                      <Link
+                        href={"/dashboard/account/fund-request?pageid=account"}
+                      >
+                        {pendingRequests?.funds || 0}
+                      </Link>
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>KYC Verification</Td>
-                    <Link href={"/dashboard/users/users-list?pageid=users"}>
-                      <Td py={2}>{pendingRequests?.profile || 0}</Td>
-                    </Link>
+                    <Td py={2}>
+                      <Link href={"/dashboard/users/users-list?pageid=users"}>
+                        {pendingRequests?.profile || 0}
+                      </Link>
+                    </Td>
                   </Tr>
                   {/* <Tr>
                     <Td py={2}>Settlement Account Verification</Td>
@@ -358,15 +364,19 @@ const Index = () => {
                   </Tr> */}
                   <Tr>
                     <Td py={2}>Pending Support Tickets</Td>
-                    <Link href={"/dashboard/support-tickets?pageid=support"}>
-                      <Td py={2}>{pendingRequests?.tickets || 0}</Td>
-                    </Link>
+                    <Td py={2}>
+                      <Link href={"/dashboard/support-tickets?pageid=support"}>
+                        {pendingRequests?.tickets || 0}
+                      </Link>
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td py={2}>Pending Recharge</Td>
-                    <Link href={"/dashboard/reports/recharge?pageid=reports"}>
-                      <Td py={2}>{pendingRequests?.recharge || 0}</Td>
-                    </Link>
+                    <Td py={2}>
+                      <Link href={"/dashboard/reports/recharge?pageid=reports"}>
+                        {pendingRequests?.recharge || 0}
+                      </Link>
+                    </Td>
                   </Tr>
                   {/* <Tr>
                     <Td py={2}>Pending DMT</Td>
@@ -383,15 +393,15 @@ const Index = () => {
             <TransactionCard
               color={"#13005A"}
               title={"Pending Payouts"}
-              quantity={payoutData?.count}
-              amount={payoutData?.debit - payoutData?.credit}
+              quantity={payoutDetails?.processing_payouts?.count}
+              amount={payoutDetails?.processing_payouts?.sum}
             />
 
             <TransactionCard
               color={"#26845A"}
               title={"Processed Payouts"}
-              quantity={payoutData?.count}
-              amount={payoutData?.debit - payoutData?.credit}
+              quantity={payoutDetails?.processed_payouts?.count}
+              amount={payoutDetails?.processed_payouts?.sum}
             />
 
             <Box

@@ -42,11 +42,12 @@ const Ledger = () => {
             cellRenderer: 'userCellRenderer',
             width: 150
         },
-        {
-            headerName: "Phone",
-            field: "transaction_by_phone",
-            width: 150
-        },
+        // {
+        //     headerName: "Phone",
+        //     field: "transaction_by_phone",
+        //     width: 150,
+        //     hide: true
+        // },
         {
             headerName: "Description",
             field: "description"
@@ -101,12 +102,13 @@ const Ledger = () => {
     const Formik = useFormik({
         initialValues: {
             from: "",
-            to: ""
+            to: "",
+            query: ""
         }
     })
 
     function fetchLedger(pageLink) {
-        BackendAxios.get(pageLink || `/api/admin/transactions?from=${Formik.values.from}&to=${Formik.values.to}page=1`).then((res) => {
+        BackendAxios.get(pageLink || `/api/admin/transactions?from=${Formik.values.from}&to=${Formik.values.to}&search=${Formik.values.query}&page=1`).then((res) => {
             setPagination({
                 current_page: res.data.current_page,
                 total_pages: parseInt(res.data.last_page),
@@ -145,7 +147,7 @@ const Ledger = () => {
     const userCellRenderer = (params) => {
         return (
             <Text>
-                ({params.data.trigered_by}) {params.data.transaction_by}
+                ({params?.data?.trigered_by}) {params?.data?.transaction_by} - {params?.data?.transaction_by_phone}
             </Text>
         )
     }
@@ -191,6 +193,13 @@ const Ledger = () => {
                         <Input
                             name='to' onChange={Formik.handleChange}
                             type='date' bg={'white'}
+                        />
+                    </FormControl>
+                    <FormControl w={['full', 'xs']}>
+                        <FormLabel>Trnxn ID or Acc No.</FormLabel>
+                        <Input
+                            name='query' onChange={Formik.handleChange}
+                            bg={'white'}
                         />
                     </FormControl>
                 </Stack>
