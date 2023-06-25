@@ -58,13 +58,13 @@ const ResetPassword = () => {
         Toast({
           status: "error",
           title: "Error Occured",
-          description: err.message,
+          description: err?.response?.data?.message || err?.response?.data || err?.message,
         });
       });
   }
 
   function sendOtp() {
-    BackendAxios.post("/api/send-otp")
+    BackendAxios.post("/password/send-otp")
       .then((res) => {
         onToggle();
         Toast({
@@ -134,7 +134,7 @@ const ResetPassword = () => {
                 bg={"aqua"}
               />
             </FormControl>
-            <Button colorScheme={"twitter"} onClick={handlePasswordReset}>
+            <Button colorScheme={"twitter"} onClick={sendOtp}>
               Done
             </Button>
           </VStack>
@@ -151,7 +151,7 @@ const ResetPassword = () => {
             <HStack justifyContent={"center"}>
               <PinInput
                 otp
-                onComplete={(value) => MpinFormik.setFieldValue("otp", value)}
+                onComplete={(value) => PasswordFormik.setFieldValue("otp", value)}
               >
                 <PinInputField bg={"aqua"} />
                 <PinInputField bg={"aqua"} />
@@ -162,7 +162,7 @@ const ResetPassword = () => {
           </ModalBody>
           <ModalFooter>
             <HStack justifyContent={"flex-end"}>
-              <Button colorScheme="twitter" onClick={handleMpinReset}>
+              <Button colorScheme="twitter" onClick={handlePasswordReset}>
                 Submit
               </Button>
             </HStack>

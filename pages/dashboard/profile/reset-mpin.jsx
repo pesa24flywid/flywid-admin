@@ -61,13 +61,13 @@ const ResetMpin = () => {
         Toast({
           status: "error",
           title: "Error Occured",
-          description: err.message,
+          description: err?.response?.data?.message || err?.response?.data || err?.message,
         });
       });
   }
 
   function sendOtp(){
-    BackendAxios.post("/api/send-otp").then(res => {
+    BackendAxios.post("/password/send-otp").then(res => {
         onToggle()
         Toast({
             status: 'success',
@@ -158,7 +158,7 @@ const ResetMpin = () => {
                   </PinInput>
                 </HStack>
               </FormControl>
-              <Button colorScheme={"twitter"} onClick={handleMpinReset}>
+              <Button colorScheme={"twitter"} onClick={sendOtp}>
                 Done
               </Button>
             </VStack>
