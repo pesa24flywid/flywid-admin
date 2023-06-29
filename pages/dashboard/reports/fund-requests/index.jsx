@@ -146,7 +146,7 @@ const FundRequests = () => {
   });
 
   function fetchRequests(pageLink) {
-    BackendAxios.get(pageLink || "/api/admin/fetch-fund-requests")
+    BackendAxios.get(pageLink || "/api/admin/fetch-fund/all")
       .then((res) => {
         setPagination({
           current_page: res.data.current_page,

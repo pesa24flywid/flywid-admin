@@ -138,7 +138,7 @@ const Index = () => {
     function fetchUsersList(pageLink) {
         setFetchedUsers([])
         setIsLoading(true)
-        BackendAxios.get(pageLink || `/api/admin/users-list/${selectedTab}?page=1`).then((res) => {
+        BackendAxios.get(pageLink || `/api/admin/users-list/${selectedTab}?search=${query}&page=1`).then((res) => {
             setPagination({
                 current_page: res.data.current_page,
                 total_pages: parseInt(res.data.last_page),
@@ -317,10 +317,6 @@ const Index = () => {
         })
     }
 
-    function searchUser(e) {
-
-    }
-
     const tableRef = useRef(null)
     return (
         <>
@@ -409,7 +405,7 @@ const Index = () => {
                                                     placeholder={'Search User ID or Number'}
                                                     onChange={e => setQuery(e.target.value)}
                                                 />
-                                                <Button colorScheme='twitter' onClick={searchUser}>Search</Button>
+                                                <Button colorScheme='twitter' onClick={()=>fetchUsersList()}>Search</Button>
                                             </HStack>
                                         </Stack>
 
