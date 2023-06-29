@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import DashboardWrapper from '../../../../hocs/DashboardLayout'
+import DashboardWrapper from '@/hocs/DashboardLayout'
 import {
   useToast,
   Box,
@@ -33,7 +33,7 @@ import {
   BsXCircle,
   BsEye
 } from 'react-icons/bs'
-import BackendAxios from '../../../../lib/axios';
+import BackendAxios from '@/lib/utils/axios';
 import Pdf from 'react-to-pdf'
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'

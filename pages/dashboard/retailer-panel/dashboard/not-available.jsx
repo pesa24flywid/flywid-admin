@@ -3,7 +3,7 @@ import {
     Text,
 } from '@chakra-ui/react'
 import React from 'react'
-import DashboardWrapper from '../../hocs/DashboardLayout'
+import DashboardWrapper from '@/hocs/DashboardLayout'
 
 const NotAvailable = () => {
     return (
