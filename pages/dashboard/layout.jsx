@@ -199,21 +199,21 @@ const menuOptions = [
         link: "/dashboard/account/add-money?pageid=account",
         status: true,
       },
-      {
-        title: "wallet balance",
-        link: "/dashboard/account/wallet-balance?pageid=account",
-        status: true,
-      },
-      {
-        title: "wallet transactions",
-        link: "/dashboard/account/wallet-transactions?pageid=account",
-        status: true,
-      },
-      {
-        title: "add bank",
-        link: "/dashboard/account/add-bank?pageid=account",
-        status: true,
-      },
+      // {
+      //   title: "wallet balance",
+      //   link: "/dashboard/account/wallet-balance?pageid=account",
+      //   status: true,
+      // },
+      // {
+      //   title: "wallet transactions",
+      //   link: "/dashboard/account/wallet-transactions?pageid=account",
+      //   status: true,
+      // },
+      // {
+      //   title: "add bank",
+      //   link: "/dashboard/account/add-bank?pageid=account",
+      //   status: true,
+      // },
       {
         // id: "settlement-requests-view",
         id: "settlement-account",
@@ -253,26 +253,26 @@ const menuOptions = [
       // },
     ],
   },
-  {
-    type: "accordion",
-    name: "whitelabel",
-    id: "whitelabel",
-    icon: <IoIosFlash />,
-    children: [
-      {
-        id: "all-organizations",
-        title: "all organisations",
-        link: "/dashboard/organisation?pageid=whitelabel",
-        status: true,
-      },
-      {
-        id: "create-whitelabel",
-        title: "create whitelabel",
-        link: "/dashboard/organisation/create?pageid=whitelabel",
-        status: true,
-      }
-    ]
-  },
+  // {
+  //   type: "accordion",
+  //   name: "whitelabel",
+  //   id: "whitelabel",
+  //   icon: <IoIosFlash />,
+  //   children: [
+  //     {
+  //       id: "all-organizations",
+  //       title: "all organisations",
+  //       link: "/dashboard/organisation?pageid=whitelabel",
+  //       status: true,
+  //     },
+  //     {
+  //       id: "create-whitelabel",
+  //       title: "create whitelabel",
+  //       link: "/dashboard/organisation/create?pageid=whitelabel",
+  //       status: true,
+  //     }
+  //   ]
+  // },
   {
     type: "accordion",
     name: "reports",
@@ -315,12 +315,12 @@ const menuOptions = [
         link: "/dashboard/reports/payout?pageid=reports",
         status: true,
       },
-      {
-        id: "report-cms",
-        title: "cms",
-        link: "/dashboard/reports/cms?pageid=reports",
-        status: true,
-      },
+      // {
+      //   id: "report-cms",
+      //   title: "cms",
+      //   link: "/dashboard/reports/cms?pageid=reports",
+      //   status: true,
+      // },
       // {
       //   title: "pg",
       //   link: "/dashboard",
@@ -348,24 +348,24 @@ const menuOptions = [
       //   link: "/dashboard",
       //   status: true,
       // },
-      {
-        title: "report-lic",
-        title: "lic report",
-        link: "/dashboard",
-        status: true,
-      },
-      {
-        id: "report-fastag",
-        title: "fastag",
-        link: "/dashboard",
-        status: true,
-      },
-      {
-        id: "report-axis-account",
-        title: "axis accounts",
-        link: "/dashboard",
-        status: false,
-      },
+      // {
+      //   title: "report-lic",
+      //   title: "lic report",
+      //   link: "/dashboard",
+      //   status: true,
+      // },
+      // {
+      //   id: "report-fastag",
+      //   title: "fastag",
+      //   link: "/dashboard",
+      //   status: true,
+      // },
+      // {
+      //   id: "report-axis-account",
+      //   title: "axis accounts",
+      //   link: "/dashboard",
+      //   status: false,
+      // },
       {
         id: "transaction-ledger",
         title: "transaction ledger",

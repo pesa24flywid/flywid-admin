@@ -138,13 +138,13 @@ const Preferences = () => {
                                 }
                                 onClick={() => updateGlobalInfo({ aeps_provider: "eko" })}
                             >Eko</Button>
-                            <Button
+                            {/* <Button
                                 w={36}
                                 colorScheme={globalInfo.aeps_provider == "paysprint" ?
                                     "twitter" : "gray"
                                 }
                                 onClick={() => updateGlobalInfo({ aeps_provider: "paysprint" })}
-                            >Paysprint</Button>
+                            >Paysprint</Button> */}
                         </HStack>
                     </Box>
                     <Box>
@@ -158,13 +158,13 @@ const Preferences = () => {
                                 }
                                 onClick={() => updateGlobalInfo({ bbps_provider: "eko" })}
                             >Eko</Button>
-                            <Button
+                            {/* <Button
                                 w={36}
                                 colorScheme={globalInfo.bbps_provider == "paysprint" ?
                                     "twitter" : "gray"
                                 }
                                 onClick={() => updateGlobalInfo({ bbps_provider: "paysprint" })}
-                            >Paysprint</Button>
+                            >Paysprint</Button> */}
                         </HStack>
                     </Box>
                     <Box>
@@ -178,17 +178,17 @@ const Preferences = () => {
                                 }
                                 onClick={() => updateGlobalInfo({ dmt_provider: "eko" })}
                             >Eko</Button>
-                            <Button
+                            {/* <Button
                                 w={36}
                                 colorScheme={globalInfo.dmt_provider == "paysprint" ?
                                     "twitter" : "gray"
                                 }
                                 onClick={() => updateGlobalInfo({ dmt_provider: "paysprint" })}
-                            >Paysprint</Button>
+                            >Paysprint</Button> */}
                         </HStack>
                     </Box>
                 </Stack>
-                <Stack
+                {/* <Stack
                     direction={['column', 'row']}
                     justifyContent={'space-between'}
                     pt={16} pb={8} gap={10}
@@ -213,7 +213,7 @@ const Preferences = () => {
                             >Offline</Button>
                         </HStack>
                     </Box>
-                </Stack>
+                </Stack> */}
                 <Box mt={8} mb={6}>
                     <Text pb={12}>Portal Registration Settings</Text>
                     <TableContainer w={'full'}>
@@ -332,7 +332,7 @@ const Preferences = () => {
                                             onChange={(e) => updateOrganisation({ payout_status: e.target.checked })} />
                                     </Td>
                                 </Tr>
-                                <Tr>
+                                {/* <Tr>
                                     <Td>PAN Services</Td>
                                     <Td>{globalInfo.pan_provider || "paysprint"}</Td>
                                     <Td>
@@ -376,7 +376,7 @@ const Preferences = () => {
                                             id={'fastagStatus'} isChecked={fastagStatus}
                                             onChange={(e) => updateOrganisation({ fastag_status: e.target.checked })} />
                                     </Td>
-                                </Tr>
+                                </Tr> */}
                             </Tbody>
                         </Table>
                     </TableContainer>
