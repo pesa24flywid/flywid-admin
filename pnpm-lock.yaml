@@ -113,9 +113,6 @@ dependencies:
   react-export-table-to-excel:
     specifier: ^1.0.6
     version: 1.0.6
-  react-fast-marquee:
-    specifier: ^1.6.0
-    version: 1.6.0(react-dom@18.2.0)(react@18.2.0)
   react-icons:
     specifier: ^4.7.1
     version: 4.7.1(react@18.2.0)
@@ -2888,16 +2885,6 @@ packages:
 
   /react-fast-compare@3.2.0:
     resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
-    dev: false
-
-  /react-fast-marquee@1.6.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-jtuwT9SNjrqxnE7lGZ8mTL1I8Q4+9G4aBta2p+y2Pa3SjR17QROblwrLICyM8rbjQFHgHawTHcaH9HvoVO2NOA==}
-    peerDependencies:
-      react: '>= 16.8.0 || 18.0.0'
-      react-dom: '>= 16.8.0 || 18.0.0'
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-focus-lock@2.9.3(@types/react@18.0.28)(react@18.2.0):
