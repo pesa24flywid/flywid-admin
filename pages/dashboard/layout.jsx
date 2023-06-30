@@ -137,44 +137,44 @@ const menuOptions = [
       },
     ],
   },
-  // {
-  //   type: "accordion",
-  //   name: "manage services",
-  //   id: "services",
-  //   icon: <BsBriefcaseFill />,
-  //   children: [
-  //     {
-  //       id: "manage-global-services",
-  //       title: "manage global services",
-  //       link: "/dashboard/services/manage-services?pageid=services",
-  //       status: true,
-  //     },
-  //     {
-  //       id: "manage-portal-services",
-  //       title: "manage portal services",
-  //       link: "/dashboard/services/services-status?pageid=services",
-  //       status: true,
-  //     },
-  //     {
-  //       id: "manage-operator-categories",
-  //       title: "manage operator categories",
-  //       link: "/dashboard/services/manage-categories?pageid=services",
-  //       status: true,
-  //     },
-  //     {
-  //       id: "manage-operators",
-  //       title: "manage operators",
-  //       link: "/dashboard/services/manage-operators?pageid=services",
-  //       status: true,
-  //     },
-  //     {
-  //       id: "manage-cms-billers",
-  //       title: "manage CMS billers",
-  //       link: "/dashboard/services/manage-cms-billers?pageid=services",
-  //       status: true,
-  //     },
-  //   ]
-  // },
+  {
+    type: "accordion",
+    name: "manage services",
+    id: "services",
+    icon: <BsBriefcaseFill />,
+    children: [
+      {
+        id: "manage-global-services",
+        title: "manage global services",
+        link: "/dashboard/services/manage-services?pageid=services",
+        status: true,
+      },
+      {
+        id: "manage-portal-services",
+        title: "manage portal services",
+        link: "/dashboard/services/services-status?pageid=services",
+        status: true,
+      },
+      {
+        id: "manage-operator-categories",
+        title: "manage operator categories",
+        link: "/dashboard/services/manage-categories?pageid=services",
+        status: true,
+      },
+      {
+        id: "manage-operators",
+        title: "manage operators",
+        link: "/dashboard/services/manage-operators?pageid=services",
+        status: true,
+      },
+      {
+        id: "manage-cms-billers",
+        title: "manage CMS billers",
+        link: "/dashboard/services/manage-cms-billers?pageid=services",
+        status: true,
+      },
+    ]
+  },
   {
     type: "accordion",
     name: "account",
@@ -199,21 +199,21 @@ const menuOptions = [
         link: "/dashboard/account/add-money?pageid=account",
         status: true,
       },
-      // {
-      //   title: "wallet balance",
-      //   link: "/dashboard/account/wallet-balance?pageid=account",
-      //   status: true,
-      // },
-      // {
-      //   title: "wallet transactions",
-      //   link: "/dashboard/account/wallet-transactions?pageid=account",
-      //   status: true,
-      // },
-      // {
-      //   title: "add bank",
-      //   link: "/dashboard/account/add-bank?pageid=account",
-      //   status: true,
-      // },
+      {
+        title: "wallet balance",
+        link: "/dashboard/account/wallet-balance?pageid=account",
+        status: true,
+      },
+      {
+        title: "wallet transactions",
+        link: "/dashboard/account/wallet-transactions?pageid=account",
+        status: true,
+      },
+      {
+        title: "add bank",
+        link: "/dashboard/account/add-bank?pageid=account",
+        status: true,
+      },
       {
         // id: "settlement-requests-view",
         id: "settlement-account",
@@ -229,11 +229,11 @@ const menuOptions = [
     id: "controls",
     icon: <AiFillApi />,
     children: [
-      // {
-      //   title: "add new operator",
-      //   link: "/dashboard/controls/add-operator?pageid=controls",
-      //   status: true,
-      // },
+      {
+        title: "add new operator",
+        link: "/dashboard/controls/add-operator?pageid=controls",
+        status: true,
+      },
       {
         id: "manage-banks",
         title: "manage banks",
@@ -253,26 +253,26 @@ const menuOptions = [
       // },
     ],
   },
-  // {
-  //   type: "accordion",
-  //   name: "whitelabel",
-  //   id: "whitelabel",
-  //   icon: <IoIosFlash />,
-  //   children: [
-  //     {
-  //       id: "all-organizations",
-  //       title: "all organisations",
-  //       link: "/dashboard/organisation?pageid=whitelabel",
-  //       status: true,
-  //     },
-  //     {
-  //       id: "create-whitelabel",
-  //       title: "create whitelabel",
-  //       link: "/dashboard/organisation/create?pageid=whitelabel",
-  //       status: true,
-  //     }
-  //   ]
-  // },
+  {
+    type: "accordion",
+    name: "whitelabel",
+    id: "whitelabel",
+    icon: <IoIosFlash />,
+    children: [
+      {
+        id: "all-organizations",
+        title: "all organisations",
+        link: "/dashboard/organisation?pageid=whitelabel",
+        status: true,
+      },
+      {
+        id: "create-whitelabel",
+        title: "create whitelabel",
+        link: "/dashboard/organisation/create?pageid=whitelabel",
+        status: true,
+      }
+    ]
+  },
   {
     type: "accordion",
     name: "reports",
