@@ -99,11 +99,12 @@ const FundRequests = () => {
       field: "name",
       cellRenderer: "userCellRenderer",
     },
-    {
-      headerName: "User Phone",
-      field: "phone_number",
-      width: 120,
-    },
+    // {
+    //   headerName: "User Phone",
+    //   field: "phone_number",
+    //   width: 120,
+    //   hide: true,
+    // },
     {
       headerName: "Updated By",
       field: "admin_name",
@@ -145,7 +146,7 @@ const FundRequests = () => {
   });
 
   function fetchRequests(pageLink) {
-    BackendAxios.get(pageLink || "/api/admin/fetch-fund-requests")
+    BackendAxios.get(pageLink || "/api/admin/fetch-fund/all")
       .then((res) => {
         setPagination({
           current_page: res.data.current_page,
@@ -328,7 +329,7 @@ const FundRequests = () => {
     return (
       <>
         <Text>
-          {params.data.name} {params.data.user_id}
+          ({params.data.name}) {params.data.user_id} - {params.data.phone_number}
         </Text>
       </>
     );
@@ -538,11 +539,10 @@ const FundRequests = () => {
                       <td>{data.bank_name}</td>
                       <td>{data.transaction_type}</td>
                       <td>{data.name}</td>
-                      <td>{data.beneficiary_id}</td>
-                      <td>{data.phone_number}</td>
-                      <td>{data.updated_at}</td>
-                      <td>{data.user_id}</td>
+                      <td>{data.admin_name}</td>
                       <td>{data.remarks}</td>
+                      <td>{data.admin_remarks}</td>
+                      <td>{data.updated_at}</td>
                     </tr>
                   );
                 })}

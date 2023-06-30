@@ -95,15 +95,16 @@ const FundRequests = () => {
       width: 80,
     },
     {
-      headerName: "User Name",
+      headerName: "User",
       field: "name",
       cellRenderer: "userCellRenderer",
     },
-    {
-      headerName: "User Phone",
-      field: "phone_number",
-      width: 120,
-    },
+    // {
+    //   headerName: "User Phone",
+    //   field: "phone_number",
+    //   width: 120,
+    //   hide: true
+    // },
     {
       headerName: "Updated By",
       field: "admin_name",
@@ -145,7 +146,7 @@ const FundRequests = () => {
   });
 
   function fetchRequests(pageLink) {
-    BackendAxios.get(pageLink || "/api/admin/fetch-fund-requests")
+    BackendAxios.get(pageLink || "/api/admin/fetch-fund/pending")
       .then((res) => {
         setPagination({
           current_page: res.data.current_page,
@@ -328,7 +329,7 @@ const FundRequests = () => {
     return (
       <>
         <Text>
-          {params.data.name} {params.data.user_id}
+          ({params.data.user_id}) {params.data.name} - {params?.data?.phone_number}
         </Text>
       </>
     );
@@ -514,7 +515,7 @@ const FundRequests = () => {
           </HStack>
 
           <VisuallyHidden>
-            <table id="printable-table">
+            <table id="printable-table" ref={tableRef}>
               <thead>
                 <tr>
                   <th>#</th>
@@ -530,6 +531,7 @@ const FundRequests = () => {
                   return (
                     <tr key={key}>
                       <td>{key + 1}</td>
+                      <td>{data.id}</td>
                       <td>{data.status}</td>
                       <td>{data.created_at}</td>
                       <td>{data.transaction_id}</td>
@@ -537,11 +539,10 @@ const FundRequests = () => {
                       <td>{data.bank_name}</td>
                       <td>{data.transaction_type}</td>
                       <td>{data.name}</td>
-                      <td>{data.beneficiary_id}</td>
-                      <td>{data.phone_number}</td>
-                      <td>{data.updated_at}</td>
-                      <td>{data.user_id}</td>
+                      <td>{data.admin_name}</td>
                       <td>{data.remarks}</td>
+                      <td>{data.admin_remarks}</td>
+                      <td>{data.updated_at}</td>
                     </tr>
                   );
                 })}

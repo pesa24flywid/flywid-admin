@@ -129,6 +129,12 @@ const menuOptions = [
         link: "/dashboard/users/create-admin?pageid=users",
         status: true,
       },
+      {
+        id: "user-view",
+        title: "retailer panel",
+        link: "/dashboard/retailer-panel?pageid=users",
+        status: true,
+      },
     ],
   },
   // {

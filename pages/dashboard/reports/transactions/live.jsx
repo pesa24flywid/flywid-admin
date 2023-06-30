@@ -105,9 +105,12 @@ const Ledger = () => {
     }
 
     useEffect(() => {
-        setInterval(() => {
+        const timer = setInterval(() => {
             fetchLedger()
         }, 3000);
+        return () => {
+            clearTimeout(timer)
+        }
     }, [])
 
     const userCellRenderer = (params) => {
